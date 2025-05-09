@@ -1,0 +1,20 @@
+{% load i18n admin_urls %}
+{% block object-tools-items %}
+
+  {% block comment %}
+    <li>
+    {% url opts|admin_urlname:'update' original.pk|admin_urlquote as update_url %}
+      <a class="button"
+         href="{% add_preserved_filters update_url %}"
+         style="margin-right: 10px; background-color: #91484c; color: white;">
+        {% translate "Update Country data" %}
+      </a>
+
+      {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+      <a href="{% add_preserved_filters history_url %}" class="historylink">
+        {% translate "History" %}</a>
+
+    </li>
+  {% endblock comment %}
+
+{% endblock object-tools-items %}
