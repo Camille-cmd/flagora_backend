@@ -1,12 +1,19 @@
+import logging
+
 import requests
 from core.management.commands.import_countries import continents_url, CONTINENT_MAPPING
 from core.models import Country, City
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def country_update(country_obj: Country) -> None:
     """
     Update country data from Wikidata.
     """
+    if country_obj.wikidata_id is None:
+        raise ValueError("Wikidata ID is missing for the country.")
+
     sparql_url = "https://query.wikidata.org/sparql"
     query = f"""
     SELECT ?name_en ?name_fr ?iso2 ?iso3 ?flag ?capital ?capitalLabel_en ?capitalLabel_fr WHERE {{
@@ -37,34 +44,52 @@ def country_update(country_obj: Country) -> None:
         raise ValueError(f"Too many results found for Wikidata ID: {country_obj.wikidata_id}")
 
     data = results[0]
-    country_obj.name_en = data.get('name_en', {}).get('value')
-    country_obj.name_fr = data.get('name_fr', {}).get('value')
+    name_en = data.get('name_en', {}).get('value')
+    name_fr = data.get('name_fr', {}).get('value')
+    if not name_en or not name_fr:
+        raise ValueError(f"Missing name_en or name_fr for Wikidata ID: {country_obj.wikidata_id}")
+    country_obj.name_en = name_en
+    country_obj.name_fr = name_fr
+
     iso2 = data.get('iso2', {}).get('value')
+    iso3 = data.get('iso3', {}).get('value')
+    if not iso2 or not iso3:
+        raise ValueError(f"Missing iso2 or iso3 for Wikidata ID: {country_obj.wikidata_id}")
     country_obj.iso2_code = iso2
-    country_obj.iso3_code = data.get('iso3', {}).get('value')
+    country_obj.iso3_code = iso3
 
-    flag_url = data.get('flag', {}).get('value')  # This is the SVG file URL (Special:FilePath)
-    if flag_url:
-        country_obj.save_flag(flag_url)
-
+    # Handle continent
     continents_data = requests.get(continents_url).json()
     continent = CONTINENT_MAPPING.get(continents_data.get(iso2), "Unknown")
     country_obj.continent = continent
 
-    # Assume that duplicated results are for the capital cities of the same country
+    # Handle cities: assume that duplicated results are for the capital cities of the same country
     cities_to_add_to_country = []
     for result in results:
         capital_en = result.get("capitalLabel_en", {}).get("value")
         capital_fr = result.get("capitalLabel_fr", {}).get("value")
+
+        if not capital_en and not capital_fr:
+            logger.warning(f"No capital data found for country {name_en} with Wikidata ID {country_obj.wikidata_id}.")
+            continue
+
         capital_city_obj, _ = City.objects.update_or_create(
             name_en=capital_en,
             defaults={
-                "name_fr":capital_fr,
+                "name_fr":capital_fr or capital_en,
                 "is_capital": True,
             }
         )
         cities_to_add_to_country.append(capital_city_obj)
 
-    country_obj.cities.add(*cities_to_add_to_country)
+    # Handle Flag
+    flag_url = data.get('flag', {}).get('value')  # This is the SVG file URL (Special:FilePath)
+    if flag_url:
+        saved_flag = country_obj.save_flag(flag_url)
+        if not saved_flag:
+            raise ValueError(f"Could not save flag for country {name_en}")
 
+    # Final save
     country_obj.save()
+    country_obj.cities.add(*cities_to_add_to_country)
+    logger.info(f"Country {country_obj.name_en} updated successfully.")

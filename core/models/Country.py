@@ -33,15 +33,19 @@ class Country(models.Model):
     def __str__(self):
         return self.name_en
 
-    def save_flag(self, flag_url: str) -> None:
+    def save_flag(self, flag_url: str, delete_current: bool = True) -> bool:
         """
         Save the flag of a country to a file and delete the old one if it exists.
         """
         # Delete the old flag file if it exists
-        if self.flag and self.flag.path:
+        if delete_current and self.flag and self.flag.path:
             self.flag.delete(save=False)
 
-        response = requests.get(flag_url)
+        headers = {"User-Agent": 'FlagoraBot/0.0'}
+        response = requests.get(flag_url, headers=headers)
         if response.status_code == 200:
             file_name = "flag.svg"
             self.flag.save(file_name, ContentFile(response.content), save=True)
+            return True
+
+        return False

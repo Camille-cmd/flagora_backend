@@ -17,14 +17,14 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--json_file_name",
+            "-f", "-file_name",
             type=str,
             help="The path to the JSON file containing the countries data. "
                  "The file MUST be in the 'data' directory. If not provided, the data will be fetched from the API."
         )
 
     def handle(self, *args, **options):
-        json_file_name = options.get("json_file_name")
+        json_file_name = options.get("file_name")
 
         file_path = Path(__file__).resolve().parent / "data" / json_file_name
         with open(file_path, "r", encoding="utf-8") as json_file:

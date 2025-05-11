@@ -1,12 +1,22 @@
 from django.contrib import admin, messages
+from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import path
 from django.utils.html import format_html
 from django import forms
 
-from core.models import Country, City
+from core.models import Country, City, User
 from core.services import country_update
 
+
+@admin.register(User)
+class UserAdminAdmin(UserAdmin):
+    pass
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ("name_en",)
+    search_fields = ("name_en", "name_fr")
 
 class CapitalCitiesInline(admin.TabularInline):
     model = Country.cities.through
@@ -39,7 +49,6 @@ class CountryAdminForm(forms.ModelForm):
         if not flag:
             return None  # Retourne explicitement None si aucun fichier n'est fourni
         return flag
-
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -82,15 +91,14 @@ class CountryAdmin(admin.ModelAdmin):
             country_update(country)
 
             messages.success(request, f"The country '{country.name_en}' has been updated successfully!")
-            messages.warning(request, "Note: native name is not a field that can be updated. Please update manually in the database if needed.")
+            messages.warning(
+                request,
+                "Note: native name is not a field that can be updated. "
+                "Please update manually in the database if needed."
+            )
 
         except Exception as e:
             messages.error(request, f"Failed to update the country '{country.name_en}': {str(e)}")
 
         # Redirect back to the detail page
         return redirect("admin:core_country_change", object_id)
-
-@admin.register(City)
-class CityAdmin(admin.ModelAdmin):
-    list_display = ("name_en",)
-    search_fields = ("name_en", "name_fr")

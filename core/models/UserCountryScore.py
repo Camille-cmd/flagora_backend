@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Country, Guess
+from core.models import Country, Guess, User
 
 
 class UserCountryScore(models.Model):
@@ -12,8 +11,8 @@ class UserCountryScore(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="country_scores")
+    user = models.ForeignKey("core.User", on_delete=models.CASCADE, related_name="user_scores")
     game_mode = models.CharField(choices=GameModes.choices)
     user_guesses = models.ManyToManyField(Guess, blank=True, related_name="user_guesses")
 

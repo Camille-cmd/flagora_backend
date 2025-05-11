@@ -1,14 +1,11 @@
-import json
 import logging
 from collections import defaultdict
-from pathlib import Path
 
 import requests
-from django.core.files.base import ContentFile
 from django.core.management import BaseCommand
-from django.utils import timezone
 
 from core.models import Country, City
+from core.management.commands.generate_countries_json_backup import Command as CountriesBackupCommand
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -123,57 +120,11 @@ class Command(BaseCommand):
 
         return capital_data
 
-    @staticmethod
-    def generate_backup_json():
-        """
-        Generate a JSON file with the data of all countries in the database for backup purposes.
-
-        The JSON file will be saved in the 'data' directory.
-        """
-        countries_in_db = Country.objects.all()
-
-        # Do not backup an empty database.
-        if not countries_in_db:
-            return
-
-        countries_list = []
-        for country in countries_in_db:
-            cities_data = []
-            for city in country.cities.all():
-                cities_data.append({
-                    "name_en": city.name_en,
-                    "name_fr": city.name_fr,
-                    "is_capital": city.is_capital
-                })
-
-            country_dict = {
-                "name_en": country.name_en,
-                "name_fr": country.name_fr,
-                "name_native": country.name_native,
-                "iso2": country.iso2_code,
-                "iso3": country.iso3_code,
-                "flag": country.flag.name if country.flag else "",
-                "continent": country.continent,
-                "wikidata_id": country.wikidata_id,
-                "cities": cities_data,
-            }
-            countries_list.append(country_dict)
-
-        now = timezone.now()
-        working_dir = Path(__file__).resolve()
-        # Create directories if they do not exist
-        Path(working_dir.parent, "data").mkdir(exist_ok=True)
-        output_file = Path(working_dir.parent, "data", f"countries_data_saved_{now}.json")
-        with open(output_file, "w", encoding="utf-8") as json_file:
-            json.dump(countries_list, json_file, ensure_ascii=False, indent=4)
-
-        print(f"File {output_file} generated successfully!")
-
     def handle(self, *args, **options):
         country_name = options.get("country_name")
 
         # Backup data before importing and updating
-        self.generate_backup_json()
+        CountriesBackupCommand.generate_backup_json()
 
         # Import countries updating what is in db
         self.import_countries(country_name)
@@ -229,7 +180,9 @@ class Command(BaseCommand):
                     "wikidata_id": wikidata_id or None
                 }
             )
-            country_obj.save_flag(flag_url)
+            saved_flag = country_obj.save_flag(flag_url, delete_current=False)
+            if not saved_flag:
+                logger.warning(f"Could not save flag for country {name_en}.")
 
             # Capital data (some countries can have multiple capital cities)
             capitals_data_for_country = capitals_data.get(wikidata_id, {})

@@ -1,0 +1,3478 @@
+[
+    {
+        "name_en": "Afghanistan",
+        "name_fr": "Afghanistan",
+        "name_native": "افغانستان",
+        "iso2": "AF",
+        "iso3": "AFG",
+        "flag": "flags/AF/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q889",
+        "cities": [
+            {
+                "name_en": "Kabul",
+                "name_fr": "Kaboul",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Albania",
+        "name_fr": "Albanie",
+        "name_native": "Shqipëria",
+        "iso2": "AL",
+        "iso3": "ALB",
+        "flag": "flags/AL/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q222",
+        "cities": [
+            {
+                "name_en": "Tirana",
+                "name_fr": "Tirana",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Algeria",
+        "name_fr": "Algérie",
+        "name_native": "الجزائر",
+        "iso2": "DZ",
+        "iso3": "DZA",
+        "flag": "flags/DZ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q262",
+        "cities": [
+            {
+                "name_en": "Algiers",
+                "name_fr": "Alger",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "American Samoa",
+        "name_fr": "Samoa américaines",
+        "name_native": "American Samoa",
+        "iso2": "AS",
+        "iso3": "ASM",
+        "flag": "flags/AS/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Andorra",
+        "name_fr": "Andorre",
+        "name_native": "Andorra",
+        "iso2": "AD",
+        "iso3": "AND",
+        "flag": "flags/AD/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q228",
+        "cities": [
+            {
+                "name_en": "Andorra la Vella",
+                "name_fr": "Andorre-la-Vieille",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Angola",
+        "name_fr": "Angola",
+        "name_native": "Angola",
+        "iso2": "AO",
+        "iso3": "AGO",
+        "flag": "flags/AO/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q916",
+        "cities": [
+            {
+                "name_en": "Luanda",
+                "name_fr": "Luanda",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Antigua and Barbuda",
+        "name_fr": "Antigua-et-Barbuda",
+        "name_native": "Antigua and Barbuda",
+        "iso2": "AG",
+        "iso3": "ATG",
+        "flag": "flags/AG/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q781",
+        "cities": [
+            {
+                "name_en": "Saint John's",
+                "name_fr": "Saint John's",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Argentina",
+        "name_fr": "Argentine",
+        "name_native": "Argentina",
+        "iso2": "AR",
+        "iso3": "ARG",
+        "flag": "flags/AR/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q414",
+        "cities": [
+            {
+                "name_en": "Buenos Aires",
+                "name_fr": "Buenos Aires",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Armenia",
+        "name_fr": "Arménie",
+        "name_native": "Հայաստան",
+        "iso2": "AM",
+        "iso3": "ARM",
+        "flag": "flags/AM/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q399",
+        "cities": [
+            {
+                "name_en": "Yerevan",
+                "name_fr": "Erevan",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Aruba",
+        "name_fr": "Aruba",
+        "name_native": "Aruba",
+        "iso2": "AW",
+        "iso3": "ABW",
+        "flag": "flags/AW/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Australia",
+        "name_fr": "Australie",
+        "name_native": "Australia",
+        "iso2": "AU",
+        "iso3": "AUS",
+        "flag": "flags/AU/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q408",
+        "cities": [
+            {
+                "name_en": "Canberra",
+                "name_fr": "Canberra",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Austria",
+        "name_fr": "Autriche",
+        "name_native": "Österreich",
+        "iso2": "AT",
+        "iso3": "AUT",
+        "flag": "flags/AT/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q40",
+        "cities": [
+            {
+                "name_en": "Vienna",
+                "name_fr": "Vienne",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Azerbaijan",
+        "name_fr": "Azerbaïdjan",
+        "name_native": "Azərbaycan",
+        "iso2": "AZ",
+        "iso3": "AZE",
+        "flag": "flags/AZ/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q227",
+        "cities": [
+            {
+                "name_en": "Baku",
+                "name_fr": "Bakou",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bahamas",
+        "name_fr": "Bahamas",
+        "name_native": "Bahamas",
+        "iso2": "BS",
+        "iso3": "BHS",
+        "flag": "flags/BS/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Bahrain",
+        "name_fr": "Bahreïn",
+        "name_native": "‏البحرين",
+        "iso2": "BH",
+        "iso3": "BHR",
+        "flag": "flags/BH/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q398",
+        "cities": [
+            {
+                "name_en": "Manama",
+                "name_fr": "Manama",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bangladesh",
+        "name_fr": "Bangladesh",
+        "name_native": "Bangladesh",
+        "iso2": "BD",
+        "iso3": "BGD",
+        "flag": "flags/BD/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q902",
+        "cities": [
+            {
+                "name_en": "Dhaka",
+                "name_fr": "Dacca",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Barbados",
+        "name_fr": "Barbade",
+        "name_native": "Barbados",
+        "iso2": "BB",
+        "iso3": "BRB",
+        "flag": "flags/BB/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q244",
+        "cities": [
+            {
+                "name_en": "Bridgetown",
+                "name_fr": "Bridgetown",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Belarus",
+        "name_fr": "Biélorussie",
+        "name_native": "Белару́сь",
+        "iso2": "BY",
+        "iso3": "BLR",
+        "flag": "flags/BY/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q184",
+        "cities": [
+            {
+                "name_en": "Minsk",
+                "name_fr": "Minsk",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Belgium",
+        "name_fr": "Belgique",
+        "name_native": "België",
+        "iso2": "BE",
+        "iso3": "BEL",
+        "flag": "flags/BE/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q31",
+        "cities": [
+            {
+                "name_en": "City of Brussels",
+                "name_fr": "Bruxelles",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Belize",
+        "name_fr": "Belize",
+        "name_native": "Belize",
+        "iso2": "BZ",
+        "iso3": "BLZ",
+        "flag": "flags/BZ/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Benin",
+        "name_fr": "Bénin",
+        "name_native": "Bénin",
+        "iso2": "BJ",
+        "iso3": "BEN",
+        "flag": "flags/BJ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q962",
+        "cities": [
+            {
+                "name_en": "Porto-Novo",
+                "name_fr": "Porto-Novo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bermuda",
+        "name_fr": "Bermudes",
+        "name_native": "Bermuda",
+        "iso2": "BM",
+        "iso3": "BMU",
+        "flag": "flags/BM/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Bhutan",
+        "name_fr": "Bhoutan",
+        "name_native": "ʼbrug-yul",
+        "iso2": "BT",
+        "iso3": "BTN",
+        "flag": "flags/BT/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q917",
+        "cities": [
+            {
+                "name_en": "Thimphu",
+                "name_fr": "Thimphou",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bolivia",
+        "name_fr": "Bolivie",
+        "name_native": "Bolivia",
+        "iso2": "BO",
+        "iso3": "BOL",
+        "flag": "flags/BO/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q750",
+        "cities": [
+            {
+                "name_en": "La Paz",
+                "name_fr": "La Paz",
+                "is_capital": true
+            },
+            {
+                "name_en": "Sucre",
+                "name_fr": "Sucre",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bosnia and Herzegovina",
+        "name_fr": "Bosnie-Herzégovine",
+        "name_native": "Bosna i Hercegovina",
+        "iso2": "BA",
+        "iso3": "BIH",
+        "flag": "flags/BA/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q225",
+        "cities": [
+            {
+                "name_en": "Sarajevo",
+                "name_fr": "Sarajevo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Botswana",
+        "name_fr": "Botswana",
+        "name_native": "Botswana",
+        "iso2": "BW",
+        "iso3": "BWA",
+        "flag": "flags/BW/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q963",
+        "cities": [
+            {
+                "name_en": "Gaborone",
+                "name_fr": "Gaborone",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Brazil",
+        "name_fr": "Brésil",
+        "name_native": "Brasil",
+        "iso2": "BR",
+        "iso3": "BRA",
+        "flag": "flags/BR/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q155",
+        "cities": [
+            {
+                "name_en": "Brasília",
+                "name_fr": "Brasilia",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Brunei Darussalam",
+        "name_fr": "Brunei",
+        "name_native": "Negara Brunei Darussalam",
+        "iso2": "BN",
+        "iso3": "BRN",
+        "flag": "flags/BN/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q921",
+        "cities": [
+            {
+                "name_en": "Bandar Seri Begawan",
+                "name_fr": "Bandar Seri Begawan",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Bulgaria",
+        "name_fr": "Bulgarie",
+        "name_native": "България",
+        "iso2": "BG",
+        "iso3": "BGR",
+        "flag": "flags/BG/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q219",
+        "cities": [
+            {
+                "name_en": "Sofia",
+                "name_fr": "Sofia",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Burkina Faso",
+        "name_fr": "Burkina Faso",
+        "name_native": "Burkina Faso",
+        "iso2": "BF",
+        "iso3": "BFA",
+        "flag": "flags/BF/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q965",
+        "cities": [
+            {
+                "name_en": "Ouagadougou",
+                "name_fr": "Ouagadougou",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Burundi",
+        "name_fr": "Burundi",
+        "name_native": "Burundi",
+        "iso2": "BI",
+        "iso3": "BDI",
+        "flag": "flags/BI/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q967",
+        "cities": [
+            {
+                "name_en": "Gitega",
+                "name_fr": "Gitega",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Cabo Verde",
+        "name_fr": "Cap Vert",
+        "name_native": "Cabo Verde",
+        "iso2": "CV",
+        "iso3": "CPV",
+        "flag": "flags/CV/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1011",
+        "cities": [
+            {
+                "name_en": "Praia",
+                "name_fr": "Praia",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Cambodia",
+        "name_fr": "Cambodge",
+        "name_native": "Kâmpŭchéa",
+        "iso2": "KH",
+        "iso3": "KHM",
+        "flag": "flags/KH/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q424",
+        "cities": [
+            {
+                "name_en": "Phnom Penh",
+                "name_fr": "Phnom Penh",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Cameroon",
+        "name_fr": "Cameroun",
+        "name_native": "Cameroon",
+        "iso2": "CM",
+        "iso3": "CMR",
+        "flag": "flags/CM/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1009",
+        "cities": [
+            {
+                "name_en": "Yaoundé",
+                "name_fr": "Yaoundé",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Canada",
+        "name_fr": "Canada",
+        "name_native": "Canada",
+        "iso2": "CA",
+        "iso3": "CAN",
+        "flag": "flags/CA/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q16",
+        "cities": [
+            {
+                "name_en": "Ottawa",
+                "name_fr": "Ottawa",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Cayman Islands",
+        "name_fr": "îles Caïmans",
+        "name_native": "Cayman Islands",
+        "iso2": "KY",
+        "iso3": "CYM",
+        "flag": "flags/KY/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q5785",
+        "cities": [
+            {
+                "name_en": "George Town",
+                "name_fr": "George Town",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Central African Republic",
+        "name_fr": "République centrafricaine",
+        "name_native": "Ködörösêse tî Bêafrîka",
+        "iso2": "CF",
+        "iso3": "CAF",
+        "flag": "flags/CF/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q929",
+        "cities": [
+            {
+                "name_en": "Bangui",
+                "name_fr": "Bangui",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Chad",
+        "name_fr": "Tchad",
+        "name_native": "Tchad",
+        "iso2": "TD",
+        "iso3": "TCD",
+        "flag": "flags/TD/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q657",
+        "cities": [
+            {
+                "name_en": "N'Djamena",
+                "name_fr": "N'Djaména",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Chile",
+        "name_fr": "Chili",
+        "name_native": "Chile",
+        "iso2": "CL",
+        "iso3": "CHL",
+        "flag": "flags/CL/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q298",
+        "cities": [
+            {
+                "name_en": "Santiago",
+                "name_fr": "Santiago",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "China",
+        "name_fr": "Chine",
+        "name_native": "中国",
+        "iso2": "CN",
+        "iso3": "CHN",
+        "flag": "flags/CN/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q148",
+        "cities": [
+            {
+                "name_en": "Beijing",
+                "name_fr": "Pékin",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Colombia",
+        "name_fr": "Colombie",
+        "name_native": "Colombia",
+        "iso2": "CO",
+        "iso3": "COL",
+        "flag": "flags/CO/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q739",
+        "cities": [
+            {
+                "name_en": "Bogotá",
+                "name_fr": "Bogota",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Comoros",
+        "name_fr": "Comores",
+        "name_native": "Komori",
+        "iso2": "KM",
+        "iso3": "COM",
+        "flag": "flags/KM/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q970",
+        "cities": [
+            {
+                "name_en": "Moroni",
+                "name_fr": "Moroni",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Congo",
+        "name_fr": "Congo",
+        "name_native": "République du Congo",
+        "iso2": "CG",
+        "iso3": "COG",
+        "flag": "flags/CG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q971",
+        "cities": [
+            {
+                "name_en": "Brazzaville",
+                "name_fr": "Brazzaville",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Congo (Democratic Republic of the)",
+        "name_fr": "Congo (Rép. dém.)",
+        "name_native": "République démocratique du Congo",
+        "iso2": "CD",
+        "iso3": "COD",
+        "flag": "flags/CD/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q974",
+        "cities": [
+            {
+                "name_en": "Kinshasa",
+                "name_fr": "Kinshasa",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Costa Rica",
+        "name_fr": "Costa Rica",
+        "name_native": "Costa Rica",
+        "iso2": "CR",
+        "iso3": "CRI",
+        "flag": "flags/CR/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q800",
+        "cities": [
+            {
+                "name_en": "San José",
+                "name_fr": "San José",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Croatia",
+        "name_fr": "Croatie",
+        "name_native": "Hrvatska",
+        "iso2": "HR",
+        "iso3": "HRV",
+        "flag": "flags/HR/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q224",
+        "cities": [
+            {
+                "name_en": "Zagreb",
+                "name_fr": "Zagreb",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Cuba",
+        "name_fr": "Cuba",
+        "name_native": "Cuba",
+        "iso2": "CU",
+        "iso3": "CUB",
+        "flag": "flags/CU/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q241",
+        "cities": [
+            {
+                "name_en": "Havana",
+                "name_fr": "La Havane",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Curaçao",
+        "name_fr": "Curaçao",
+        "name_native": "Curaçao",
+        "iso2": "CW",
+        "iso3": "CUW",
+        "flag": "flags/CW/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Cyprus",
+        "name_fr": "Chypre",
+        "name_native": "Κύπρος",
+        "iso2": "CY",
+        "iso3": "CYP",
+        "flag": "flags/CY/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q229",
+        "cities": [
+            {
+                "name_en": "Nicosia",
+                "name_fr": "Nicosie",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Czech Republic",
+        "name_fr": "République tchèque",
+        "name_native": "Česká republika",
+        "iso2": "CZ",
+        "iso3": "CZE",
+        "flag": "flags/CZ/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q213",
+        "cities": [
+            {
+                "name_en": "Prague",
+                "name_fr": "Prague",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Côte dIvoire",
+        "name_fr": "Côte dIvoire",
+        "name_native": "Côte dIvoire",
+        "iso2": "CI",
+        "iso3": "CIV",
+        "flag": "flags/CI/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1008",
+        "cities": [
+            {
+                "name_en": "Yamoussoukro",
+                "name_fr": "Yamoussoukro",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Denmark",
+        "name_fr": "Danemark",
+        "name_native": "Danmark",
+        "iso2": "DK",
+        "iso3": "DNK",
+        "flag": "flags/DK/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q756617",
+        "cities": [
+            {
+                "name_en": "Copenhagen",
+                "name_fr": "Copenhague",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Djibouti",
+        "name_fr": "Djibouti",
+        "name_native": "Djibouti",
+        "iso2": "DJ",
+        "iso3": "DJI",
+        "flag": "flags/DJ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q977",
+        "cities": [
+            {
+                "name_en": "Djibouti",
+                "name_fr": "Djibouti",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Dominica",
+        "name_fr": "Dominique",
+        "name_native": "Dominica",
+        "iso2": "DM",
+        "iso3": "DMA",
+        "flag": "flags/DM/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Dominican Republic",
+        "name_fr": "République dominicaine",
+        "name_native": "República Dominicana",
+        "iso2": "DO",
+        "iso3": "DOM",
+        "flag": "flags/DO/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q786",
+        "cities": [
+            {
+                "name_en": "Santo Domingo",
+                "name_fr": "Saint-Domingue",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Ecuador",
+        "name_fr": "Equateur",
+        "name_native": "Ecuador",
+        "iso2": "EC",
+        "iso3": "ECU",
+        "flag": "flags/EC/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q736",
+        "cities": [
+            {
+                "name_en": "Quito",
+                "name_fr": "Quito",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Egypt",
+        "name_fr": "Egypte",
+        "name_native": "مصر‎",
+        "iso2": "EG",
+        "iso3": "EGY",
+        "flag": "flags/EG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q79",
+        "cities": [
+            {
+                "name_en": "Cairo",
+                "name_fr": "Le Caire",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "El Salvador",
+        "name_fr": "Salvador",
+        "name_native": "El Salvador",
+        "iso2": "SV",
+        "iso3": "SLV",
+        "flag": "flags/SV/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q792",
+        "cities": [
+            {
+                "name_en": "San Salvador",
+                "name_fr": "San Salvador",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Equatorial Guinea",
+        "name_fr": "Guinée-Équatoriale",
+        "name_native": "Guinea Ecuatorial",
+        "iso2": "GQ",
+        "iso3": "GNQ",
+        "flag": "flags/GQ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q983",
+        "cities": [
+            {
+                "name_en": "Malabo",
+                "name_fr": "Malabo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Eritrea",
+        "name_fr": "Erythrée",
+        "name_native": "ኤርትራ",
+        "iso2": "ER",
+        "iso3": "ERI",
+        "flag": "flags/ER/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q986",
+        "cities": [
+            {
+                "name_en": "Asmara",
+                "name_fr": "Asmara",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Estonia",
+        "name_fr": "Estonie",
+        "name_native": "Eesti",
+        "iso2": "EE",
+        "iso3": "EST",
+        "flag": "flags/EE/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q191",
+        "cities": [
+            {
+                "name_en": "Tallinn",
+                "name_fr": "Tallinn",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Ethiopia",
+        "name_fr": "Ethiopie",
+        "name_native": "ኢትዮጵያ",
+        "iso2": "ET",
+        "iso3": "ETH",
+        "flag": "flags/ET/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q115",
+        "cities": [
+            {
+                "name_en": "Addis Ababa",
+                "name_fr": "Addis-Abeba",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Faroe Islands",
+        "name_fr": "Îles Féroé",
+        "name_native": "Føroyar",
+        "iso2": "FO",
+        "iso3": "FRO",
+        "flag": "flags/FO/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Fiji",
+        "name_fr": "Fidji",
+        "name_native": "Fiji",
+        "iso2": "FJ",
+        "iso3": "FJI",
+        "flag": "flags/FJ/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q712",
+        "cities": [
+            {
+                "name_en": "Suva",
+                "name_fr": "Suva",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Finland",
+        "name_fr": "Finlande",
+        "name_native": "Suomi",
+        "iso2": "FI",
+        "iso3": "FIN",
+        "flag": "flags/FI/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q33",
+        "cities": [
+            {
+                "name_en": "Helsinki",
+                "name_fr": "Helsinki",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "France",
+        "name_fr": "France",
+        "name_native": "France",
+        "iso2": "FR",
+        "iso3": "FRA",
+        "flag": "flags/FR/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q142",
+        "cities": [
+            {
+                "name_en": "Paris",
+                "name_fr": "Paris",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Gabon",
+        "name_fr": "Gabon",
+        "name_native": "Gabon",
+        "iso2": "GA",
+        "iso3": "GAB",
+        "flag": "flags/GA/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1000",
+        "cities": [
+            {
+                "name_en": "Libreville",
+                "name_fr": "Libreville",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Gambia",
+        "name_fr": "Gambie",
+        "name_native": "Gambia",
+        "iso2": "GM",
+        "iso3": "GMB",
+        "flag": "flags/GM/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1005",
+        "cities": [
+            {
+                "name_en": "Banjul",
+                "name_fr": "Banjul",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Georgia",
+        "name_fr": "Géorgie",
+        "name_native": "საქართველო",
+        "iso2": "GE",
+        "iso3": "GEO",
+        "flag": "flags/GE/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q230",
+        "cities": [
+            {
+                "name_en": "Tbilisi",
+                "name_fr": "Tbilissi",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Germany",
+        "name_fr": "Allemagne",
+        "name_native": "Deutschland",
+        "iso2": "DE",
+        "iso3": "DEU",
+        "flag": "flags/DE/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q183",
+        "cities": [
+            {
+                "name_en": "Berlin",
+                "name_fr": "Berlin",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Ghana",
+        "name_fr": "Ghana",
+        "name_native": "Ghana",
+        "iso2": "GH",
+        "iso3": "GHA",
+        "flag": "flags/GH/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q117",
+        "cities": [
+            {
+                "name_en": "Accra",
+                "name_fr": "Accra",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Gibraltar",
+        "name_fr": "Gibraltar",
+        "name_native": "Gibraltar",
+        "iso2": "GI",
+        "iso3": "GIB",
+        "flag": "flags/GI/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Greece",
+        "name_fr": "Grèce",
+        "name_native": "Ελλάδα",
+        "iso2": "GR",
+        "iso3": "GRC",
+        "flag": "flags/GR/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q41",
+        "cities": [
+            {
+                "name_en": "Athens",
+                "name_fr": "Athènes",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Greenland",
+        "name_fr": "Groenland",
+        "name_native": "Kalaallit Nunaat",
+        "iso2": "GL",
+        "iso3": "GRL",
+        "flag": "flags/GL/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Grenada",
+        "name_fr": "Grenade",
+        "name_native": "Grenada",
+        "iso2": "GD",
+        "iso3": "GRD",
+        "flag": "flags/GD/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Guam",
+        "name_fr": "Guam",
+        "name_native": "Guam",
+        "iso2": "GU",
+        "iso3": "GUM",
+        "flag": "flags/GU/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Guatemala",
+        "name_fr": "Guatemala",
+        "name_native": "Guatemala",
+        "iso2": "GT",
+        "iso3": "GTM",
+        "flag": "flags/GT/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q774",
+        "cities": [
+            {
+                "name_en": "Guatemala City",
+                "name_fr": "Guatemala",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Guinea",
+        "name_fr": "Guinée",
+        "name_native": "Guinée",
+        "iso2": "GN",
+        "iso3": "GIN",
+        "flag": "flags/GN/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1006",
+        "cities": [
+            {
+                "name_en": "Conakry",
+                "name_fr": "Conakry",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Guinea-Bissau",
+        "name_fr": "Guinée-Bissau",
+        "name_native": "Guiné-Bissau",
+        "iso2": "GW",
+        "iso3": "GNB",
+        "flag": "flags/GW/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1007",
+        "cities": [
+            {
+                "name_en": "Bissau",
+                "name_fr": "Bissau",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Guyana",
+        "name_fr": "Guyana",
+        "name_native": "Guyana",
+        "iso2": "GY",
+        "iso3": "GUY",
+        "flag": "flags/GY/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q734",
+        "cities": [
+            {
+                "name_en": "Georgetown",
+                "name_fr": "Georgetown",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Haiti",
+        "name_fr": "Haïti",
+        "name_native": "Haïti",
+        "iso2": "HT",
+        "iso3": "HTI",
+        "flag": "flags/HT/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q790",
+        "cities": [
+            {
+                "name_en": "Port-au-Prince",
+                "name_fr": "Port-au-Prince",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Honduras",
+        "name_fr": "Honduras",
+        "name_native": "Honduras",
+        "iso2": "HN",
+        "iso3": "HND",
+        "flag": "flags/HN/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q783",
+        "cities": [
+            {
+                "name_en": "Tegucigalpa",
+                "name_fr": "Tegucigalpa",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Hong Kong",
+        "name_fr": "Hong Kong (Chine)",
+        "name_native": "香港",
+        "iso2": "HK",
+        "iso3": "HKG",
+        "flag": "flags/HK/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Hungary",
+        "name_fr": "Hongrie",
+        "name_native": "Magyarország",
+        "iso2": "HU",
+        "iso3": "HUN",
+        "flag": "flags/HU/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q28",
+        "cities": [
+            {
+                "name_en": "Budapest",
+                "name_fr": "Budapest",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Iceland",
+        "name_fr": "Islande",
+        "name_native": "Ísland",
+        "iso2": "IS",
+        "iso3": "ISL",
+        "flag": "flags/IS/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q189",
+        "cities": [
+            {
+                "name_en": "Reykjavík",
+                "name_fr": "Reykjavik",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "India",
+        "name_fr": "Inde",
+        "name_native": "भारत",
+        "iso2": "IN",
+        "iso3": "IND",
+        "flag": "flags/IN/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q668",
+        "cities": [
+            {
+                "name_en": "New Delhi",
+                "name_fr": "New Delhi",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Indonesia",
+        "name_fr": "Indonésie",
+        "name_native": "Indonesia",
+        "iso2": "ID",
+        "iso3": "IDN",
+        "flag": "flags/ID/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q252",
+        "cities": [
+            {
+                "name_en": "Jakarta",
+                "name_fr": "Jakarta",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Iran (Islamic Republic of)",
+        "name_fr": "Iran",
+        "name_native": "ایران",
+        "iso2": "IR",
+        "iso3": "IRN",
+        "flag": "flags/IR/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q794",
+        "cities": [
+            {
+                "name_en": "Tehran",
+                "name_fr": "Téhéran",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Iraq",
+        "name_fr": "Irak",
+        "name_native": "العراق",
+        "iso2": "IQ",
+        "iso3": "IRQ",
+        "flag": "flags/IQ/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q796",
+        "cities": [
+            {
+                "name_en": "Baghdad",
+                "name_fr": "Bagdad",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Ireland",
+        "name_fr": "Irlande",
+        "name_native": "Éire",
+        "iso2": "IE",
+        "iso3": "IRL",
+        "flag": "flags/IE/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q27",
+        "cities": [
+            {
+                "name_en": "Dublin",
+                "name_fr": "Dublin",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Isle of Man",
+        "name_fr": "Île de Man",
+        "name_native": "Isle of Man",
+        "iso2": "IM",
+        "iso3": "IMN",
+        "flag": "flags/IM/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Israel",
+        "name_fr": "Israël",
+        "name_native": "יִשְׂרָאֵל",
+        "iso2": "IL",
+        "iso3": "ISR",
+        "flag": "flags/IL/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q801",
+        "cities": [
+            {
+                "name_en": "Jerusalem",
+                "name_fr": "Jérusalem",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Italy",
+        "name_fr": "Italie",
+        "name_native": "Italia",
+        "iso2": "IT",
+        "iso3": "ITA",
+        "flag": "flags/IT/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q38",
+        "cities": [
+            {
+                "name_en": "Rome",
+                "name_fr": "Rome",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Jamaica",
+        "name_fr": "Jamaïque",
+        "name_native": "Jamaica",
+        "iso2": "JM",
+        "iso3": "JAM",
+        "flag": "flags/JM/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q766",
+        "cities": [
+            {
+                "name_en": "Kingston",
+                "name_fr": "Kingston",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Japan",
+        "name_fr": "Japon",
+        "name_native": "日本",
+        "iso2": "JP",
+        "iso3": "JPN",
+        "flag": "flags/JP/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q17",
+        "cities": [
+            {
+                "name_en": "Tokyo",
+                "name_fr": "Tokyo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Jordan",
+        "name_fr": "Jordanie",
+        "name_native": "الأردن",
+        "iso2": "JO",
+        "iso3": "JOR",
+        "flag": "flags/JO/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q810",
+        "cities": [
+            {
+                "name_en": "Amman",
+                "name_fr": "Amman",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Kazakhstan",
+        "name_fr": "Kazakhstan",
+        "name_native": "Қазақстан",
+        "iso2": "KZ",
+        "iso3": "KAZ",
+        "flag": "flags/KZ/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q232",
+        "cities": [
+            {
+                "name_en": "Astana",
+                "name_fr": "Astana",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Kenya",
+        "name_fr": "Kenya",
+        "name_native": "Kenya",
+        "iso2": "KE",
+        "iso3": "KEN",
+        "flag": "flags/KE/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q114",
+        "cities": [
+            {
+                "name_en": "Nairobi",
+                "name_fr": "Nairobi",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Kiribati",
+        "name_fr": "Kiribati",
+        "name_native": "Kiribati",
+        "iso2": "KI",
+        "iso3": "KIR",
+        "flag": "flags/KI/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Korea (Democratic Peoples Republic of)",
+        "name_fr": "Corée du Nord",
+        "name_native": "북한",
+        "iso2": "KP",
+        "iso3": "PRK",
+        "flag": "flags/KP/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Korea (Republic of)",
+        "name_fr": "Corée du Sud",
+        "name_native": "대한민국",
+        "iso2": "KR",
+        "iso3": "KOR",
+        "flag": "flags/KR/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q884",
+        "cities": [
+            {
+                "name_en": "Seoul",
+                "name_fr": "Séoul",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Kuwait",
+        "name_fr": "Koweït",
+        "name_native": "الكويت",
+        "iso2": "KW",
+        "iso3": "KWT",
+        "flag": "flags/KW/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q817",
+        "cities": [
+            {
+                "name_en": "Kuwait City",
+                "name_fr": "Koweït",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Kyrgyzstan",
+        "name_fr": "Kirghizistan",
+        "name_native": "Кыргызстан",
+        "iso2": "KG",
+        "iso3": "KGZ",
+        "flag": "flags/KG/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q813",
+        "cities": [
+            {
+                "name_en": "Bishkek",
+                "name_fr": "Bichkek",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Lao Peoples Democratic Republic",
+        "name_fr": "Laos",
+        "name_native": "ສປປລາວ",
+        "iso2": "LA",
+        "iso3": "LAO",
+        "flag": "flags/LA/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q819",
+        "cities": [
+            {
+                "name_en": "Vientiane",
+                "name_fr": "Vientiane",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Latvia",
+        "name_fr": "Lettonie",
+        "name_native": "Latvija",
+        "iso2": "LV",
+        "iso3": "LVA",
+        "flag": "flags/LV/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q211",
+        "cities": [
+            {
+                "name_en": "Riga",
+                "name_fr": "Riga",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Lebanon",
+        "name_fr": "Liban",
+        "name_native": "لبنان",
+        "iso2": "LB",
+        "iso3": "LBN",
+        "flag": "flags/LB/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q822",
+        "cities": [
+            {
+                "name_en": "Beirut",
+                "name_fr": "Beyrouth",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Lesotho",
+        "name_fr": "Lesotho",
+        "name_native": "Lesotho",
+        "iso2": "LS",
+        "iso3": "LSO",
+        "flag": "flags/LS/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1013",
+        "cities": [
+            {
+                "name_en": "Maseru",
+                "name_fr": "Maseru",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Liberia",
+        "name_fr": "Liberia",
+        "name_native": "Liberia",
+        "iso2": "LR",
+        "iso3": "LBR",
+        "flag": "flags/LR/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1014",
+        "cities": [
+            {
+                "name_en": "Monrovia",
+                "name_fr": "Monrovia",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Libya",
+        "name_fr": "Libye",
+        "name_native": "‏ليبيا",
+        "iso2": "LY",
+        "iso3": "LBY",
+        "flag": "flags/LY/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1016",
+        "cities": [
+            {
+                "name_en": "Tripoli",
+                "name_fr": "Tripoli",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Liechtenstein",
+        "name_fr": "Liechtenstein",
+        "name_native": "Liechtenstein",
+        "iso2": "LI",
+        "iso3": "LIE",
+        "flag": "flags/LI/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Lithuania",
+        "name_fr": "Lituanie",
+        "name_native": "Lietuva",
+        "iso2": "LT",
+        "iso3": "LTU",
+        "flag": "flags/LT/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q37",
+        "cities": [
+            {
+                "name_en": "Vilnius",
+                "name_fr": "Vilnius",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Luxembourg",
+        "name_fr": "Luxembourg",
+        "name_native": "Luxembourg",
+        "iso2": "LU",
+        "iso3": "LUX",
+        "flag": "flags/LU/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q32",
+        "cities": [
+            {
+                "name_en": "Luxembourg",
+                "name_fr": "Luxembourg",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Macao",
+        "name_fr": "Macao (Chine)",
+        "name_native": "澳門",
+        "iso2": "MO",
+        "iso3": "MAC",
+        "flag": "flags/MO/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Macedonia (the former Yugoslav Republic of)",
+        "name_fr": "Macédoine du Nord",
+        "name_native": "Македонија",
+        "iso2": "MK",
+        "iso3": "MKD",
+        "flag": "flags/MK/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q221",
+        "cities": [
+            {
+                "name_en": "Skopje",
+                "name_fr": "Skopje",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Madagascar",
+        "name_fr": "Madagascar",
+        "name_native": "Madagasikara",
+        "iso2": "MG",
+        "iso3": "MDG",
+        "flag": "flags/MG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1019",
+        "cities": [
+            {
+                "name_en": "Antananarivo",
+                "name_fr": "Antananarivo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Malawi",
+        "name_fr": "Malawi",
+        "name_native": "Malawi",
+        "iso2": "MW",
+        "iso3": "MWI",
+        "flag": "flags/MW/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1020",
+        "cities": [
+            {
+                "name_en": "Lilongwe",
+                "name_fr": "Lilongwe",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Malaysia",
+        "name_fr": "Malaisie",
+        "name_native": "Malaysia",
+        "iso2": "MY",
+        "iso3": "MYS",
+        "flag": "flags/MY/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q833",
+        "cities": [
+            {
+                "name_en": "Kuala Lumpur",
+                "name_fr": "Kuala Lumpur",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Maldives",
+        "name_fr": "Maldives",
+        "name_native": "Maldives",
+        "iso2": "MV",
+        "iso3": "MDV",
+        "flag": "flags/MV/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Mali",
+        "name_fr": "Mali",
+        "name_native": "Mali",
+        "iso2": "ML",
+        "iso3": "MLI",
+        "flag": "flags/ML/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q912",
+        "cities": [
+            {
+                "name_en": "Bamako",
+                "name_fr": "Bamako",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Malta",
+        "name_fr": "Malte",
+        "name_native": "Malta",
+        "iso2": "MT",
+        "iso3": "MLT",
+        "flag": "flags/MT/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q233",
+        "cities": [
+            {
+                "name_en": "Valletta",
+                "name_fr": "La Valette",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Marshall Islands",
+        "name_fr": "Îles Marshall",
+        "name_native": "M̧ajeļ",
+        "iso2": "MH",
+        "iso3": "MHL",
+        "flag": "flags/MH/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Mauritania",
+        "name_fr": "Mauritanie",
+        "name_native": "موريتانيا",
+        "iso2": "MR",
+        "iso3": "MRT",
+        "flag": "flags/MR/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1025",
+        "cities": [
+            {
+                "name_en": "Nouakchott",
+                "name_fr": "Nouakchott",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Mauritius",
+        "name_fr": "Ile Maurice",
+        "name_native": "Maurice",
+        "iso2": "MU",
+        "iso3": "MUS",
+        "flag": "flags/MU/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1027",
+        "cities": [
+            {
+                "name_en": "Port Louis",
+                "name_fr": "Port-Louis",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Mexico",
+        "name_fr": "Mexique",
+        "name_native": "México",
+        "iso2": "MX",
+        "iso3": "MEX",
+        "flag": "flags/MX/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q96",
+        "cities": [
+            {
+                "name_en": "Mexico City",
+                "name_fr": "Mexico",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Micronesia (Federated States of)",
+        "name_fr": "Micronésie",
+        "name_native": "Micronesia",
+        "iso2": "FM",
+        "iso3": "FSM",
+        "flag": "flags/FM/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Moldova (Republic of)",
+        "name_fr": "Moldavie",
+        "name_native": "Moldova",
+        "iso2": "MD",
+        "iso3": "MDA",
+        "flag": "flags/MD/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q217",
+        "cities": [
+            {
+                "name_en": "Chișinău",
+                "name_fr": "Chișinău",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Monaco",
+        "name_fr": "Monaco",
+        "name_native": "Monaco",
+        "iso2": "MC",
+        "iso3": "MCO",
+        "flag": "flags/MC/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q235",
+        "cities": [
+            {
+                "name_en": "Commune of Monaco",
+                "name_fr": "commune de Monaco",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Mongolia",
+        "name_fr": "Mongolie",
+        "name_native": "Монгол улс",
+        "iso2": "MN",
+        "iso3": "MNG",
+        "flag": "flags/MN/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q711",
+        "cities": [
+            {
+                "name_en": "Ulaanbaatar",
+                "name_fr": "Oulan-Bator",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Montenegro",
+        "name_fr": "Monténégro",
+        "name_native": "Црна Гора",
+        "iso2": "ME",
+        "iso3": "MNE",
+        "flag": "flags/ME/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q236",
+        "cities": [
+            {
+                "name_en": "Podgorica",
+                "name_fr": "Podgorica",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Morocco",
+        "name_fr": "Maroc",
+        "name_native": "المغرب",
+        "iso2": "MA",
+        "iso3": "MAR",
+        "flag": "flags/MA/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1028",
+        "cities": [
+            {
+                "name_en": "Rabat",
+                "name_fr": "Rabat",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Mozambique",
+        "name_fr": "Mozambique",
+        "name_native": "Moçambique",
+        "iso2": "MZ",
+        "iso3": "MOZ",
+        "flag": "flags/MZ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1029",
+        "cities": [
+            {
+                "name_en": "Maputo",
+                "name_fr": "Maputo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Myanmar",
+        "name_fr": "Birmanie",
+        "name_native": "Myanma",
+        "iso2": "MM",
+        "iso3": "MMR",
+        "flag": "flags/MM/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q836",
+        "cities": [
+            {
+                "name_en": "Naypyidaw",
+                "name_fr": "Naypyidaw",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Namibia",
+        "name_fr": "Namibie",
+        "name_native": "Namibia",
+        "iso2": "NA",
+        "iso3": "NAM",
+        "flag": "flags/NA/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1030",
+        "cities": [
+            {
+                "name_en": "Windhoek",
+                "name_fr": "Windhoek",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Nauru",
+        "name_fr": "Nauru",
+        "name_native": "Nauru",
+        "iso2": "NR",
+        "iso3": "NRU",
+        "flag": "flags/NR/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Nepal",
+        "name_fr": "Népal",
+        "name_native": "नेपाल",
+        "iso2": "NP",
+        "iso3": "NPL",
+        "flag": "flags/NP/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q837",
+        "cities": [
+            {
+                "name_en": "Kathmandu",
+                "name_fr": "Katmandou",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Netherlands",
+        "name_fr": "Pays-Bas",
+        "name_native": "Nederland",
+        "iso2": "NL",
+        "iso3": "NLD",
+        "flag": "flags/NL/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q29999",
+        "cities": [
+            {
+                "name_en": "Amsterdam",
+                "name_fr": "Amsterdam",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "New Zealand",
+        "name_fr": "Nouvelle-Zélande",
+        "name_native": "New Zealand",
+        "iso2": "NZ",
+        "iso3": "NZL",
+        "flag": "flags/NZ/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q664",
+        "cities": [
+            {
+                "name_en": "Wellington",
+                "name_fr": "Wellington",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Nicaragua",
+        "name_fr": "Nicaragua",
+        "name_native": "Nicaragua",
+        "iso2": "NI",
+        "iso3": "NIC",
+        "flag": "flags/NI/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q811",
+        "cities": [
+            {
+                "name_en": "Managua",
+                "name_fr": "Managua",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Niger",
+        "name_fr": "Niger",
+        "name_native": "Niger",
+        "iso2": "NE",
+        "iso3": "NER",
+        "flag": "flags/NE/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1032",
+        "cities": [
+            {
+                "name_en": "Niamey",
+                "name_fr": "Niamey",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Nigeria",
+        "name_fr": "Nigéria",
+        "name_native": "Nigeria",
+        "iso2": "NG",
+        "iso3": "NGA",
+        "flag": "flags/NG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1033",
+        "cities": [
+            {
+                "name_en": "Abuja",
+                "name_fr": "Abuja",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Northern Mariana Islands",
+        "name_fr": "Îles Mariannes du Nord",
+        "name_native": "Northern Mariana Islands",
+        "iso2": "MP",
+        "iso3": "MNP",
+        "flag": "flags/MP/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Norway",
+        "name_fr": "Norvège",
+        "name_native": "Norge",
+        "iso2": "NO",
+        "iso3": "NOR",
+        "flag": "flags/NO/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q20",
+        "cities": [
+            {
+                "name_en": "Oslo",
+                "name_fr": "Oslo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Oman",
+        "name_fr": "Oman",
+        "name_native": "عمان",
+        "iso2": "OM",
+        "iso3": "OMN",
+        "flag": "flags/OM/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q842",
+        "cities": [
+            {
+                "name_en": "Muscat",
+                "name_fr": "Mascate",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Pakistan",
+        "name_fr": "Pakistan",
+        "name_native": "Pakistan",
+        "iso2": "PK",
+        "iso3": "PAK",
+        "flag": "flags/PK/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q843",
+        "cities": [
+            {
+                "name_en": "Islamabad",
+                "name_fr": "Islamabad",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Palau",
+        "name_fr": "Palaos",
+        "name_native": "Palau",
+        "iso2": "PW",
+        "iso3": "PLW",
+        "flag": "flags/PW/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q695",
+        "cities": [
+            {
+                "name_en": "Ngerulmud",
+                "name_fr": "Ngerulmud",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Palestine,State of",
+        "name_fr": "Territoires palestiniens",
+        "name_native": "فلسطين",
+        "iso2": "PS",
+        "iso3": "PSE",
+        "flag": "flags/PS/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Panama",
+        "name_fr": "Panama",
+        "name_native": "Panamá",
+        "iso2": "PA",
+        "iso3": "PAN",
+        "flag": "flags/PA/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q804",
+        "cities": [
+            {
+                "name_en": "Panama City",
+                "name_fr": "Panama",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Papua New Guinea",
+        "name_fr": "Papouasie-Nouvelle-Guinée",
+        "name_native": "Papua Niugini",
+        "iso2": "PG",
+        "iso3": "PNG",
+        "flag": "flags/PG/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q691",
+        "cities": [
+            {
+                "name_en": "Port Moresby",
+                "name_fr": "Port Moresby",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Paraguay",
+        "name_fr": "Paraguay",
+        "name_native": "Paraguay",
+        "iso2": "PY",
+        "iso3": "PRY",
+        "flag": "flags/PY/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q733",
+        "cities": [
+            {
+                "name_en": "Asunción",
+                "name_fr": "Asuncion",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Peru",
+        "name_fr": "Pérou",
+        "name_native": "Perú",
+        "iso2": "PE",
+        "iso3": "PER",
+        "flag": "flags/PE/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q419",
+        "cities": [
+            {
+                "name_en": "Lima",
+                "name_fr": "Lima",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Philippines",
+        "name_fr": "Philippines",
+        "name_native": "Pilipinas",
+        "iso2": "PH",
+        "iso3": "PHL",
+        "flag": "flags/PH/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q928",
+        "cities": [
+            {
+                "name_en": "Manila",
+                "name_fr": "Manille",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Poland",
+        "name_fr": "Pologne",
+        "name_native": "Polska",
+        "iso2": "PL",
+        "iso3": "POL",
+        "flag": "flags/PL/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q36",
+        "cities": [
+            {
+                "name_en": "Warsaw",
+                "name_fr": "Varsovie",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Portugal",
+        "name_fr": "Portugal",
+        "name_native": "Portugal",
+        "iso2": "PT",
+        "iso3": "PRT",
+        "flag": "flags/PT/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q45",
+        "cities": [
+            {
+                "name_en": "Lisbon",
+                "name_fr": "Lisbonne",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Puerto Rico",
+        "name_fr": "Porto Rico",
+        "name_native": "Puerto Rico",
+        "iso2": "PR",
+        "iso3": "PRI",
+        "flag": "flags/PR/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Qatar",
+        "name_fr": "Qatar",
+        "name_native": "قطر",
+        "iso2": "QA",
+        "iso3": "QAT",
+        "flag": "flags/QA/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q846",
+        "cities": [
+            {
+                "name_en": "Doha",
+                "name_fr": "Doha",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Republic of Kosovo",
+        "name_fr": "Kosovo",
+        "name_native": "Republika e Kosovës",
+        "iso2": "XK",
+        "iso3": "KOS",
+        "flag": "flags/XK/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q1246",
+        "cities": [
+            {
+                "name_en": "Prishtina",
+                "name_fr": "Pristina",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Romania",
+        "name_fr": "Roumanie",
+        "name_native": "România",
+        "iso2": "RO",
+        "iso3": "ROU",
+        "flag": "flags/RO/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q218",
+        "cities": [
+            {
+                "name_en": "Bucharest",
+                "name_fr": "Bucarest",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Russian Federation",
+        "name_fr": "Russie",
+        "name_native": "Россия",
+        "iso2": "RU",
+        "iso3": "RUS",
+        "flag": "flags/RU/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q159",
+        "cities": [
+            {
+                "name_en": "Moscow",
+                "name_fr": "Moscou",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Rwanda",
+        "name_fr": "Rwanda",
+        "name_native": "Rwanda",
+        "iso2": "RW",
+        "iso3": "RWA",
+        "flag": "flags/RW/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1037",
+        "cities": [
+            {
+                "name_en": "Kigali",
+                "name_fr": "Kigali",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Saint Kitts and Nevis",
+        "name_fr": "Saint-Christophe-et-Niévès",
+        "name_native": "Saint Kitts and Nevis",
+        "iso2": "KN",
+        "iso3": "KNA",
+        "flag": "flags/KN/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Saint Lucia",
+        "name_fr": "Sainte-Lucie",
+        "name_native": "Saint Lucia",
+        "iso2": "LC",
+        "iso3": "LCA",
+        "flag": "flags/LC/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q760",
+        "cities": [
+            {
+                "name_en": "Castries",
+                "name_fr": "Castries",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Saint Martin (French part)",
+        "name_fr": "Saint-Martin (partie française)",
+        "name_native": "Saint-Martin",
+        "iso2": "MF",
+        "iso3": "MAF",
+        "flag": "flags/MF/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Saint Vincent and the Grenadines",
+        "name_fr": "Saint-Vincent-et-les-Grenadines",
+        "name_native": "Saint Vincent and the Grenadines",
+        "iso2": "VC",
+        "iso3": "VCT",
+        "flag": "flags/VC/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Samoa",
+        "name_fr": "Samoa",
+        "name_native": "Samoa",
+        "iso2": "WS",
+        "iso3": "WSM",
+        "flag": "flags/WS/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q683",
+        "cities": [
+            {
+                "name_en": "Apia",
+                "name_fr": "Apia",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "San Marino",
+        "name_fr": "Saint-Marin",
+        "name_native": "San Marino",
+        "iso2": "SM",
+        "iso3": "SMR",
+        "flag": "flags/SM/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Saudi Arabia",
+        "name_fr": "Arabie Saoudite",
+        "name_native": "العربية السعودية",
+        "iso2": "SA",
+        "iso3": "SAU",
+        "flag": "flags/SA/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q851",
+        "cities": [
+            {
+                "name_en": "Riyadh",
+                "name_fr": "Riyad",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Senegal",
+        "name_fr": "Sénégal",
+        "name_native": "Sénégal",
+        "iso2": "SN",
+        "iso3": "SEN",
+        "flag": "flags/SN/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1041",
+        "cities": [
+            {
+                "name_en": "Dakar",
+                "name_fr": "Dakar",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Serbia",
+        "name_fr": "Serbie",
+        "name_native": "Србија",
+        "iso2": "RS",
+        "iso3": "SRB",
+        "flag": "flags/RS/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q403",
+        "cities": [
+            {
+                "name_en": "Belgrade",
+                "name_fr": "Belgrade",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Seychelles",
+        "name_fr": "Seychelles",
+        "name_native": "Seychelles",
+        "iso2": "SC",
+        "iso3": "SYC",
+        "flag": "flags/SC/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1042",
+        "cities": [
+            {
+                "name_en": "Victoria",
+                "name_fr": "Victoria",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Sierra Leone",
+        "name_fr": "Sierra Leone",
+        "name_native": "Sierra Leone",
+        "iso2": "SL",
+        "iso3": "SLE",
+        "flag": "flags/SL/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1044",
+        "cities": [
+            {
+                "name_en": "Freetown",
+                "name_fr": "Freetown",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Singapore",
+        "name_fr": "Singapour",
+        "name_native": "Singapore",
+        "iso2": "SG",
+        "iso3": "SGP",
+        "flag": "flags/SG/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q334",
+        "cities": [
+            {
+                "name_en": "Singapore",
+                "name_fr": "Singapour",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Sint Maarten (Dutch part)",
+        "name_fr": "Saint-Martin (Royaume des Pays-Bas)",
+        "name_native": "Sint Maarten",
+        "iso2": "SX",
+        "iso3": "SXM",
+        "flag": "flags/SX/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q26273",
+        "cities": [
+            {
+                "name_en": "Philipsburg",
+                "name_fr": "Philipsburg",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Slovakia",
+        "name_fr": "Slovaquie",
+        "name_native": "Slovensko",
+        "iso2": "SK",
+        "iso3": "SVK",
+        "flag": "flags/SK/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q214",
+        "cities": [
+            {
+                "name_en": "Bratislava",
+                "name_fr": "Bratislava",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Slovenia",
+        "name_fr": "Slovénie",
+        "name_native": "Slovenija",
+        "iso2": "SI",
+        "iso3": "SVN",
+        "flag": "flags/SI/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q215",
+        "cities": [
+            {
+                "name_en": "Ljubljana",
+                "name_fr": "Ljubljana",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Solomon Islands",
+        "name_fr": "Îles Salomon",
+        "name_native": "Solomon Islands",
+        "iso2": "SB",
+        "iso3": "SLB",
+        "flag": "flags/SB/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q685",
+        "cities": [
+            {
+                "name_en": "Honiara",
+                "name_fr": "Honiara",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Somalia",
+        "name_fr": "Somalie",
+        "name_native": "Soomaaliya",
+        "iso2": "SO",
+        "iso3": "SOM",
+        "flag": "flags/SO/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1045",
+        "cities": [
+            {
+                "name_en": "Mogadishu",
+                "name_fr": "Mogadiscio",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "South Africa",
+        "name_fr": "Afrique du Sud",
+        "name_native": "South Africa",
+        "iso2": "ZA",
+        "iso3": "ZAF",
+        "flag": "flags/ZA/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q258",
+        "cities": [
+            {
+                "name_en": "Bloemfontein",
+                "name_fr": "Bloemfontein",
+                "is_capital": true
+            },
+            {
+                "name_en": "Cape Town",
+                "name_fr": "Le Cap",
+                "is_capital": true
+            },
+            {
+                "name_en": "Pretoria",
+                "name_fr": "Pretoria",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "South Sudan",
+        "name_fr": "Soudan du Sud",
+        "name_native": "South Sudan",
+        "iso2": "SS",
+        "iso3": "SSD",
+        "flag": "flags/SS/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q958",
+        "cities": [
+            {
+                "name_en": "Juba",
+                "name_fr": "Djouba",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Spain",
+        "name_fr": "Espagne",
+        "name_native": "España",
+        "iso2": "ES",
+        "iso3": "ESP",
+        "flag": "flags/ES/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q29",
+        "cities": [
+            {
+                "name_en": "Madrid",
+                "name_fr": "Madrid",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Sri Lanka",
+        "name_fr": "Sri Lanka",
+        "name_native": "śrī laṃkāva",
+        "iso2": "LK",
+        "iso3": "LKA",
+        "flag": "flags/LK/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q854",
+        "cities": [
+            {
+                "name_en": "Colombo",
+                "name_fr": "Colombo",
+                "is_capital": true
+            },
+            {
+                "name_en": "Sri Jayawardenepura Kotte",
+                "name_fr": "Sri Jayawardenapura",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Sudan",
+        "name_fr": "Soudan",
+        "name_native": "السودان",
+        "iso2": "SD",
+        "iso3": "SDN",
+        "flag": "flags/SD/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1049",
+        "cities": [
+            {
+                "name_en": "Khartoum",
+                "name_fr": "Khartoum",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Suriname",
+        "name_fr": "Suriname",
+        "name_native": "Suriname",
+        "iso2": "SR",
+        "iso3": "SUR",
+        "flag": "flags/SR/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q730",
+        "cities": [
+            {
+                "name_en": "Paramaribo",
+                "name_fr": "Paramaribo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Swaziland",
+        "name_fr": "Eswatini",
+        "name_native": "Swaziland",
+        "iso2": "SZ",
+        "iso3": "SWZ",
+        "flag": "flags/SZ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Sweden",
+        "name_fr": "Suède",
+        "name_native": "Sverige",
+        "iso2": "SE",
+        "iso3": "SWE",
+        "flag": "flags/SE/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q34",
+        "cities": [
+            {
+                "name_en": "Stockholm",
+                "name_fr": "Stockholm",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Switzerland",
+        "name_fr": "Suisse",
+        "name_native": "Schweiz",
+        "iso2": "CH",
+        "iso3": "CHE",
+        "flag": "flags/CH/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q39",
+        "cities": [
+            {
+                "name_en": "Bern",
+                "name_fr": "Berne",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Syria",
+        "name_fr": "Syrie",
+        "name_native": "سوريا",
+        "iso2": "SY",
+        "iso3": "SYR",
+        "flag": "flags/SY/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q858",
+        "cities": [
+            {
+                "name_en": "Damascus",
+                "name_fr": "Damas",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "São Tomé and Príncipe",
+        "name_fr": "Sao Tomé-et-Principe",
+        "name_native": "São Tomé e Príncipe",
+        "iso2": "ST",
+        "iso3": "STP",
+        "flag": "flags/ST/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1039",
+        "cities": [
+            {
+                "name_en": "São Tomé",
+                "name_fr": "São Tomé",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Taiwan",
+        "name_fr": "Taïwan",
+        "name_native": "臺灣",
+        "iso2": "TW",
+        "iso3": "TWN",
+        "flag": "flags/TW/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q865",
+        "cities": [
+            {
+                "name_en": "Taipei",
+                "name_fr": "Taipei",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Tajikistan",
+        "name_fr": "Tadjikistan",
+        "name_native": "Тоҷикистон",
+        "iso2": "TJ",
+        "iso3": "TJK",
+        "flag": "flags/TJ/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q863",
+        "cities": [
+            {
+                "name_en": "Dushanbe",
+                "name_fr": "Douchanbé",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Tanzania,United Republic of",
+        "name_fr": "Tanzanie",
+        "name_native": "Tanzania",
+        "iso2": "TZ",
+        "iso3": "TZA",
+        "flag": "flags/TZ/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q924",
+        "cities": [
+            {
+                "name_en": "Dodoma",
+                "name_fr": "Dodoma",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Thailand",
+        "name_fr": "Thaïlande",
+        "name_native": "ประเทศไทย",
+        "iso2": "TH",
+        "iso3": "THA",
+        "flag": "flags/TH/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q869",
+        "cities": [
+            {
+                "name_en": "Bangkok",
+                "name_fr": "Bangkok",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Timor-Leste",
+        "name_fr": "Timor oriental",
+        "name_native": "Timor-Leste",
+        "iso2": "TL",
+        "iso3": "TLS",
+        "flag": "flags/TL/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q574",
+        "cities": [
+            {
+                "name_en": "Dili",
+                "name_fr": "Dili",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Togo",
+        "name_fr": "Togo",
+        "name_native": "Togo",
+        "iso2": "TG",
+        "iso3": "TGO",
+        "flag": "flags/TG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q945",
+        "cities": [
+            {
+                "name_en": "Lomé",
+                "name_fr": "Lomé",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Tonga",
+        "name_fr": "Tonga",
+        "name_native": "Tonga",
+        "iso2": "TO",
+        "iso3": "TON",
+        "flag": "flags/TO/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q678",
+        "cities": [
+            {
+                "name_en": "Nukuʻalofa",
+                "name_fr": "Nukuʻalofa",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Trinidad and Tobago",
+        "name_fr": "Trinité et Tobago",
+        "name_native": "Trinidad and Tobago",
+        "iso2": "TT",
+        "iso3": "TTO",
+        "flag": "flags/TT/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q754",
+        "cities": [
+            {
+                "name_en": "Port of Spain",
+                "name_fr": "Port-d'Espagne",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Tunisia",
+        "name_fr": "Tunisie",
+        "name_native": "تونس",
+        "iso2": "TN",
+        "iso3": "TUN",
+        "flag": "flags/TN/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q948",
+        "cities": [
+            {
+                "name_en": "Tunis",
+                "name_fr": "Tunis",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Turkey",
+        "name_fr": "Turquie",
+        "name_native": "Türkiye",
+        "iso2": "TR",
+        "iso3": "TUR",
+        "flag": "flags/TR/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q43",
+        "cities": [
+            {
+                "name_en": "Ankara",
+                "name_fr": "Ankara",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Turkmenistan",
+        "name_fr": "Turkménistan",
+        "name_native": "Türkmenistan",
+        "iso2": "TM",
+        "iso3": "TKM",
+        "flag": "flags/TM/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q874",
+        "cities": [
+            {
+                "name_en": "Ashgabat",
+                "name_fr": "Achgabat",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Turks and Caicos Islands",
+        "name_fr": "Îles Turques-et-Caïques",
+        "name_native": "Turks and Caicos Islands",
+        "iso2": "TC",
+        "iso3": "TCA",
+        "flag": "flags/TC/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Tuvalu",
+        "name_fr": "Tuvalu",
+        "name_native": "Tuvalu",
+        "iso2": "TV",
+        "iso3": "TUV",
+        "flag": "flags/TV/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Uganda",
+        "name_fr": "Uganda",
+        "name_native": "Uganda",
+        "iso2": "UG",
+        "iso3": "UGA",
+        "flag": "flags/UG/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q1036",
+        "cities": [
+            {
+                "name_en": "Kampala",
+                "name_fr": "Kampala",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Ukraine",
+        "name_fr": "Ukraine",
+        "name_native": "Україна",
+        "iso2": "UA",
+        "iso3": "UKR",
+        "flag": "flags/UA/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q212",
+        "cities": [
+            {
+                "name_en": "Kyiv",
+                "name_fr": "Kiev",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "United Arab Emirates",
+        "name_fr": "Emirats arabes unis",
+        "name_native": "دولة الإمارات العربية المتحدة",
+        "iso2": "AE",
+        "iso3": "ARE",
+        "flag": "flags/AE/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q878",
+        "cities": [
+            {
+                "name_en": "Abu Dhabi",
+                "name_fr": "Abou Dabi",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "United Kingdom of Great Britain and Northern Ireland",
+        "name_fr": "Royaume-Uni",
+        "name_native": "United Kingdom",
+        "iso2": "GB",
+        "iso3": "GBR",
+        "flag": "flags/GB/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q145",
+        "cities": [
+            {
+                "name_en": "London",
+                "name_fr": "Londres",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "United States of America",
+        "name_fr": "Etats-Unis",
+        "name_native": "United States",
+        "iso2": "US",
+        "iso3": "USA",
+        "flag": "flags/US/flag.svg",
+        "continent": "North America",
+        "wikidata_id": "Q30",
+        "cities": [
+            {
+                "name_en": "Washington, D.C.",
+                "name_fr": "Washington",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Uruguay",
+        "name_fr": "Uruguay",
+        "name_native": "Uruguay",
+        "iso2": "UY",
+        "iso3": "URY",
+        "flag": "flags/UY/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q77",
+        "cities": [
+            {
+                "name_en": "Montevideo",
+                "name_fr": "Montevideo",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Uzbekistan",
+        "name_fr": "Ouzbékistan",
+        "name_native": "O‘zbekiston",
+        "iso2": "UZ",
+        "iso3": "UZB",
+        "flag": "flags/UZ/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q265",
+        "cities": [
+            {
+                "name_en": "Tashkent",
+                "name_fr": "Tachkent",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Vanuatu",
+        "name_fr": "Vanuatu",
+        "name_native": "Vanuatu",
+        "iso2": "VU",
+        "iso3": "VUT",
+        "flag": "flags/VU/flag.svg",
+        "continent": "Oceania",
+        "wikidata_id": "Q686",
+        "cities": [
+            {
+                "name_en": "Port Vila",
+                "name_fr": "Port-Vila",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Vatican City",
+        "name_fr": "Vatican",
+        "name_native": "Vaticano",
+        "iso2": "VA",
+        "iso3": "VAT",
+        "flag": "flags/VA/flag.svg",
+        "continent": "Europe",
+        "wikidata_id": "Q237",
+        "cities": []
+    },
+    {
+        "name_en": "Venezuela",
+        "name_fr": "Venezuela",
+        "name_native": "Venezuela",
+        "iso2": "VE",
+        "iso3": "VEN",
+        "flag": "flags/VE/flag.svg",
+        "continent": "South America",
+        "wikidata_id": "Q717",
+        "cities": [
+            {
+                "name_en": "Caracas",
+                "name_fr": "Caracas",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Viet Nam",
+        "name_fr": "Viêt Nam",
+        "name_native": "Việt Nam",
+        "iso2": "VN",
+        "iso3": "VNM",
+        "flag": "flags/VN/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q881",
+        "cities": [
+            {
+                "name_en": "Hanoi",
+                "name_fr": "Hanoï",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Virgin Islands (British)",
+        "name_fr": "Îles Vierges britanniques",
+        "name_native": "British Virgin Islands",
+        "iso2": "VG",
+        "iso3": "VGB",
+        "flag": "flags/VG/flag.svg",
+        "continent": "North America",
+        "wikidata_id": null,
+        "cities": []
+    },
+    {
+        "name_en": "Yemen",
+        "name_fr": "Yémen",
+        "name_native": "اليَمَن",
+        "iso2": "YE",
+        "iso3": "YEM",
+        "flag": "flags/YE/flag.svg",
+        "continent": "Asia",
+        "wikidata_id": "Q805",
+        "cities": [
+            {
+                "name_en": "Aden",
+                "name_fr": "Aden",
+                "is_capital": true
+            },
+            {
+                "name_en": "Sanaa",
+                "name_fr": "Sanaa",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Zambia",
+        "name_fr": "Zambie",
+        "name_native": "Zambia",
+        "iso2": "ZM",
+        "iso3": "ZMB",
+        "flag": "flags/ZM/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q953",
+        "cities": [
+            {
+                "name_en": "Lusaka",
+                "name_fr": "Lusaka",
+                "is_capital": true
+            }
+        ]
+    },
+    {
+        "name_en": "Zimbabwe",
+        "name_fr": "Zimbabwe",
+        "name_native": "Zimbabwe",
+        "iso2": "ZW",
+        "iso3": "ZWE",
+        "flag": "flags/ZW/flag.svg",
+        "continent": "Africa",
+        "wikidata_id": "Q954",
+        "cities": [
+            {
+                "name_en": "Harare",
+                "name_fr": "Harare",
+                "is_capital": true
+            }
+        ]
+    }
+]
