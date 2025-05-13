@@ -35,6 +35,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
 CORS_ALLOW_ALL_ORIGINS = True
 
+AUTHENTICATION_BACKENDS = ["flagora.backends.EmailOrUsernameModelBackend"]
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",

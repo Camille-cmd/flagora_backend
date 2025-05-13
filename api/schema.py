@@ -20,11 +20,9 @@ class ResponseUserOut(BaseSchema):
 
 class ResponseLogin(BaseSchema):
     session_id: str
-    user: ResponseUserOut
 
 class ResponseError(BaseSchema):
     error: str
-    message: str
 
 class Login(BaseSchema):
     email: str
