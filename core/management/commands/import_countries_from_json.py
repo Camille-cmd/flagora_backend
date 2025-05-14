@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-f", "-file_name",
+            "--file_name",
             type=str,
             help="The path to the JSON file containing the countries data. "
                  "The file MUST be in the 'data' directory. If not provided, the data will be fetched from the API."

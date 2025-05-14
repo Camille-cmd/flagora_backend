@@ -34,6 +34,7 @@ SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", "0"))
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
 CORS_ALLOW_ALL_ORIGINS = True
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
 
 AUTHENTICATION_BACKENDS = ["flagora.backends.EmailOrUsernameModelBackend"]
 
@@ -140,3 +141,7 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.User"
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")

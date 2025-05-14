@@ -12,7 +12,6 @@ class BaseSchema(Schema):
 class ResponseRegister(BaseSchema):
     user_id: int
 
-
 class ResponseUserOut(BaseSchema):
     user_id: int
     username: str
@@ -23,12 +22,31 @@ class ResponseLogin(BaseSchema):
 
 class ResponseError(BaseSchema):
     error: str
+    code: str
+
+class ResponseCheckUsername(BaseSchema):
+    available: bool
 
 class Login(BaseSchema):
     email: str
     password: str
 
 class Register(BaseSchema):
+    email: str
     username: str
     password: str
+
+class CheckUsername(BaseSchema):
+    username: str
+
+class ResetPassword(BaseSchema):
     email: str
+
+class ResetPasswordValidate(BaseSchema):
+    uid: str
+    token: str
+
+class ResetPasswordConfirm(BaseSchema):
+    uid: str
+    token: str
+    password: str
