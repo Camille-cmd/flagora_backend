@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import path
 from django.utils.html import format_html
 from django import forms
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from core.models import Country, City, User
 from core.services import country_update
@@ -22,7 +24,7 @@ class CapitalCitiesInline(admin.TabularInline):
     model = Country.cities.through
     extra = 0
     can_delete = False
-    verbose_name_plural = "Capital Cities"
+    verbose_name_plural = gettext_lazy("Capital Cities")
 
     def get_queryset(self, request):
         """
@@ -71,7 +73,7 @@ class CountryAdmin(admin.ModelAdmin):
             return format_html(
                 f'<img src="{obj.flag.url}" style="width: 80px; height: auto;" alt="Flag">'
             )
-        return "(No Flag)"
+        return _("(No Flag)")
 
     def get_urls(self):
         urls = super().get_urls()
@@ -90,15 +92,15 @@ class CountryAdmin(admin.ModelAdmin):
         try:
             country_update(country)
 
-            messages.success(request, f"The country '{country.name_en}' has been updated successfully!")
+            messages.success(request, _("The country '{name_en}' has been updated successfully!").format(name_en=country.name_en))
             messages.warning(
                 request,
-                "Note: native name is not a field that can be updated. "
-                "Please update manually in the database if needed."
+                _("Note: native name is not a field that can be updated. "
+                "Please update manually in the database if needed.")
             )
 
         except Exception as e:
-            messages.error(request, f"Failed to update the country '{country.name_en}': {str(e)}")
+            messages.error(request, _("Failed to update the country '{name_en}': {error}").format(name_en=country.name_en, error=str(e)))
 
         # Redirect back to the detail page
         return redirect("admin:core_country_change", object_id)

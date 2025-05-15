@@ -1,7 +1,9 @@
 from django.core.files.base import ContentFile
 from django.db import models
 import requests
+from django.utils.translation import gettext_lazy as _
 
+from core.management.commands.import_countries import CONTINENT_MAPPING
 from core.models.City import City
 
 def flag_upload_path(instance, filename):
@@ -15,20 +17,21 @@ def flag_upload_path(instance, filename):
 
 
 class Country(models.Model):
-    name_en = models.CharField(max_length=100)
-    name_fr = models.CharField(max_length=100)
-    name_native = models.CharField(max_length=100)
-    iso2_code = models.CharField(max_length=2, unique=True)
-    iso3_code = models.CharField(max_length=3, unique=True)
-    flag = models.ImageField(upload_to=flag_upload_path, null=True)
-    cities = models.ManyToManyField(City)
-    continent = models.CharField(max_length=100)
+    name_en = models.CharField(max_length=100, verbose_name=_("English name"))
+    name_fr = models.CharField(max_length=100, verbose_name=_("French name"))
+    name_native = models.CharField(max_length=100, verbose_name=_("Native name"))
+    iso2_code = models.CharField(max_length=2, unique=True, verbose_name=_("iso2 code"))
+    iso3_code = models.CharField(max_length=3, unique=True, verbose_name=_("iso3 code"))
+    flag = models.ImageField(upload_to=flag_upload_path, null=True, blank=True, verbose_name=_("Flag"))
+    cities = models.ManyToManyField(City, related_name='countries', verbose_name=_("Cities"))
+    continent = models.CharField(max_length=100, choices=CONTINENT_MAPPING.items(), verbose_name=_("Continent"))
 
-    wikidata_id = models.CharField(max_length=100, null=True)
+    wikidata_id = models.CharField(max_length=100, null=True, verbose_name=_("Wikidata ID"))
 
     class Meta:
         ordering = ('name_en',)
-        verbose_name_plural = 'countries'
+        verbose_name = _('country')
+        verbose_name_plural = _('countries')
 
     def __str__(self):
         return self.name_en

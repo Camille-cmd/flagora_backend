@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "anymail",
     "core",
     "api"
 ]
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "flagora.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -120,6 +122,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
+LANGUAGES = [
+    ('fr', 'Français'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
 TIME_ZONE = "UTC"
 
 USE_I18N = True
@@ -142,6 +153,26 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.User"
 
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
 # Email
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+# Use Brevo in production
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+ANYMAIL = {
+    "BREVO_API_KEY": os.environ.get("ANYMAIL_BREVO_API_KEY"),
+}
+# if not DEBUG:
+#     # Use Brevo in production
+#     EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+#     ANYMAIL = {
+#         "BREVO_API_KEY": os.environ.get("ANYMAIL_BREVO_API_KEY"),
+#         "SEND_DEFAULTS": {
+#             "tags": ["flagora"],
+#         },
+#     }
+# else:
+#     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+DEFAULT_FROM_EMAIL = "noreply@camillemeunier.fr"

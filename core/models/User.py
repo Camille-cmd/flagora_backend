@@ -1,7 +1,10 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from flagora import settings
+
 
 class CustomUsernameValidator(UnicodeUsernameValidator):
     """
@@ -18,6 +21,8 @@ class User(AbstractUser):
     username_validator = CustomUsernameValidator()
 
     email = models.EmailField(unique=True)
+    is_email_verified = models.BooleanField(default=False, verbose_name=_("is email verified"))
+    language = models.CharField(max_length=2, choices=settings.LANGUAGES, verbose_name=_("language"))
 
     def __str__(self):
         return self.email

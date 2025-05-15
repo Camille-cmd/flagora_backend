@@ -16,6 +16,8 @@ class ResponseUserOut(BaseSchema):
     user_id: int
     username: str
     email: str
+    is_email_verified: bool
+    language: str
 
 class ResponseLogin(BaseSchema):
     session_id: str
@@ -50,3 +52,6 @@ class ResetPasswordConfirm(BaseSchema):
     uid: str
     token: str
     password: str
+
+class UserLanguageSet(BaseSchema):
+    language: str

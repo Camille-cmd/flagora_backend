@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Bienvenue sur {{ app_name }} - Confirmation de votre adresse email</title>
+  <!--[if mso]>
+  <style type="text/css">
+    body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+  </style>
+  <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f7f7; color: #333333; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+  <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; background-color: #f7f7f7; margin: 0; padding: 0;">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <!-- Email Container -->
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); margin: 0 auto;">
+          <!-- Header -->
+          <tr>
+            <td style="padding: 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 30px 40px 20px 40px; text-align: center; border-bottom: 1px solid #f0f0f0;">
+                    <!-- Logo Placeholder - Replace with your actual logo -->
+                    <img src="https://via.placeholder.com/150x50?text=Flagora" alt="{{ app_name }}" style="height: 40px; max-width: 180px; display: inline-block;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Hero Section -->
+          <tr>
+            <td style="padding: 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 40px 40px 20px 40px; text-align: center; background-color: #f8fafc; border-bottom: 1px solid #f0f0f0;">
+                    <!-- Welcome Icon -->
+                    <img src="https://via.placeholder.com/80x80?text=👋" alt="Welcome" style="width: 80px; height: 80px; margin-bottom: 20px; border-radius: 50%;">
+                    <h1 style="margin: 0 0 15px 0; font-size: 28px; line-height: 36px; font-weight: 700; color: #1f2937;">Bienvenue sur {{ app_name }} !</h1>
+                    <p style="margin: 0; font-size: 18px; line-height: 28px; color: #4b5563;">Nous sommes ravis de vous compter parmi nous</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 40px 40px 30px 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <!-- Content -->
+                <tr>
+                  <td style="padding: 0; font-size: 16px; line-height: 24px; color: #4b5563;">
+                    <p style="margin: 0 0 20px 0;">Bonjour <strong>{{ user_name }}</strong>,</p>
+                    <p style="margin: 0 0 20px 0;">Merci d'avoir créé votre compte sur {{ app_name }}. Pour finaliser votre inscription et commencer à utiliser nos services, veuillez confirmer votre adresse email.</p>
+                    <p style="margin: 0 0 25px 0;">Cette étape est essentielle pour sécuriser votre compte et vous permettre de profiter pleinement de toutes nos fonctionnalités.</p>
+                  </td>
+                </tr>
+
+                <!-- Button -->
+                <tr>
+                  <td style="padding: 0 0 30px 0; text-align: center;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ confirmation_url }}" style="height:52px;v-text-anchor:middle;width:280px;" arcsize="8%" stroke="f" fillcolor="#3b82f6">
+                      <w:anchorlock/>
+                      <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">Confirmer mon adresse email</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <a href="{{ confirmation_url }}" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #3b82f6; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.15); mso-hide: all;">
+                      Confirmer mon adresse email
+                    </a>
+                  </td>
+                </tr>
+
+                <!-- Benefits Section -->
+                <tr>
+                  <td style="padding: 0 0 30px 0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border-radius: 8px;">
+                      <tr>
+                        <td style="padding: 20px 25px;">
+                          <h3 style="margin: 0 0 15px 0; font-size: 18px; line-height: 24px; font-weight: 600; color: #1f2937;">Pourquoi confirmer votre email ?</h3>
+                          <ul style="margin: 0; padding: 0 0 0 20px; font-size: 15px; line-height: 24px; color: #4b5563;">
+                            <li style="margin-bottom: 8px;">Sécuriser votre compte contre les accès non autorisés</li>
+                            <li style="margin-bottom: 8px;">Recevoir des notifications importantes concernant votre compte</li>
+                            <li style="margin-bottom: 8px;">Récupérer votre compte facilement en cas d'oubli de mot de passe</li>
+                            <li style="margin-bottom: 0;">Accéder à toutes les fonctionnalités de {{ app_name }}</li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Additional Info -->
+                <tr>
+                  <td style="padding: 0; font-size: 16px; line-height: 24px; color: #4b5563;">
+                    <p style="margin: 0 0 20px 0;">Si vous n'arrivez pas à cliquer sur le bouton, vous pouvez copier et coller le lien suivant dans votre navigateur :</p>
+                  </td>
+                </tr>
+
+                <!-- Link Box -->
+                <tr>
+                  <td style="padding: 0 0 25px 0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td style="padding: 12px 15px; background-color: #f3f4f6; border-radius: 6px; word-break: break-all; font-size: 14px; line-height: 20px; color: #6b7280;">
+                          <a href="{{ confirmation_url }}" style="color: #2563eb; text-decoration: underline; word-break: break-all;">{{ confirmation_url }}</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Expiration Notice -->
+                <tr>
+                  <td style="padding: 0 0 25px 0; font-size: 15px; line-height: 24px; color: #4b5563;">
+                    <p style="margin: 0; padding: 12px 15px; background-color: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 4px; color: #92400e;">
+                      <strong>Note :</strong> Ce lien de confirmation est valable pendant 24 heures. Après cette période, vous devrez demander un nouveau lien de confirmation.
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Signature -->
+                <tr>
+                  <td style="padding: 0; font-size: 16px; line-height: 24px; color: #4b5563;">
+                    <p style="margin: 0 0 10px 0;">À bientôt sur {{ app_name }},</p>
+                    <p style="margin: 0; font-weight: 600; color: #1f2937;">L'équipe de {{ app_name }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 0; border-top: 1px solid #f0f0f0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- What's Next Section -->
+          <tr>
+            <td style="padding: 30px 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 0;">
+                    <h3 style="margin: 0 0 15px 0; font-size: 18px; line-height: 24px; font-weight: 600; color: #1f2937; text-align: center;">Que se passe-t-il après la confirmation ?</h3>
+                    <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 24px; color: #4b5563; text-align: center;">
+                      Une fois votre email confirmé, vous pourrez immédiatement commencer à utiliser {{ app_name }} et découvrir toutes nos fonctionnalités.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; text-align: center; font-size: 14px; line-height: 20px; color: #9ca3af; background-color: #f8fafc; border-top: 1px solid #f0f0f0; border-radius: 0 0 8px 8px;">
+              <p style="margin: 0 0 15px 0;">Si vous n'avez pas créé de compte sur {{ app_name }}, veuillez ignorer cet email ou nous contacter à <a href="mailto:support@{{ app_domain }}" style="color: #2563eb; text-decoration: underline;">support@{{ app_domain }}</a></p>
+              <p style="margin: 0 0 15px 0;">
+                <a href="{{ privacy_url }}" style="color: #6b7280; text-decoration: underline; margin: 0 10px;">Politique de confidentialité</a>
+                <a href="{{ terms_url }}" style="color: #6b7280; text-decoration: underline; margin: 0 10px;">Conditions d'utilisation</a>
+              </p>
+              <p style="margin: 0; font-size: 13px;">© {{ current_year }} {{ app_name }}. Tous droits réservés.</p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Spacer -->
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; border-collapse: collapse; margin: 0 auto;">
+          <tr>
+            <td style="height: 40px;"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

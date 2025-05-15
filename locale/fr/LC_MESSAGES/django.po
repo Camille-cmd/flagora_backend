@@ -1,0 +1,317 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-15 21:44+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: api/auth.py:46
+msgid "Email or password incorrect"
+msgstr "Email ou mot de passe incorrect"
+
+#: api/auth.py:74
+msgid "Username already registered"
+msgstr "Nom d'utilisateur déjà enregistré"
+
+#: api/auth.py:77
+msgid "Email already registered"
+msgstr "Adresse e-mail déjà enregistrée"
+
+#: api/auth.py:94
+msgid "Not authenticated"
+msgstr "Non authentifié"
+
+#: api/auth.py:114
+msgid "If this email exists, a reset link has been sent."
+msgstr ""
+"Si cette adresse e-mail existe, un lien de réinitialisation a été envoyé."
+
+#: api/auth.py:126 api/auth.py:140
+msgid "Invalid token or uid"
+msgstr "Jeton ou identifiant invalide"
+
+#: api/auth.py:145
+msgid "The password do not meet the requirements"
+msgstr "Le mot de passe ne respecte pas les exigences"
+
+#: api/services.py:10
+msgid "Flagora - Réinitialisation de votre mot de passe"
+msgstr "Flagora - Réinitialisation de votre mot de passe"
+
+#: api/services.py:29
+msgid "Flagora - Bienvenue"
+msgstr "Flagora - Bienvenue"
+
+#: core/admin.py:27
+msgid "Capital Cities"
+msgstr "Capitales"
+
+#: core/admin.py:76
+msgid "(No Flag)"
+msgstr "(Aucun drapeau)"
+
+#: core/admin.py:95
+#, python-brace-format
+msgid "The country '{name_en}' has been updated successfully!"
+msgstr "Le pays '{name_en}' a été mis à jour avec succès !"
+
+#: core/admin.py:98
+msgid ""
+"Note: native name is not a field that can be updated. Please update manually "
+"in the database if needed."
+msgstr ""
+"Note : le nom natif n'est pas un champ pouvant être mis à jour. Veuillez le "
+"mettre à jour manuellement dans la base de données si nécessaire."
+
+#: core/admin.py:103
+#, python-brace-format
+msgid "Failed to update the country '{name_en}': {error}"
+msgstr "Échec de la mise à jour du pays '{name_en}' : {error}"
+
+#: core/models/City.py:5 core/models/Country.py:21
+msgid "French name"
+msgstr "Nom français"
+
+#: core/models/City.py:6 core/models/Country.py:20
+msgid "English name"
+msgstr "Nom anglais"
+
+#: core/models/City.py:10
+msgid "Is capital city"
+msgstr "Est une capitale"
+
+#: core/models/City.py:11
+msgid "Several cities can be capital cities of a country (e.g, South Africa)."
+msgstr ""
+"Plusieurs villes peuvent être des capitales d’un pays (par ex. Afrique du "
+"Sud)."
+
+#: core/models/City.py:16
+msgid "city"
+msgstr "ville"
+
+#: core/models/City.py:17
+msgid "cities"
+msgstr "villes"
+
+#: core/models/Country.py:22
+msgid "Native name"
+msgstr "Nom natif"
+
+#: core/models/Country.py:23
+msgid "iso2 code"
+msgstr "Code iso2"
+
+#: core/models/Country.py:24
+msgid "iso3 code"
+msgstr "Code iso3"
+
+#: core/models/Country.py:25
+#, fuzzy
+#| msgid "(No Flag)"
+msgid "Flag"
+msgstr "(Aucun drapeau)"
+
+#: core/models/Country.py:26
+#, fuzzy
+#| msgid "cities"
+msgid "Cities"
+msgstr "villes"
+
+#: core/models/Country.py:27
+msgid "Continent"
+msgstr "Continent"
+
+#: core/models/Country.py:29
+msgid "Wikidata ID"
+msgstr "ID Wikidata"
+
+#: core/models/Country.py:33 core/models/UserCountryScore.py:14
+msgid "country"
+msgstr "pays"
+
+#: core/models/Country.py:34
+msgid "countries"
+msgstr "pays"
+
+#: core/models/Guess.py:5 core/models/UserCountryScore.py:12
+msgid "created at"
+msgstr "Créé le"
+
+#: core/models/Guess.py:6
+msgid "is correct"
+msgstr "Est correct"
+
+#: core/models/Guess.py:10
+msgid "guess"
+msgstr "guess"
+
+#: core/models/Guess.py:11
+msgid "guesses"
+msgstr "guesses"
+
+#: core/models/User.py:16
+msgid ""
+"Enter a valid username. This value may contain only letters, numbers, "
+"and ./-/_ characters."
+msgstr ""
+"Entrez un nom d’utilisateur valide. Cette valeur peut contenir uniquement "
+"des lettres, des chiffres et les caractères ./-/_."
+
+#: core/models/User.py:24
+msgid "is email verified"
+msgstr "L’adresse e-mail est vérifiée"
+
+#: core/models/User.py:25
+msgid "language"
+msgstr "langue"
+
+#: core/models/UserCountryScore.py:9
+msgid "Guess Country From Flag"
+msgstr "Deviner le pays à partir du drapeau"
+
+#: core/models/UserCountryScore.py:10
+msgid "Guess Capital From Country"
+msgstr "Deviner la capitale à partir du pays"
+
+#: core/models/UserCountryScore.py:13
+msgid "updated at"
+msgstr "Mis à jour le"
+
+#: core/models/UserCountryScore.py:15
+msgid "user"
+msgstr "utilisateur"
+
+#: core/models/UserCountryScore.py:16
+msgid "game mode"
+msgstr "mode de jeu"
+
+#: core/models/UserCountryScore.py:17
+#, fuzzy
+#| msgid "guesses"
+msgid "user guesses"
+msgstr "guesses"
+
+#: core/models/UserCountryScore.py:22
+msgid "user country score"
+msgstr "score utilisateur par pays"
+
+#: core/models/UserCountryScore.py:23
+msgid "user country scores"
+msgstr "scores utilisateur par pays"
+
+#: core/services.py:44
+#, python-brace-format
+msgid "No results found for {id}:"
+msgstr "Aucun résultat trouvé pour {id} :"
+
+#: core/services.py:48
+#, python-brace-format
+msgid "Too many results found for {id}:"
+msgstr "Trop de résultats trouvés pour {id} :"
+
+#: core/services.py:54
+#, python-brace-format
+msgid "Missing name_en or name_fr for Wikidata ID: {id}"
+msgstr ""
+"Nom en anglais ou en français manquant pour l’identifiant Wikidata : {id}"
+
+#: core/services.py:61
+#, python-brace-format
+msgid "Missing iso2 or iso3 for Wikidata ID: {id}"
+msgstr "Code iso2 ou iso3 manquant pour l’identifiant Wikidata : {id}"
+
+#: core/services.py:77
+#, python-brace-format
+msgid "No capital data found for country {name_en} with Wikidata ID {id}"
+msgstr ""
+"Aucune donnée de capitale trouvée pour le pays {name_en} avec l’identifiant "
+"Wikidata {id}"
+
+#: core/services.py:94
+#, python-brace-format
+msgid "Could not save flag for country {name_en}"
+msgstr "Impossible d’enregistrer le drapeau pour le pays {name_en}"
+
+#: templates/admin/core/country/change_form_object_tools.html:10
+msgid "Update Country data"
+msgstr "Mettre à jour les données du pays"
+
+#: templates/admin/core/country/change_form_object_tools.html:15
+msgid "History"
+msgstr "Historique"
+
+#: templates/emails/reset_password.html:8
+msgid "Password reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/emails/reset_password.html:49
+msgid "Hello"
+msgstr "Bonjour"
+
+#: templates/emails/reset_password.html:50
+msgid "You have requested to reset your password."
+msgstr "Vous avez demandé à réinitialiser votre mot de passe."
+
+#: templates/emails/reset_password.html:51
+#: templates/emails/reset_password.txt:6
+msgid "Simply click on the button below to choose a new password:"
+msgstr ""
+"Cliquez simplement sur le bouton ci-dessous pour choisir un nouveau mot de "
+"passe :"
+
+#: templates/emails/reset_password.html:61
+msgid "Reset my password"
+msgstr "Réinitialiser mon mot de passe"
+
+#: templates/emails/reset_password.html:73
+#: templates/emails/reset_password.txt:10
+msgid "Please ignore this email if you have not requested a password reset."
+msgstr ""
+"Veuillez ignorer cet e-mail si vous n’avez pas demandé de réinitialisation "
+"de mot de passe."
+
+#: templates/emails/reset_password.html:74
+msgid "Here's the full link in case you need it:"
+msgstr "Voici le lien complet au cas où vous en auriez besoin :"
+
+#: templates/emails/reset_password.html:94
+msgid "Have a nice day!"
+msgstr "Bonne journée !"
+
+#: templates/emails/reset_password.html:95
+msgid "The Flagora Team!"
+msgstr "L’équipe Flagora !"
+
+#: templates/emails/reset_password.txt:2
+msgid "Hello,"
+msgstr "Bonjour,"
+
+#: templates/emails/reset_password.txt:4
+msgid "You've asked to reset your password."
+msgstr "Vous avez demandé à réinitialiser votre mot de passe."
+
+#: templates/emails/reset_password.txt:12
+msgid "The link will expire in 1 hour for security reasons."
+msgstr "Le lien expirera dans 1 heure pour des raisons de sécurité."
+
+#: templates/emails/reset_password.txt:14
+msgid "Have a great day!"
+msgstr "Bonne journée !"
+
+#: templates/emails/reset_password.txt:16
+msgid "The Flagora Team,"
+msgstr "L’équipe Flagora,"

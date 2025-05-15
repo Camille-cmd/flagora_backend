@@ -1,6 +1,9 @@
 import logging
 
 import requests
+
+from django.utils.translation import gettext as _
+
 from core.management.commands.import_countries import continents_url, CONTINENT_MAPPING
 from core.models import Country, City
 
@@ -36,25 +39,26 @@ def country_update(country_obj: Country) -> None:
     response.raise_for_status()
 
     results = response.json().get('results', {}).get('bindings', [])
+
     if not results:
-        raise ValueError(f"No results found for Wikidata ID: {country_obj.wikidata_id}")
+        raise ValueError(_("No results found for {id}:").format(id=country_obj.wikidata_id))
 
     # More than 3 results is odd: duplicated results come from the capital cities, and the max is 3 for South Africa
     if len(results) > 3:
-        raise ValueError(f"Too many results found for Wikidata ID: {country_obj.wikidata_id}")
+        raise ValueError(_("Too many results found for {id}:").format(id=country_obj.wikidata_id))
 
     data = results[0]
     name_en = data.get('name_en', {}).get('value')
     name_fr = data.get('name_fr', {}).get('value')
     if not name_en or not name_fr:
-        raise ValueError(f"Missing name_en or name_fr for Wikidata ID: {country_obj.wikidata_id}")
+        raise ValueError(_("Missing name_en or name_fr for Wikidata ID: {id}").format(id=country_obj.wikidata_id))
     country_obj.name_en = name_en
     country_obj.name_fr = name_fr
 
     iso2 = data.get('iso2', {}).get('value')
     iso3 = data.get('iso3', {}).get('value')
     if not iso2 or not iso3:
-        raise ValueError(f"Missing iso2 or iso3 for Wikidata ID: {country_obj.wikidata_id}")
+        raise ValueError(_("Missing iso2 or iso3 for Wikidata ID: {id}").format(id=country_obj.wikidata_id))
     country_obj.iso2_code = iso2
     country_obj.iso3_code = iso3
 
@@ -70,10 +74,10 @@ def country_update(country_obj: Country) -> None:
         capital_fr = result.get("capitalLabel_fr", {}).get("value")
 
         if not capital_en and not capital_fr:
-            logger.warning(f"No capital data found for country {name_en} with Wikidata ID {country_obj.wikidata_id}.")
+            logger.warning(_("No capital data found for country {name_en} with Wikidata ID {id}").format(name_en=name_en, id=country_obj.wikidata_id))
             continue
 
-        capital_city_obj, _ = City.objects.update_or_create(
+        capital_city_obj, created = City.objects.update_or_create(
             name_en=capital_en,
             defaults={
                 "name_fr":capital_fr or capital_en,
@@ -87,7 +91,7 @@ def country_update(country_obj: Country) -> None:
     if flag_url:
         saved_flag = country_obj.save_flag(flag_url)
         if not saved_flag:
-            raise ValueError(f"Could not save flag for country {name_en}")
+            raise ValueError(_("Could not save flag for country {name_en}").format(name_en=name_en))
 
     # Final save
     country_obj.save()
