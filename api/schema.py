@@ -23,8 +23,11 @@ class ResponseLogin(BaseSchema):
     session_id: str
 
 class ResponseError(BaseSchema):
-    error: str
-    code: str
+    """
+    Backend is responsible for clean error messages for the frontend.
+    Error messages should be in English and should be translated.
+    """
+    error_message: str
 
 class ResponseCheckUsername(BaseSchema):
     available: bool
@@ -37,6 +40,7 @@ class Register(BaseSchema):
     email: str
     username: str
     password: str
+    language: str
 
 class CheckUsername(BaseSchema):
     username: str
@@ -55,3 +59,10 @@ class ResetPasswordConfirm(BaseSchema):
 
 class UserLanguageSet(BaseSchema):
     language: str
+
+class UserUpdate(BaseSchema):
+    username: str
+
+class UserUpdatePassword(BaseSchema):
+    old_password: str
+    new_password: str

@@ -20,10 +20,13 @@ from api.schema import (
     ResetPassword,
     ResetPasswordConfirm,
 )
-from api.services import send_email_reset_password
+from api.services_emails import (
+    send_email_reset_password,
+    send_email_welcome,
+    send_email_email_verification,
+)
+from api.utils import user_check_token
 from core.models import User
-from flagora.settings import FRONTEND_URL
-from utils import user_check_token
 
 auth_router = Router(by_alias=True)
 
@@ -40,10 +43,9 @@ def user_login(request: HttpRequest, payload: Login):
         login(request, user)
         session_id = request.session.session_key
 
-        # send_email_welcome(user)
         return 200, {"session_id": session_id}
 
-    return 401, {"error": _("Email or password incorrect"), "code": "invalid_credentials"}
+    return 401, {"error_message": _("Email or password incorrect")}
 
 
 @auth_router.get("/logout", response={200: dict})
@@ -71,17 +73,23 @@ def user_register(request: HttpRequest, payload: Register):
     Register a new user.
     """
     if User.objects.filter(username__iexact=payload.username).exists():
-        return 400, {"error": _("Username already registered"), "code": "username_already_registered"}
+        return 400, {"error_message": _("Username already registered")}
 
     if User.objects.filter(email__iexact=payload.email).exists():
-        return 400, {"error": _("Email already registered"), "code": "email_already_registered"}
+        return 400, {"error_message": _("Email already registered")}
 
     user = User.objects.create(
         username=payload.username,
         email=payload.email,
         password=make_password(payload.password),
+        language=payload.language,
     )
-    return 201, {"username": user.username, "email": user.email, "user_id": user.id}
+
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    confirm_token = default_token_generator.make_token(user)
+    send_email_welcome(user, uid, confirm_token)
+
+    return 201, user.user_out
 
 @auth_router.post("/reset_password", auth=None, response={200: dict})
 def user_reset_password(request: HttpRequest, payload: ResetPassword):
@@ -93,12 +101,11 @@ def user_reset_password(request: HttpRequest, payload: ResetPassword):
     if user:
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
-        reset_url = f"{FRONTEND_URL}/reset-password/{uid}/{token}"
 
-        send_email_reset_password(user, reset_url)
+        send_email_reset_password(user, uid, token)
 
     # Always return 200 to avoid email enumeration
-    return 200, {"message": _("If this email exists, a reset link has been sent.")}
+    return 200, {}
 
 
 @auth_router.get("/reset_password_validate", auth=None, response={200: dict, 400: ResponseError})
@@ -110,7 +117,7 @@ def user_reset_password_validate(request: HttpRequest, uid: str, token: str):
         uid = urlsafe_base64_decode(uid).decode()
         user_check_token(uid, token)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        return 400, {"error": _("Invalid token or uid"), "code": "invalid_token"}
+        return 400, {"error_message": _("Invalid token or uid")}
 
     return 200, {}
 
@@ -124,14 +131,46 @@ def user_reset_password_confirm(request: HttpRequest, payload: ResetPasswordConf
         uid = urlsafe_base64_decode(payload.uid).decode()
         user = user_check_token(uid, payload.token)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        return 400, {"error": _("Invalid token or uid"), "code": "invalid_token"}
+        return 400, {"error": _("Token expired or invalid")}
 
     try:
         validate_password(payload.password)
     except ValidationError as e:
-        return 400, {"error": _("The password do not meet the requirements"), "code": "invalid_password"}
+        return 400, {"error_message": _("The password do not meet the requirements")}
 
     user.set_password(payload.password)
     user.save()
 
+    return 200, {}
+
+
+@auth_router.get("/email-verify/", response={200: dict, 400: ResponseError})
+def user_send_email_verify(request: HttpRequest):
+    """
+    Send an email confirmation to the user.
+    """
+    user = request.user
+    if user.is_email_verified:
+        return 400, {"error": _("The email is already verified. Thank you !")}
+
+    confirm_token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    send_email_email_verification(user, uid, confirm_token)
+
+    return 200, {}
+
+
+@auth_router.get("/email-verify/validate", auth=None, response={200: dict, 400: ResponseError})
+def user_email_verify(request: HttpRequest, uid: str, token: str):
+    """
+    Confirm the email of the user.
+    """
+    try:
+        uid = urlsafe_base64_decode(uid).decode()
+        user = user_check_token(uid, token)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+        return 400, {"error": _("Token expired or invalid")}
+
+    user.is_email_verified = True
+    user.save()
     return 200, {}

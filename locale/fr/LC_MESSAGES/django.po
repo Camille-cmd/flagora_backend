@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-15 21:44+0200\n"
+"POT-Creation-Date: 2025-05-16 19:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,40 +18,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: api/auth.py:46
-msgid "Email or password incorrect"
-msgstr "Email ou mot de passe incorrect"
-
-#: api/auth.py:74
-msgid "Username already registered"
-msgstr "Nom d'utilisateur déjà enregistré"
-
-#: api/auth.py:77
-msgid "Email already registered"
-msgstr "Adresse e-mail déjà enregistrée"
-
-#: api/auth.py:94
+#: api/api.py:17
 msgid "Not authenticated"
 msgstr "Non authentifié"
 
-#: api/auth.py:114
-msgid "If this email exists, a reset link has been sent."
-msgstr ""
-"Si cette adresse e-mail existe, un lien de réinitialisation a été envoyé."
+#: api/auth.py:45
+msgid "Email or password incorrect"
+msgstr "Email ou mot de passe incorrect"
 
-#: api/auth.py:126 api/auth.py:140
+#: api/auth.py:73
+msgid "Username already registered"
+msgstr "Nom d'utilisateur déjà enregistré"
+
+#: api/auth.py:76
+msgid "Email already registered"
+msgstr "Adresse e-mail déjà enregistrée"
+
+#: api/auth.py:116 api/auth.py:130
 msgid "Invalid token or uid"
 msgstr "Jeton ou identifiant invalide"
 
-#: api/auth.py:145
+#: api/auth.py:135
 msgid "The password do not meet the requirements"
 msgstr "Le mot de passe ne respecte pas les exigences"
 
-#: api/services.py:10
+#: api/services.py:11
 msgid "Flagora - Réinitialisation de votre mot de passe"
 msgstr "Flagora - Réinitialisation de votre mot de passe"
 
-#: api/services.py:29
+#: api/services.py:30
 msgid "Flagora - Bienvenue"
 msgstr "Flagora - Bienvenue"
 
@@ -258,7 +253,11 @@ msgstr "Historique"
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
-#: templates/emails/reset_password.html:49
+#: templates/emails/reset_password.html:42
+msgid "Reset your password"
+msgstr "Réinitialiser votre mot de passe"
+
+#: templates/emails/reset_password.html:49 templates/emails/welcome.html:57
 msgid "Hello"
 msgstr "Bonjour"
 
@@ -277,6 +276,10 @@ msgstr ""
 msgid "Reset my password"
 msgstr "Réinitialiser mon mot de passe"
 
+#: templates/emails/reset_password.html:65
+msgid "Reset my password."
+msgstr "Réinitialiser mon mot de passe"
+
 #: templates/emails/reset_password.html:73
 #: templates/emails/reset_password.txt:10
 msgid "Please ignore this email if you have not requested a password reset."
@@ -288,13 +291,17 @@ msgstr ""
 msgid "Here's the full link in case you need it:"
 msgstr "Voici le lien complet au cas où vous en auriez besoin :"
 
-#: templates/emails/reset_password.html:94
+#: templates/emails/reset_password.html:94 templates/emails/welcome.html:127
 msgid "Have a nice day!"
 msgstr "Bonne journée !"
 
-#: templates/emails/reset_password.html:95
+#: templates/emails/reset_password.html:95 templates/emails/welcome.html:128
 msgid "The Flagora Team!"
 msgstr "L’équipe Flagora !"
+
+#: templates/emails/reset_password.html:116 templates/emails/welcome.html:150
+msgid "All rights reserved."
+msgstr "Tous droits réservés."
 
 #: templates/emails/reset_password.txt:2
 msgid "Hello,"
@@ -315,3 +322,50 @@ msgstr "Bonne journée !"
 #: templates/emails/reset_password.txt:16
 msgid "The Flagora Team,"
 msgstr "L’équipe Flagora,"
+
+#: templates/emails/welcome.html:8 templates/emails/welcome.html:42
+msgid "Welcome to"
+msgstr "Bienvenue sur"
+
+#: templates/emails/welcome.html:8
+msgid "Confirm your email address"
+msgstr "Confirmer votre adresse e-mail"
+
+#: templates/emails/welcome.html:43
+msgid "We are glad to have you with us"
+msgstr "Nous sommes heureux de vous compter parmi nous"
+
+#: templates/emails/welcome.html:58
+msgid "Thank you for creating your account on"
+msgstr "Merci d'avoir créé votre compte sur"
+
+#: templates/emails/welcome.html:58
+msgid "Please confirm your email address."
+msgstr "Confirmer votre adresse e-mail"
+
+#: templates/emails/welcome.html:72
+msgid "Confirm my email address"
+msgstr "Confirmer mon adresse e-mail"
+
+#: templates/emails/welcome.html:83
+msgid "Why confirm your email?"
+msgstr "Pourquoi confirmer votre e-mail ?"
+
+#: templates/emails/welcome.html:85
+msgid "Secure your account against unauthorized access"
+msgstr "Sécuriser votre compte contre tout accès non autorisé"
+
+#: templates/emails/welcome.html:86
+msgid "Receive important notifications regarding your account"
+msgstr "Recevoir des notifications importantes concernant votre compte"
+
+#: templates/emails/welcome.html:87
+msgid "Easily recover your account if you forget your password"
+msgstr "Pouvoir récupérer facilement votre compte si vous oubliez votre mot de passe"
+
+#: templates/emails/welcome.html:98
+msgid ""
+"If you're unable to click the button, you can copy and paste the following "
+"link into your browser:"
+msgstr "Si vous n'arrivez pas à cliquer sur le bouton, vous pouvez copier et coller le lien "
+"suivant dans votre navigateur :"

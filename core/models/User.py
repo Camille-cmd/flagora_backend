@@ -26,3 +26,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+    @property
+    def user_out(self):
+        """
+        Return the user information to be sent to the frontend.
+        """
+        return {
+            "user_id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "is_email_verified": self.is_email_verified,
+            "language": self.language,
+        }
