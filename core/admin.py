@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import get_object_or_404, redirect
+from django.templatetags.i18n import language
 from django.urls import path
 from django.utils.html import format_html
 from django import forms
@@ -13,7 +14,14 @@ from core.services import country_update
 
 @admin.register(User)
 class UserAdminAdmin(UserAdmin):
-    pass
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super().get_fieldsets(request, obj)
+
+        current_personal_info_fields = fieldsets[1][1]["fields"]
+        if not {"language", "is_email_verified"}.issubset(current_personal_info_fields):
+            fieldsets[1][1]["fields"] += ("language", "is_email_verified")
+
+        return fieldsets
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):

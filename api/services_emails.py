@@ -29,14 +29,16 @@ def send_email_reset_password(user: User, uid: str, token: str):
     email.send()
 
 
-def send_email_welcome(user: User, uid: str, token: str):
+def send_email_welcome(user: User):
     with translation.override(user.language):
         subject = _("Flagora - Bienvenue")
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = [user.email]
 
+        uid, email_token = user.email_tokens
+
         context = {
-            "confirmation_url": f"{settings.FRONTEND_URL}/email-confirmation/{uid}/{token}",
+            "confirmation_url": f"{settings.FRONTEND_URL}/email-confirmation/{uid}/{email_token}",
             "current_year": timezone.now().year,
         }
 
@@ -47,16 +49,17 @@ def send_email_welcome(user: User, uid: str, token: str):
     email.attach_alternative(html_content, "text/html")
     email.send()
 
-def send_email_email_verification(user: User, uid: str, token: str):
+
+def send_email_email_verification(user: User):
     with translation.override(user.language):
         subject = _("Flagora - Vérification de votre adresse email")
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = [user.email]
 
-        confirmation_url = f"{settings.FRONTEND_URL}/email-confirmation/{uid}/{token}"
+        uid, email_token = user.email_tokens
 
         context = {
-            "confirmation_url": confirmation_url,
+            "confirmation_url": f"{settings.FRONTEND_URL}/email-confirmation/{uid}/{email_token}",
             "current_year": timezone.now().year,
         }
 

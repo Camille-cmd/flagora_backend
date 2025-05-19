@@ -85,9 +85,7 @@ def user_register(request: HttpRequest, payload: Register):
         language=payload.language,
     )
 
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    confirm_token = default_token_generator.make_token(user)
-    send_email_welcome(user, uid, confirm_token)
+    send_email_welcome(user)
 
     return 201, user.user_out
 
@@ -151,11 +149,9 @@ def user_send_email_verify(request: HttpRequest):
     """
     user = request.user
     if user.is_email_verified:
-        return 400, {"error": _("The email is already verified. Thank you !")}
+        return 400, {"error_message": _("The email is already verified. Thank you !")}
 
-    confirm_token = default_token_generator.make_token(user)
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    send_email_email_verification(user, uid, confirm_token)
+    send_email_email_verification(user)
 
     return 200, {}
 
@@ -167,9 +163,12 @@ def user_email_verify(request: HttpRequest, uid: str, token: str):
     """
     try:
         uid = urlsafe_base64_decode(uid).decode()
-        user = user_check_token(uid, token)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        return 400, {"error": _("Token expired or invalid")}
+        user = User.objects.get(pk=uid, verification_uuid=token)
+    except (ValueError, User.DoesNotExist):
+        return 400, {"error_message": _("Token expired or invalid")}
+
+    if user.is_email_verified is True:
+        return 200, {}
 
     user.is_email_verified = True
     user.save()
