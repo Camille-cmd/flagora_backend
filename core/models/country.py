@@ -3,8 +3,18 @@ from django.db import models
 import requests
 from django.utils.translation import gettext_lazy as _
 
-from core.management.commands.import_countries import CONTINENT_MAPPING
-from core.models.City import City
+from core.models.city import City
+
+# Mapping of continent codes to full names
+CONTINENT_MAPPING = {
+    "AF": "Africa",
+    "AS": "Asia",
+    "EU": "Europe",
+    "NA": "North America",
+    "SA": "South America",
+    "OC": "Oceania",
+    "AN": "Antarctica"
+}
 
 def flag_upload_path(instance, filename):
     """
@@ -49,6 +59,8 @@ class Country(models.Model):
         if response.status_code == 200:
             file_name = "flag.svg"
             self.flag.save(file_name, ContentFile(response.content), save=True)
+            from api.flag_store import flag_store
+            flag_store.reload_flag(self.iso2_code)
             return True
 
         return False

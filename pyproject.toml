@@ -5,6 +5,8 @@ description = "Backend for the Flagora app"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "channels-redis>=4.2.1",
+    "channels[daphne]>=4.2.2",
     "django>=5.2",
     "django-anymail[brevo]>=13.0",
     "django-cors-headers>=4.7.0",

@@ -40,6 +40,7 @@ AUTHENTICATION_BACKENDS = ["flagora.backends.EmailOrUsernameModelBackend"]
 
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,7 +50,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "anymail",
     "core",
-    "api"
+    "api",
+    "channels_redis"
 ]
 
 MIDDLEWARE = [
@@ -81,8 +83,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "flagora.wsgi.application"
+ASGI_APPLICATION = "flagora.asgi.application"
 
-
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.environ["REDIS_HOST"], os.environ["REDIS_PORT"])],
+        },
+    },
+}
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{os.environ['REDIS_HOST']}:{os.environ['REDIS_PORT']}",
+    }
+}
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

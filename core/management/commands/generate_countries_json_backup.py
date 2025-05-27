@@ -1,14 +1,11 @@
 import json
 import logging
-from collections import defaultdict
 from pathlib import Path
 
-import requests
-from django.core.files.base import ContentFile
 from django.core.management import BaseCommand
 from django.utils import timezone
 
-from core.models import Country, City
+from core.models import Country
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -6,6 +6,7 @@ from django.core.management import BaseCommand
 
 from core.models import Country, City
 from core.management.commands.generate_countries_json_backup import Command as CountriesBackupCommand
+from core.models.country import CONTINENT_MAPPING
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,16 +15,7 @@ logger = logging.getLogger(__name__)
 countries_url = "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/curiexplore-pays/records"
 continents_url = "https://country.io/continent.json"
 
-# Mapping of continent codes to full names
-CONTINENT_MAPPING = {
-    "AF": "Africa",
-    "AS": "Asia",
-    "EU": "Europe",
-    "NA": "North America",
-    "SA": "South America",
-    "OC": "Oceania",
-    "AN": "Antarctica"
-}
+
 
 class Command(BaseCommand):
 

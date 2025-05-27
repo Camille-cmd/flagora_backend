@@ -1,7 +1,6 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import get_object_or_404, redirect
-from django.templatetags.i18n import language
 from django.urls import path
 from django.utils.html import format_html
 from django import forms
