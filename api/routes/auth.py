@@ -20,11 +20,8 @@ from api.schema import (
     ResetPassword,
     ResetPasswordConfirm,
 )
-from api.services_emails import (
-    send_email_reset_password,
-    send_email_welcome,
-    send_email_email_verification,
-)
+from api.services.emails import send_email_welcome, send_email_reset_password, send_email_email_verification
+
 from api.utils import user_check_token
 from core.models import User
 

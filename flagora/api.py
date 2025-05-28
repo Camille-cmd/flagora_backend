@@ -1,8 +1,8 @@
 from ninja import NinjaAPI
 from ninja.security import HttpBearer
 
-from api.api import router as api_router
-from api.auth import auth_router
+from api.routes.api import router as api_router
+from api.routes.auth import auth_router
 
 # Using HttpBearer along with Django's session authentication
 # The goal is to use django's session token as the bearer token

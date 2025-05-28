@@ -66,3 +66,14 @@ class UserUpdate(BaseSchema):
 class UserUpdatePassword(BaseSchema):
     old_password: str
     new_password: str
+
+class WebsocketMessage(BaseSchema):
+    type: str
+    payload: dict
+
+class NewQuestions(BaseSchema):
+    questions: dict[int, str]
+
+class AnswerResult(BaseSchema):
+    id: int
+    is_correct: bool
