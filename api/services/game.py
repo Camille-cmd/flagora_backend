@@ -36,7 +36,7 @@ class GameService:
 
 
     @classmethod
-    def check_answer(cls, session_id: UUID, question_index: int, answer_submitted: str, user: User | AnonymousUser) -> bool:
+    def check_answer(cls, session_id: UUID, question_index: int, answer_submitted: str, user: User | AnonymousUser) -> (bool, Country | None):
         """
         Return whether the answer received is the expected one.
         """
@@ -48,18 +48,18 @@ class GameService:
         country_to_guess_iso2_code = questions.get(question_index)
         is_correct = country_to_guess_iso2_code == answer_submitted
 
+        country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
         if not isinstance(user, AnonymousUser):
-            cls.guess_register(user, is_correct, country_to_guess_iso2_code)
+            cls.guess_register(user, is_correct, country)
 
-        return is_correct
+        return is_correct, country
 
     @classmethod
     @transaction.atomic
-    def guess_register(cls, user: User, is_correct: bool, country_to_guess_iso2_code: str):
+    def guess_register(cls, user: User, is_correct: bool, country: Country) -> None:
         """
         Save a user's guess
         """
-        country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
         score, _ = UserCountryScore.objects.get_or_create(
             user=user,
             country=country,

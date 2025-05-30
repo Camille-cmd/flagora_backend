@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from django.utils import translation
 from ninja import Router
 from django.utils.translation import gettext as _
 from api.schema import (
@@ -6,9 +7,9 @@ from api.schema import (
     ResponseUserOut,
     ResponseError,
     UserUpdate,
-    UserUpdatePassword,
+    UserUpdatePassword, CountryOut, CountriesOut,
 )
-from core.models import User
+from core.models import User, Country
 
 router = Router(by_alias=True)
 
@@ -33,6 +34,8 @@ def user_set_language(request, payload: UserLanguageSet):
     request.user.language = payload.language
     request.user.save()
 
+    translation.activate(payload.language)
+
     return 200, {}
 
 
@@ -51,6 +54,7 @@ def user_update(request: HttpRequest, payload: UserUpdate):
 
     return 200, user.user_out
 
+
 @router.put("user/password", response={200: dict, 400: ResponseError})
 def user_update_password(request: HttpRequest, payload: UserUpdatePassword):
     """
@@ -65,3 +69,22 @@ def user_update_password(request: HttpRequest, payload: UserUpdatePassword):
     user.save()
 
     return 200, {}
+
+
+@router.get("country/list", response={200: CountriesOut})
+def country_get_list(request: HttpRequest):
+    """
+    Return the list of all countries' names in the user-selected language.
+    """
+    name_field = f"name_{request.user.language}"
+    countries_qs = Country.objects.all().values(name_field, "iso2_code").order_by(name_field)
+
+    countries = []
+    for country in countries_qs:
+        country_out = CountryOut(
+            name=country[name_field],
+            iso2_code=country["iso2_code"]
+        )
+        countries.append(country_out)
+
+    return 200, CountriesOut(countries=countries)

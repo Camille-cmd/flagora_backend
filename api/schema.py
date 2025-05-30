@@ -77,3 +77,12 @@ class NewQuestions(BaseSchema):
 class AnswerResult(BaseSchema):
     id: int
     is_correct: bool
+    correct_answer: str = ""
+
+
+class CountryOut(BaseSchema):
+    iso2_code: str
+    name: str
+
+class CountriesOut(BaseSchema):
+    countries: list[CountryOut]
