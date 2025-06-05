@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.models import Session
 from django.core.cache import cache
 from django.db import transaction
 
@@ -12,6 +13,29 @@ from core.models import Country, User, Guess, UserCountryScore
 
 class GameService:
     CACHE_TIMEOUT_SECONDS = 86400
+
+    @classmethod
+    def user_accept(cls, session_id: UUID, session_token: UUID) -> bool:
+        try:
+            # Get session data
+            session = Session.objects.get(pk=session_token)
+            session_data = session.get_decoded()
+
+            # Get the user stored
+            uid = session_data.get('_auth_user_id')
+            user = User.objects.get(id=uid)
+
+            # Cache it for later requests
+            cache.set(f"{session_id}_user", user, timeout=cls.CACHE_TIMEOUT_SECONDS)
+
+            return True
+        except (Session.DoesNotExist, User.DoesNotExist):
+            return False
+
+
+    @classmethod
+    def user_get(cls, session_id: UUID) -> User:
+        return cache.get(f"{session_id}_user", AnonymousUser(), timeout=cls.CACHE_TIMEOUT_SECONDS)
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:

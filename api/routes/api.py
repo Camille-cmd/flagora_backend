@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.utils import translation
 from ninja import Router
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 from api.schema import (
     UserLanguageSet,
     ResponseUserOut,
@@ -71,12 +71,15 @@ def user_update_password(request: HttpRequest, payload: UserUpdatePassword):
     return 200, {}
 
 
-@router.get("country/list", response={200: CountriesOut})
+@router.get("country/list", response={200: CountriesOut}, auth=None)
 def country_get_list(request: HttpRequest):
     """
     Return the list of all countries' names in the user-selected language.
     """
-    name_field = f"name_{request.user.language}"
+    language = request.LANGUAGE_CODE
+    if request.user.is_authenticated:
+        language = request.user.language
+    name_field = f"name_{language}"
     countries_qs = Country.objects.all().values(name_field, "iso2_code").order_by(name_field)
 
     countries = []

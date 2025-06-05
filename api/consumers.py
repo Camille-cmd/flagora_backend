@@ -1,6 +1,6 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 
-from api.schema import WebsocketMessage, AnswerResult
+from api.schema import WebsocketMessage, AnswerResult, SetUserWebsocket
 from api.services.game import GameService
 
 
@@ -14,6 +14,8 @@ class GameConsumer(JsonWebsocketConsumer):
 
     def receive_json(self, content, **kwargs):
         match content["type"]:
+            case "user_accept":
+                self.store_user(content)
             case "answer_submission":
                 self.answer_result(content)
             case "request_questions":
@@ -22,6 +24,18 @@ class GameConsumer(JsonWebsocketConsumer):
                 self.answer_result(content, skipped=True)
             case _:
                 raise ValueError(f"Unknown message type: {content['type']}")
+
+    def store_user(self, content: SetUserWebsocket):
+        token = content["token"]
+        is_user_authenticated = GameService.user_accept(self.channel_name, token)
+
+        message = WebsocketMessage(
+            type="user_accept",
+            payload={
+                "is_user_authenticated": is_user_authenticated,
+            }
+        )
+        self.send_json(message.model_dump(by_alias=True))
 
     def send_questions(self):
         questions = GameService.get_questions(self.channel_name)

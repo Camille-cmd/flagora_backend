@@ -6,7 +6,6 @@ from core.models import Country
 
 class FlagStore:
     def __init__(self):
-        print("FlagStore initialized")
         self._cache_flags()
 
     @staticmethod

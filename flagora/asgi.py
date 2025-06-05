@@ -26,7 +26,10 @@ application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
+            # No need for authentication here. Everything is handle directly on connect
+            # due to not storing sessionid in cookies
+            # See SessionMiddleware
+            URLRouter(websocket_urlpatterns),
         ),
     }
 )

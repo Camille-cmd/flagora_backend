@@ -79,10 +79,13 @@ class AnswerResult(BaseSchema):
     is_correct: bool
     correct_answer: str = ""
 
-
 class CountryOut(BaseSchema):
     iso2_code: str
     name: str
 
 class CountriesOut(BaseSchema):
     countries: list[CountryOut]
+
+class SetUserWebsocket(BaseSchema):
+    type: str
+    token: str
