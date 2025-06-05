@@ -78,6 +78,8 @@ class AnswerResult(BaseSchema):
     id: int
     is_correct: bool
     correct_answer: str = ""
+    code: str = ""
+    wikipedia_link: str = ""
 
 class CountryOut(BaseSchema):
     iso2_code: str

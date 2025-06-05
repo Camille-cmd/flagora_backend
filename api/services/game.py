@@ -26,7 +26,7 @@ class GameService:
             user = User.objects.get(id=uid)
 
             # Cache it for later requests
-            cache.set(f"{session_id}_user", user, timeout=cls.CACHE_TIMEOUT_SECONDS)
+            cache.set(f"{session_id}_user_id", user.id, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
             return True
         except (Session.DoesNotExist, User.DoesNotExist):
@@ -35,7 +35,19 @@ class GameService:
 
     @classmethod
     def user_get(cls, session_id: UUID) -> User:
-        return cache.get(f"{session_id}_user", AnonymousUser(), timeout=cls.CACHE_TIMEOUT_SECONDS)
+        cache_key = f"{session_id}_user_id"
+        user_id = cache.get(cache_key)
+        print("user_get", user_id)
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                # Reset timeout for sliding expiration
+                cache.set(cache_key, user_id, timeout=cls.CACHE_TIMEOUT_SECONDS)
+                return user
+            except User.DoesNotExist:
+                pass
+
+        return AnonymousUser()
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:
@@ -73,7 +85,7 @@ class GameService:
         is_correct = country_to_guess_iso2_code == answer_submitted
 
         country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
-        if not isinstance(user, AnonymousUser):
+        if user.is_authenticated:
             cls.guess_register(user, is_correct, country)
 
         return is_correct, country

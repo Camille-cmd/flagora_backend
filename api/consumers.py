@@ -1,4 +1,6 @@
 from channels.generic.websocket import JsonWebsocketConsumer
+from django.templatetags.i18n import language
+from django.utils.translation import get_language
 
 from api.schema import WebsocketMessage, AnswerResult, SetUserWebsocket
 from api.services.game import GameService
@@ -49,22 +51,31 @@ class GameConsumer(JsonWebsocketConsumer):
     def answer_result(self, content: dict[int, str], skipped: bool = False):
         question_id = int(content["id"])
         answer_submitted = content["answer"]
-        user = self.scope["user"]
+        user = GameService.user_get(self.channel_name)
 
         is_correct, country = GameService.check_answer(self.channel_name, question_id, answer_submitted, user)
 
         correct_answer = ""
+        code = ""
+        wikipedia_link = ""
         if skipped:
             # On skips, we send the correct answer to the frontend
-            name_field = f"name_{user.language}"
+            user_language = get_language()
+            if user.is_authenticated:
+                user_language = user.language
+            name_field = f"name_{user_language}"
             correct_answer = getattr(country, name_field)
+            code = country.iso2_code
+            wikipedia_link = f"https://fr.wikipedia.org/wiki/{correct_answer}"
 
         message = WebsocketMessage(
             type="answer_result",
             payload=AnswerResult(
                 id=content["id"],
                 is_correct=is_correct,
-                correct_answer= correct_answer,
+                correct_answer=correct_answer,
+                code=code,
+                wikipedia_link=wikipedia_link
             ).model_dump(by_alias=True)
         )
 
