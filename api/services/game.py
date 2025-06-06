@@ -7,6 +7,7 @@ from django.db import transaction
 
 from api.flag_store import flag_store
 from api.schema import NewQuestions
+from api.services.user_country_score import UserCountryScoreService
 from core.models import Country, User, Guess, UserCountryScore
 
 
@@ -26,6 +27,7 @@ class GameService:
             user = User.objects.get(id=uid)
 
             # Cache it for later requests
+            print("set cache")
             cache.set(f"{session_id}_user_id", user.id, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
             return True
@@ -37,7 +39,6 @@ class GameService:
     def user_get(cls, session_id: UUID) -> User:
         cache_key = f"{session_id}_user_id"
         user_id = cache.get(cache_key)
-        print("user_get", user_id)
         if user_id:
             try:
                 user = User.objects.get(id=user_id)
@@ -59,7 +60,8 @@ class GameService:
         len_previous_data = len(questions_with_answer)
 
         new_questions = {}
-        countries = Country.objects.order_by('?')[0:10]
+        user = cls.user_get(session_id)
+        countries = UserCountryScoreService(user).compute_questions()
 
         for index, country in enumerate(countries):
             next_index = len_previous_data + index

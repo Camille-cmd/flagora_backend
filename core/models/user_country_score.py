@@ -14,7 +14,7 @@ class UserCountryScore(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="country_scores", verbose_name=_("country"))
     user = models.ForeignKey("core.User", on_delete=models.CASCADE, related_name="user_scores", verbose_name=_("user"))
     game_mode = models.CharField(choices=GameModes.choices, verbose_name=_("game mode"))
-    user_guesses = models.ManyToManyField(Guess, blank=True, related_name="user_guesses", verbose_name=_("user guesses"))
+    user_guesses = models.ManyToManyField(Guess, blank=True, related_name="user_scores", verbose_name=_("user guesses"))
 
     class Meta:
         ordering = ("created_at",)

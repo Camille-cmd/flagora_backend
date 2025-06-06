@@ -11,8 +11,6 @@ class GameConsumer(JsonWebsocketConsumer):
 
     def connect(self):
         self.accept()
-        # Initial questions
-        self.send_questions()
 
     def receive_json(self, content, **kwargs):
         match content["type"]:
@@ -39,6 +37,9 @@ class GameConsumer(JsonWebsocketConsumer):
         )
         self.send_json(message.model_dump(by_alias=True))
 
+        # Initial questions
+        self.send_questions()
+
     def send_questions(self):
         questions = GameService.get_questions(self.channel_name)
         self.questions = questions
@@ -50,7 +51,7 @@ class GameConsumer(JsonWebsocketConsumer):
 
     def answer_result(self, content: dict[int, str], skipped: bool = False):
         question_id = int(content["id"])
-        answer_submitted = content["answer"]
+        answer_submitted = content["answer"] if not skipped else ""
         user = GameService.user_get(self.channel_name)
 
         is_correct, country = GameService.check_answer(self.channel_name, question_id, answer_submitted, user)
