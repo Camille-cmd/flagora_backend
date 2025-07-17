@@ -34,7 +34,6 @@ def user_login(request: HttpRequest, payload: Login):
     Login a user.
     """
     # Login with username or email
-
     user = authenticate(request, username=payload.email, password=payload.password)
     if user is not None:
         login(request, user)
@@ -96,7 +95,6 @@ def user_reset_password(request: HttpRequest, payload: ResetPassword):
     if user:
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
-
         send_email_reset_password(user, uid, token)
 
     # Always return 200 to avoid email enumeration
@@ -126,7 +124,7 @@ def user_reset_password_confirm(request: HttpRequest, payload: ResetPasswordConf
         uid = urlsafe_base64_decode(payload.uid).decode()
         user = user_check_token(uid, payload.token)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        return 400, {"error": _("Token expired or invalid")}
+        return 400, {"error_message": _("Token expired or invalid")}
 
     try:
         validate_password(payload.password)

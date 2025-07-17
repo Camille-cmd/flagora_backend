@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 import math
 from django.db.models import Subquery, OuterRef, Q
@@ -88,24 +87,12 @@ class UserCountryScoreService:
         if not self.user.is_authenticated:
             return Country.objects.order_by('?')[0:pack_len]
 
-        latest_guess_subquery = (
-            Guess.objects
-            .filter(user_scores=OuterRef('pk'))
-            .order_by('-created_at')
-            .values('created_at')[:1]
-        )
         # TODO : GAME MODE
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
-        self.user_country_scores = (
-            UserCountryScore.objects
-            .filter(user=self.user)
-            # Ignore if a guess has been made too recently
-            .annotate(latest_guess_time=Subquery(latest_guess_subquery))
-            .filter(Q(latest_guess_time__lte=cooldown_threshold) | Q(latest_guess_time__isnull=True))
-        )
+        self.user_country_scores = UserCountryScore.objects.filter(user=self.user, updated_at__lte=cooldown_threshold)
 
         # Step 1: Compute weights
-        scored_questions = [self.compute_weight(q) for q in self.user_country_scores.all()]
+        scored_questions = [self.compute_weight(q) for q in self.user_country_scores]
 
         # Step 2: Normalize the weights (total amount of "chance" available)
         total_weight = sum(q["weight"] for q in scored_questions)

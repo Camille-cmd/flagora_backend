@@ -4,6 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
 from django.core.cache import cache
 from django.db import transaction
+from django.utils import timezone
 
 from api.flag_store import flag_store
 from api.schema import NewQuestions
@@ -27,7 +28,6 @@ class GameService:
             user = User.objects.get(id=uid)
 
             # Cache it for later requests
-            print("set cache")
             cache.set(f"{session_id}_user_id", user.id, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
             return True
@@ -81,7 +81,7 @@ class GameService:
         questions = cache.get(session_id)
 
         if not questions or question_index not in questions:
-            return False
+            return False, None
 
         country_to_guess_iso2_code = questions.get(question_index)
         is_correct = country_to_guess_iso2_code == answer_submitted
@@ -105,3 +105,6 @@ class GameService:
         )
         guess = Guess.objects.create(is_correct=is_correct)
         score.user_guesses.add(guess)
+
+        score.updated_at = timezone.now()
+        score.save()

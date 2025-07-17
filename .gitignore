@@ -17,3 +17,5 @@ wheels/
 
 media/flags
 media
+
+.coverage

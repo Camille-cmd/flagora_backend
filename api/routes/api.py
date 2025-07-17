@@ -46,7 +46,7 @@ def user_update(request: HttpRequest, payload: UserUpdate):
     """
     user = request.user
 
-    if User.objects.filter(username__iexact=payload.username).exists():
+    if User.objects.exclude(pk=user.pk).filter(username__iexact=payload.username).exists():
         return 400, {"error_message": _("Username already registered")}
 
     user.username = payload.username

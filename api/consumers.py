@@ -1,5 +1,4 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-from django.templatetags.i18n import language
 from django.utils.translation import get_language
 
 from api.schema import WebsocketMessage, AnswerResult, SetUserWebsocket

@@ -20,4 +20,4 @@ class BearerAuth(HttpBearer):
 api = NinjaAPI(auth=BearerAuth())
 
 api.add_router("/v1", api_router)
-api.add_router("/v1/auth/", auth_router)
+api.add_router("/v1/auth", auth_router)

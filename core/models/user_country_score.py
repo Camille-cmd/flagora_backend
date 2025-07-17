@@ -24,6 +24,3 @@ class UserCountryScore(models.Model):
 
     def __str__(self):
         return f"{self.user.username} score for {self.country.iso2_code} - {self.game_mode}"
-
-    def weight(self):
-        pass

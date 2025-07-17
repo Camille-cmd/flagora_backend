@@ -19,7 +19,7 @@ class MockResponse:
 
 class ImportCountriesCommandTest(TestCase):
 
-    @patch("core.models.Country.Country.save_flag", return_value=True)  # Correct patch path
+    @patch("core.models.Country.save_flag", return_value=True)
     @patch("core.management.commands.import_countries.requests.get")
     def test_import_countries_from_api(self, mock_get, mock_save_flag):
         # Mock API responses
