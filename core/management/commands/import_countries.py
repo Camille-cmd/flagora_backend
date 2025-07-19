@@ -4,21 +4,23 @@ from collections import defaultdict
 import requests
 from django.core.management import BaseCommand
 
-from core.models import Country, City
-from core.management.commands.generate_countries_json_backup import Command as CountriesBackupCommand
+from core.management.commands.generate_countries_json_backup import (
+    Command as CountriesBackupCommand,
+)
+from core.models import City, Country
 from core.models.country import CONTINENT_MAPPING
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # API endpoints
-countries_url = "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/curiexplore-pays/records"
+countries_url = (
+    "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/curiexplore-pays/records"
+)
 continents_url = "https://country.io/continent.json"
 
 
-
 class Command(BaseCommand):
-
     def add_arguments(self, parser):
         parser.add_argument("--country_name", type=str, help="The name of the country to import.")
 
@@ -53,7 +55,9 @@ class Command(BaseCommand):
         return countries
 
     @staticmethod
-    def get_countries_capitals_from_wikidata(country_wikidata_ids: list) -> dict[int, list[dict[str, str]]]:
+    def get_countries_capitals_from_wikidata(
+        country_wikidata_ids: list,
+    ) -> dict[int, list[dict[str, str]]]:
         """
         Get the capital cities of countries from Wikidata.
         A city can have multiple capital cities (e.g., South Africa). Therefore, we return a list of capital cities.
@@ -69,27 +73,27 @@ class Command(BaseCommand):
         SELECT ?country ?countryLabel ?capitalLabel_en ?capitalLabel_fr WHERE {{
           VALUES ?country {{ {values_clause} }}              # List of countries
           ?country wdt:P36 ?capital.                      # Capital of each country
-          
-          OPTIONAL {{ 
+
+          OPTIONAL {{
             ?capital rdfs:label ?capitalLabel_en.
             FILTER (lang(?capitalLabel_en) = "en")
-          }} 
-          OPTIONAL {{ 
+          }}
+          OPTIONAL {{
             ?capital rdfs:label ?capitalLabel_fr.
             FILTER (lang(?capitalLabel_fr) = "fr")
-          }} 
-        
+          }}
+
           SERVICE wikibase:label {{                        # Get the label of the country
             bd:serviceParam wikibase:language "en".
-          }} 
+          }}
         }}
         """
 
         # GET request to SPARQL API
-        response = requests.get(sparql_url, params={'query': query, 'format': 'json'})
+        response = requests.get(sparql_url, params={"query": query, "format": "json"})
         response.raise_for_status()
 
-        results = response.json().get('results', {}).get('bindings', [])
+        results = response.json().get("results", {}).get("bindings", [])
         if not results:
             logger.warning("No results found for the given Wikidata ID.")
             return {}  # No results found
@@ -105,10 +109,12 @@ class Command(BaseCommand):
             if not capital_en or not capital_fr:
                 continue
 
-            capital_data[country_wikidata_id].append({
-                "name_en": capital_en,
-                "name_fr": capital_fr,
-            })
+            capital_data[country_wikidata_id].append(
+                {
+                    "name_en": capital_en,
+                    "name_fr": capital_fr,
+                }
+            )
 
         return capital_data
 
@@ -155,7 +161,7 @@ class Command(BaseCommand):
                 continue
 
             # Can continue but some information will be missing
-            wikidata_id = country.get('wikidata')
+            wikidata_id = country.get("wikidata")
             if not wikidata_id:
                 logger.info(f"No Wikidata ID found for country {name_en}.")
 
@@ -169,8 +175,8 @@ class Command(BaseCommand):
                     "name_fr": name_fr,
                     "name_native": name_native,
                     "continent": continent,
-                    "wikidata_id": wikidata_id or None
-                }
+                    "wikidata_id": wikidata_id or None,
+                },
             )
             saved_flag = country_obj.save_flag(flag_url, delete_current=False)
             if not saved_flag:
@@ -187,9 +193,9 @@ class Command(BaseCommand):
                 capital_city_obj, _ = City.objects.update_or_create(
                     name_en=capital_data["name_en"],
                     defaults={
-                        "name_fr":capital_data["name_fr"],
+                        "name_fr": capital_data["name_fr"],
                         "is_capital": True,
-                    }
+                    },
                 )
                 cities_to_add_to_country.append(capital_city_obj)
 

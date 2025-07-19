@@ -1,13 +1,12 @@
 import json
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
-from unittest import mock
 
-from django.test import TestCase, override_settings
+from django.test import override_settings
 
 from core.management.commands.generate_countries_json_backup import Command
-from core.models import Country, City
+from core.models import Country
 from flagora.tests.base import FlagoraTestCase
 
 

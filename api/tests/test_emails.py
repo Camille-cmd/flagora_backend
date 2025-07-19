@@ -7,11 +7,12 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from api.services.emails import send_email_reset_password, send_email_welcome, send_email_email_verification
+from api.services.emails import send_email_email_verification, send_email_reset_password, send_email_welcome
 from flagora.settings import FRONTEND_URL
 from flagora.tests.base import FlagoraTestCase
 
 User = get_user_model()
+
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 class TestEmails(FlagoraTestCase):
@@ -41,7 +42,7 @@ class TestEmails(FlagoraTestCase):
         self.assertIn(reset_url, email.body)
         self.assertIn("réinitialiser votre mot de passe", email.body)
 
-         # Ensure HTML part is present
+        # Ensure HTML part is present
         self.assertEqual(email.alternatives[0].mimetype, "text/html")
 
     def test_send_email_welcome_french(self):
@@ -70,7 +71,7 @@ class TestEmails(FlagoraTestCase):
         self.assertIn(expected_url, email.body)
         self.assertIn(str(timezone.now().year), email.body)
 
-         # Ensure HTML part is present
+        # Ensure HTML part is present
         self.assertEqual(email.alternatives[0].mimetype, "text/html")
         self.assertIn("Merci d'avoir créé votre compte", email.body)
 
@@ -100,5 +101,5 @@ class TestEmails(FlagoraTestCase):
         self.assertIn(expected_url, email.body)
         self.assertIn(str(timezone.now().year), email.body)
 
-         # Ensure HTML part is present
+        # Ensure HTML part is present
         self.assertEqual(email.alternatives[0].mimetype, "text/html")

@@ -21,7 +21,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "bandit>=1.8.6",
     "coverage>=7.9.2",
+    "pre-commit>=4.2.0",
 ]
 
 [tool.coverage.run]
@@ -50,3 +52,19 @@ exclude_also = [
     "def __repr__",
     "def __str__",
 ]
+
+[tool.ruff]
+line-length = 120
+exclude = [
+    ".git",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "migrations"
+]
+
+[tool.autoflake]
+imports = ["django", "requests", "urllib3"]

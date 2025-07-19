@@ -1,6 +1,10 @@
-from django.conf import settings
-from django.contrib.sessions.middleware import SessionMiddleware as DjangoSessionMiddleware
 import logging
+
+from django.conf import settings
+from django.contrib.sessions.middleware import (
+    SessionMiddleware as DjangoSessionMiddleware,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,8 +30,8 @@ class SessionMiddleware(DjangoSessionMiddleware):
     def process_request(self, request):
         # Retrieve the session key from the Authorization header if present and set it to the request
         # otherwise fall back to the sessionid cookie (for admin).
-        if 'Authorization' in request.headers.keys():
-            session_key = request.headers.get('Authorization').split()[-1]
+        if "Authorization" in request.headers.keys():
+            session_key = request.headers.get("Authorization").split()[-1]
             request.session = self.SessionStore(session_key)
         else:
             session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME)
@@ -39,7 +43,7 @@ class SessionMiddleware(DjangoSessionMiddleware):
         # For API requests handled by Django Ninja, remove the sessionid cookie from the response.
         # This ensures the frontend never receives or stores a session cookie.
         # The admin is still using the sessionid cookie, so we don't remove it for admin requests.
-        if request.resolver_match and "ninja" in request.resolver_match.app_names and response.cookies.get('sessionid'):
-            del response.cookies['sessionid']
+        if request.resolver_match and "ninja" in request.resolver_match.app_names and response.cookies.get("sessionid"):
+            del response.cookies["sessionid"]
 
         return response

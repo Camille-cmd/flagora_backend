@@ -1,5 +1,6 @@
 import uuid
 from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import Client
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from flagora.tests.base import FlagoraTestCase
 
 User = get_user_model()
+
 
 class TestAuth(FlagoraTestCase):
     def setUp(self):
@@ -64,7 +66,7 @@ class TestAuth(FlagoraTestCase):
             "password": "StrongPassword123",
             "language": "en",
         }
-        response = self.client.post(self.register_url,  data=payload, content_type="application/json")
+        response = self.client.post(self.register_url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, 201)
         self.assertTrue(User.objects.filter(email="newuser@example.com").exists())
         mock_send_email.assert_called_once()
@@ -83,7 +85,7 @@ class TestAuth(FlagoraTestCase):
     def test_register_existing_email(self):
         payload = {
             "username": "newuser",
-            "email": self.user.email ,
+            "email": self.user.email,
             "password": "StrongPassword123",
             "language": "en",
         }
@@ -117,14 +119,26 @@ class TestAuth(FlagoraTestCase):
             "token": "mock_token",
             "password": "NewStrongPassword123",
         }
-        response = self.client.post(self.reset_password_confirm_url, data=payload, content_type="application/json")
+        response = self.client.post(
+            self.reset_password_confirm_url,
+            data=payload,
+            content_type="application/json",
+        )
         self.assertEqual(response.status_code, 200)
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password("NewStrongPassword123"))
 
     def test_reset_password_confirm_invalid(self):
-        payload = {"uid": urlsafe_base64_encode(force_bytes(uuid.uuid4())), "token": "invalid", "password": "password"}
-        response = self.client.post(self.reset_password_confirm_url, data=payload, content_type="application/json")
+        payload = {
+            "uid": urlsafe_base64_encode(force_bytes(uuid.uuid4())),
+            "token": "invalid",
+            "password": "password",
+        }
+        response = self.client.post(
+            self.reset_password_confirm_url,
+            data=payload,
+            content_type="application/json",
+        )
         self.assertEqual(response.status_code, 400)
 
     #### EMAIL VERIFY TESTS ####
@@ -141,7 +155,10 @@ class TestAuth(FlagoraTestCase):
         headers = self.user_do_login()
         response = self.client.get(self.send_email_verify_url, headers=headers)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()["errorMessage"], "The email is already verified. Thank you !")
+        self.assertEqual(
+            response.json()["errorMessage"],
+            "The email is already verified. Thank you !",
+        )
 
     #### EMAIL VERIFY VALIDATE TESTS ####
     def test_email_verify_validate_success(self):
@@ -150,7 +167,10 @@ class TestAuth(FlagoraTestCase):
         self.user.save()
         response = self.client.get(
             self.email_verify_url,
-            query_params={"uid": urlsafe_base64_encode(force_bytes(self.user.pk)), "token": verification_uuid},
+            query_params={
+                "uid": urlsafe_base64_encode(force_bytes(self.user.pk)),
+                "token": verification_uuid,
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.user.refresh_from_db()

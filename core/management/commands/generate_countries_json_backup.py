@@ -10,8 +10,8 @@ from core.models import Country
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     @staticmethod
     def generate_backup_json():
         """
@@ -29,11 +29,13 @@ class Command(BaseCommand):
         for country in countries_in_db:
             cities_data = []
             for city in country.cities.all():
-                cities_data.append({
-                    "name_en": city.name_en,
-                    "name_fr": city.name_fr,
-                    "is_capital": city.is_capital
-                })
+                cities_data.append(
+                    {
+                        "name_en": city.name_en,
+                        "name_fr": city.name_fr,
+                        "is_capital": city.is_capital,
+                    }
+                )
 
             country_dict = {
                 "name_en": country.name_en,
@@ -57,7 +59,6 @@ class Command(BaseCommand):
             json.dump(countries_list, json_file, ensure_ascii=False, indent=4)
 
         logger.info(f"File {output_file} generated successfully!")
-
 
     def handle(self, *args, **options):
         self.generate_backup_json()

@@ -1,6 +1,7 @@
 import uuid
-from django.core.exceptions import ValidationError
+
 from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
 
 from api.utils import user_check_token
 from core.models import User

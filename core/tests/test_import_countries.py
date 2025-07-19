@@ -3,7 +3,9 @@ from unittest.mock import patch
 import requests
 from django.core.management import call_command
 from django.test import TestCase
-from core.models import Country, City
+
+from core.models import City, Country
+
 
 class MockResponse:
     def __init__(self, json_data, status_code=200):
@@ -17,8 +19,8 @@ class MockResponse:
         if self.status_code >= 400:
             raise requests.HTTPError(f"{self.status_code} Error")
 
-class ImportCountriesCommandTest(TestCase):
 
+class ImportCountriesCommandTest(TestCase):
     @patch("core.models.Country.save_flag", return_value=True)
     @patch("core.management.commands.import_countries.requests.get")
     def test_import_countries_from_api(self, mock_get, mock_save_flag):
@@ -36,34 +38,52 @@ class ImportCountriesCommandTest(TestCase):
                             "iso2": "FR",
                             "iso3": "FRA",
                             "flag": "https://example.com/france.svg",
-                            "wikidata": "Q142"
+                            "wikidata": "Q142",
                         }
                     ]
                 },
                 status_code=200,
             ),
             # Country.io continent API
-            MockResponse(
-                json_data={
-                    "FR": "EU"
-                },
-                status_code=200
-            ),
+            MockResponse(json_data={"FR": "EU"}, status_code=200),
             # Wikidata
             MockResponse(
                 json_data={
-                    'head':{
-                            'vars': ['country', 'countryLabel', 'capitalLabel_en', 'capitalLabel_fr']
-                        },
-                    'results': {
-                        'bindings': [{
-                            'capitalLabel_fr': {'xml:lang': 'fr', 'type': 'literal', 'value': 'Paris'},
-                            'capitalLabel_en': {'xml:lang': 'en', 'type': 'literal', 'value': 'Paris'},
-                            'country': {'type': 'uri', 'value': 'http://www.wikidata.org/entity/Q142'},
-                            'countryLabel': {'xml:lang': 'en', 'type': 'literal', 'value': 'France'}
-                        }]
-                    }},
-                status_code=200
+                    "head": {
+                        "vars": [
+                            "country",
+                            "countryLabel",
+                            "capitalLabel_en",
+                            "capitalLabel_fr",
+                        ]
+                    },
+                    "results": {
+                        "bindings": [
+                            {
+                                "capitalLabel_fr": {
+                                    "xml:lang": "fr",
+                                    "type": "literal",
+                                    "value": "Paris",
+                                },
+                                "capitalLabel_en": {
+                                    "xml:lang": "en",
+                                    "type": "literal",
+                                    "value": "Paris",
+                                },
+                                "country": {
+                                    "type": "uri",
+                                    "value": "http://www.wikidata.org/entity/Q142",
+                                },
+                                "countryLabel": {
+                                    "xml:lang": "en",
+                                    "type": "literal",
+                                    "value": "France",
+                                },
+                            }
+                        ]
+                    },
+                },
+                status_code=200,
             ),
         ]
 

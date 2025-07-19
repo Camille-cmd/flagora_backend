@@ -30,7 +30,7 @@ class FlagStore:
         for country in countries:
             flag = country.flag
             if flag:
-                with open(flag.path, 'r') as f:
+                with open(flag.path, "r") as f:
                     cache.set(country.iso2_code, f.read(), timeout=None)
 
 

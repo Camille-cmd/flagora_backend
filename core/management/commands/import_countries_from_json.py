@@ -1,26 +1,22 @@
 import json
 import logging
-from collections import defaultdict
 from pathlib import Path
 
-import requests
-from django.core.files.base import ContentFile
 from django.core.management import BaseCommand
-from django.utils import timezone
 
-from core.models import Country, City
+from core.models import City, Country
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "--file_name",
             type=str,
             help="The path to the JSON file containing the countries data. "
-                 "The file MUST be in the 'data' directory. If not provided, the data will be fetched from the API."
+            "The file MUST be in the 'data' directory. If not provided, the data will be fetched from the API.",
         )
 
     def handle(self, *args, **options):
@@ -59,7 +55,7 @@ class Command(BaseCommand):
                     "iso3_code": iso3,
                     "flag": flag_url,
                     "wikidata_id": wikidata_id,
-                }
+                },
             )
 
             cities_to_add_to_country = set()
@@ -68,8 +64,8 @@ class Command(BaseCommand):
                     name_en=city_data["name_en"],
                     defaults={
                         "name_fr": city_data["name_fr"],
-                        "is_capital": city_data["is_capital"]
-                    }
+                        "is_capital": city_data["is_capital"],
+                    },
                 )
 
                 cities_to_add_to_country.add(city)

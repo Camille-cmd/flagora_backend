@@ -1,16 +1,20 @@
-from unittest.mock import patch, mock_open
+from unittest.mock import mock_open, patch
+
 from django.core.cache import cache
 from django.test import override_settings
 
 from api.flag_store import FlagStore
 from flagora.tests.base import FlagoraTestCase
 
-@override_settings(CACHES={
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'isolated-test-cache',
+
+@override_settings(
+    CACHES={
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "isolated-test-cache",
+        }
     }
-})
+)
 class FlagStoreTestCase(FlagoraTestCase):
     @patch("core.models.Country.objects.all")
     def setUp(self, mock_countries_all):
@@ -36,7 +40,7 @@ class FlagStoreTestCase(FlagoraTestCase):
         cached_flag = cache.get(self.country.iso2_code)
         self.assertEqual(cached_flag, "mocked_flag_content")
         mock_get_country.assert_called_once_with(iso2_code=self.country.iso2_code)
-        mock_file.assert_called_once_with(self.country.flag.path, 'r')
+        mock_file.assert_called_once_with(self.country.flag.path, "r")
 
     @patch("core.models.Country.objects.all")
     def test_reload_all_flags(self, mock_all_countries):
@@ -47,7 +51,7 @@ class FlagStoreTestCase(FlagoraTestCase):
         cached_flag = cache.get(self.country.iso2_code)
         self.assertEqual(cached_flag, "mocked_flag_content")
         mock_all_countries.assert_called_once()
-        mock_file.assert_called_once_with(self.country.flag.path, 'r')
+        mock_file.assert_called_once_with(self.country.flag.path, "r")
 
     @patch("core.models.Country.objects.get")
     def test_cache_flag(self, mock_get_country):
@@ -57,7 +61,7 @@ class FlagStoreTestCase(FlagoraTestCase):
 
         cached_flag = cache.get(self.country.iso2_code)
         self.assertEqual(cached_flag, "mocked_flag_content")
-        mock_file.assert_called_once_with(self.country.flag.path, 'r')
+        mock_file.assert_called_once_with(self.country.flag.path, "r")
 
     @patch("core.models.Country.objects.all")
     def test_cache_flags_all(self, mock_all_countries):
@@ -68,4 +72,4 @@ class FlagStoreTestCase(FlagoraTestCase):
         cached_flag = cache.get(self.country.iso2_code)
         self.assertEqual(cached_flag, "mocked_flag_content")
         mock_all_countries.assert_called_once()
-        mock_file.assert_called_once_with(self.country.flag.path, 'r')
+        mock_file.assert_called_once_with(self.country.flag.path, "r")

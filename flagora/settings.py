@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -51,7 +53,7 @@ INSTALLED_APPS = [
     "anymail",
     "core",
     "api",
-    "channels_redis"
+    "channels_redis",
 ]
 
 MIDDLEWARE = [
@@ -103,7 +105,7 @@ CACHES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-     "default": {
+    "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ["POSTGRES_DB"],
         "USER": os.environ["POSTGRES_USER"],
@@ -139,8 +141,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 
 LANGUAGES = [
-    ('fr', 'Français'),
-    ('en', 'English'),
+    ("fr", "Français"),
+    ("en", "English"),
 ]
 
 LOCALE_PATHS = [
@@ -159,7 +161,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 # Default primary key field type

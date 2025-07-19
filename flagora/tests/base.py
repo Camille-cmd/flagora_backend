@@ -1,11 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from core.tests.factories import UserFactory, CountryFactory, CityFactory
+from core.tests.factories import CityFactory, CountryFactory, UserFactory
 
 
 class FlagoraTestCase(TestCase):
-
     def setUp(self):
         self.user_password = "securepassword123"
         self.user = UserFactory(
@@ -38,4 +37,4 @@ class FlagoraTestCase(TestCase):
         """
         payload = {"email": self.user.email, "password": self.user_password}
         r = self.client.post(self.login_url, data=payload, content_type="application/json")
-        return {"Authorization": f"Bearer {r.json()["sessionId"]}"}
+        return {"Authorization": f"Bearer {r.json()['sessionId']}"}

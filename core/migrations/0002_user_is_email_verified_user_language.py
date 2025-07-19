@@ -6,19 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='is_email_verified',
+            model_name="user",
+            name="is_email_verified",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='user',
-            name='language',
-            field=models.CharField(choices=[('fr', 'Français'), ('en', 'English')], default='en', max_length=2),
+            model_name="user",
+            name="language",
+            field=models.CharField(
+                choices=[("fr", "Français"), ("en", "English")],
+                default="en",
+                max_length=2,
+            ),
             preserve_default=False,
         ),
     ]

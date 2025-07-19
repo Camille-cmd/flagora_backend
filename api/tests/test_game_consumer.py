@@ -1,8 +1,8 @@
+from unittest.mock import ANY, MagicMock, patch
 
-from unittest.mock import patch, MagicMock, ANY
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
-from django.test import override_settings, TransactionTestCase
+from django.test import TransactionTestCase, override_settings
 
 from api.routing import websocket_urlpatterns
 from core.tests.factories import UserFactory
@@ -23,15 +23,13 @@ class GameConsumerTestCase(TransactionTestCase):
         self.user = UserFactory(
             username="test_user",
             email="testuser@example.com",
-            password="securepassword123"
+            password="securepassword123",
         )
-
 
         self.token = "dummy-token"
         self.questions = MagicMock()
         self.questions.model_dump.return_value = {"questions": ["France", "Japan"]}
         self.url = "/ws/game/"
-
 
     async def test_connects(self):
         """Test that the WishlistConsumer successfully connects."""
@@ -42,17 +40,13 @@ class GameConsumerTestCase(TransactionTestCase):
 
         await communicator.disconnect()
 
-
     @patch("api.consumers.GameService.get_questions")
     @patch("api.consumers.GameService.user_accept", return_value=True)
     async def test_user_accept_sends_auth_and_questions(self, mock_user_accept, mock_get_questions):
         communicator = WebsocketCommunicator(self.application, self.url)
         mock_get_questions.return_value = self.questions
 
-        await communicator.send_json_to({
-            "type": "user_accept",
-            "token": self.token
-        })
+        await communicator.send_json_to({"type": "user_accept", "token": self.token})
 
         # Expect auth response
         auth_response = await communicator.receive_json_from()
@@ -76,9 +70,7 @@ class GameConsumerTestCase(TransactionTestCase):
         questions.model_dump.return_value = {"questions": ["Brazil", "Kenya"]}
         mock_get_questions.return_value = questions
 
-        await communicator.send_json_to({
-            "type": "request_questions"
-        })
+        await communicator.send_json_to({"type": "request_questions"})
 
         response = await communicator.receive_json_from()
         self.assertEqual(response["type"], "new_questions")
@@ -96,11 +88,7 @@ class GameConsumerTestCase(TransactionTestCase):
         mock_user_get.return_value = mock_user
         mock_check_answer.return_value = (True, MagicMock())
 
-        await communicator.send_json_to({
-            "type": "answer_submission",
-            "id": 123,
-            "answer": "Berlin"
-        })
+        await communicator.send_json_to({"type": "answer_submission", "id": 123, "answer": "Berlin"})
 
         response = await communicator.receive_json_from()
         self.assertEqual(response["type"], "answer_result")
@@ -130,18 +118,17 @@ class GameConsumerTestCase(TransactionTestCase):
         mock_user_get.return_value = user
         mock_check_answer.return_value = (False, country)
 
-        await communicator.send_json_to({
-            "type": "question_skipped",
-            "id": 456,
-            "answer": ""
-        })
+        await communicator.send_json_to({"type": "question_skipped", "id": 456, "answer": ""})
 
         response = await communicator.receive_json_from()
         self.assertEqual(response["type"], "answer_result")
         self.assertFalse(response["payload"]["isCorrect"])
         self.assertEqual(response["payload"]["correctAnswer"], "Allemagne")
         self.assertEqual(response["payload"]["code"], "DE")
-        self.assertEqual(response["payload"]["wikipediaLink"], "https://fr.wikipedia.org/wiki/Allemagne")
+        self.assertEqual(
+            response["payload"]["wikipediaLink"],
+            "https://fr.wikipedia.org/wiki/Allemagne",
+        )
 
         mock_user_get.assert_called_once_with(ANY)
         mock_check_answer.assert_called_once_with(ANY, 456, "", user)

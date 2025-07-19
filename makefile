@@ -30,6 +30,13 @@ migrate:
 shell:
 	$(RUN) python manage.py shell
 
+# Handle i18n
 makemessages:
-	@echo "📝 Running makemessages..."
 	./manage.py makemessages --all --no-obsolete $(IGNORE_DIRS)
+
+compilemessages:
+    ./manage.py compilemessages
+
+# Bandit scan
+bandit:
+    bandit -r .

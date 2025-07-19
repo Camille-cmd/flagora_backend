@@ -1,10 +1,9 @@
+import math
 import random
 
-import math
-from django.db.models import Subquery, OuterRef, Q
 from django.utils import timezone
 
-from core.models import Country, User, UserCountryScore, Guess
+from core.models import Country, User, UserCountryScore
 
 
 class UserCountryScoreService:
@@ -42,7 +41,7 @@ class UserCountryScoreService:
 
             total_weight += weight
 
-        failure_score = (failure_weight / total_weight)*100
+        failure_score = (failure_weight / total_weight) * 100
         return min(failure_score, 100)
 
     def _compute_forgetting_score(self, last_guess: dict):
@@ -83,9 +82,9 @@ class UserCountryScoreService:
         return {
             "user_country_score": user_country_score,
             "country": user_country_score.country,
-            "weight":  round(question_weight, 4),
+            "weight": round(question_weight, 4),
             "failure_score": round(failure_score, 2),
-            "forgetting_score": round(forgetting_score, 2)
+            "forgetting_score": round(forgetting_score, 2),
         }
 
     def get_default_weight(self, country: Country):
@@ -97,14 +96,13 @@ class UserCountryScoreService:
             "country": country,
             "weight": self._compute_question_weight(self.DEFAULT_FAILURE_SCORE, self.DEFAULT_FORGETTING_SCORE),
             "failure_score": self.DEFAULT_FAILURE_SCORE,
-            "forgetting_score": self.DEFAULT_FORGETTING_SCORE
+            "forgetting_score": self.DEFAULT_FORGETTING_SCORE,
         }
-
 
     def compute_questions(self) -> list[Country]:
         pack_len = 10
         if not self.user.is_authenticated:
-            return Country.objects.order_by('?')[0:pack_len]
+            return Country.objects.order_by("?")[0:pack_len]
 
         # TODO : GAME MODE
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)

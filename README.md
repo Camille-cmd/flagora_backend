@@ -27,10 +27,16 @@ Pour la toute première fois, il faut importer les pays et les régions.
 docker exec -it flagora_backend python manage.py import_countries
 ```
 
-Le fichier `initial_data.json` contient les pays et les régions, mais pas les fichiers images des drapeaux. 
+Le fichier `initial_data.json` contient les pays et les régions, mais pas les fichiers images des drapeaux.
 Utile si l'on veut écraser la base de données et recommencer à zéro sans refaire de call api.
 ```bash
 docker exec -it flagora_backend python manage.py import_countries_from_json --file_name 'initial_data.json'
+```
+
+# Use pre-commit
+À la première utilisation
+```bash
+pre-commit install
 ```
 
 ## Development shortcuts
@@ -42,3 +48,7 @@ make createsuperuser        # Create a superuser
 make makemigrations         # Create new migrations
 make migrate                # Apply migrations
 make manage ARGS="shell"    # Run an arbitrary manage.py command
+make messages               # Run django makemessages
+make compilemessages        # Run django compilemessages
+make bandit                 # Run a bandit scan across the project
+```

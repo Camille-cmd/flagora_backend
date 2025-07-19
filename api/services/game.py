@@ -9,8 +9,7 @@ from django.utils import timezone
 from api.flag_store import flag_store
 from api.schema import NewQuestions
 from api.services.user_country_score import UserCountryScoreService
-from core.models import Country, User, Guess, UserCountryScore
-
+from core.models import Country, Guess, User, UserCountryScore
 
 
 class GameService:
@@ -24,7 +23,7 @@ class GameService:
             session_data = session.get_decoded()
 
             # Get the user stored
-            uid = session_data.get('_auth_user_id')
+            uid = session_data.get("_auth_user_id")
             user = User.objects.get(id=uid)
 
             # Cache it for later requests
@@ -33,7 +32,6 @@ class GameService:
             return True
         except (Session.DoesNotExist, User.DoesNotExist):
             return False
-
 
     @classmethod
     def user_get(cls, session_id: UUID) -> User:
@@ -72,9 +70,14 @@ class GameService:
         print("CAMILLE IS CHEATING", questions_with_answer)
         return NewQuestions(questions=new_questions)
 
-
     @classmethod
-    def check_answer(cls, session_id: UUID, question_index: int, answer_submitted: str, user: User | AnonymousUser) -> (bool, Country | None):
+    def check_answer(
+        cls,
+        session_id: UUID,
+        question_index: int,
+        answer_submitted: str,
+        user: User | AnonymousUser,
+    ) -> (bool, Country | None):
         """
         Return whether the answer received is the expected one.
         """

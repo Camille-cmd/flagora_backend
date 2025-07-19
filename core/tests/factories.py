@@ -3,8 +3,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from core.models import User, Country, City
-
 faker_fr = Faker("fr_FR")
 faker_en = Faker("en_US")
 
@@ -35,13 +33,8 @@ class CountryFactory(DjangoModelFactory):
     iso3_code = factory.LazyAttribute(lambda _: faker_fr.country_code(representation="alpha-3"))
     continent = factory.LazyAttribute(lambda _: faker_fr.country())
     flag = factory.LazyAttribute(
-        lambda _: SimpleUploadedFile(
-            name="flag.svg",
-            content=b"<svg></svg>",
-            content_type="image/svg+xml"
-        )
+        lambda _: SimpleUploadedFile(name="flag.svg", content=b"<svg></svg>", content_type="image/svg+xml")
     )
-
 
     @factory.post_generation
     def cities(self, create, extracted, **kwargs):
@@ -62,7 +55,6 @@ class GuessFactory(DjangoModelFactory):
 
     created_at = factory.Faker("date_time")
     is_correct = factory.fuzzy.FuzzyChoice([True, False])
-
 
 
 class UserCountryScoreFactory(DjangoModelFactory):

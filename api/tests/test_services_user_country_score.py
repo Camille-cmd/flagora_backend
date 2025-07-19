@@ -1,21 +1,17 @@
-from freezegun import freeze_time
 from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
+from freezegun import freeze_time
 
 from api.services.user_country_score import UserCountryScoreService
 from core.models import UserCountryScore
-from core.tests.factories import (
-    CountryFactory,
-    GuessFactory,
-    UserCountryScoreFactory,
-)
+from core.tests.factories import CountryFactory, GuessFactory, UserCountryScoreFactory
 from flagora.tests.base import FlagoraTestCase
 
-class UserCountryScoreServiceTestCase(FlagoraTestCase):
 
+class UserCountryScoreServiceTestCase(FlagoraTestCase):
     def setUp(self):
         super().setUp()
         self.score = UserCountryScoreFactory(user=self.user, country=self.country)
@@ -34,8 +30,8 @@ class UserCountryScoreServiceTestCase(FlagoraTestCase):
             guesses.append(guess)
         return guesses
 
+
 class TestUserCountryScoreService(UserCountryScoreServiceTestCase):
-    
     def test_failure_score_empty(self):
         service = UserCountryScoreService(self.user)
         service.datetime_now = self.now
@@ -59,8 +55,8 @@ class TestUserCountryScoreService(UserCountryScoreServiceTestCase):
         score = service._compute_failure_score(guesses)
         self.assertTrue(0 < score < 100)
 
-class ComputeForgettingScoreTest(UserCountryScoreServiceTestCase):
 
+class ComputeForgettingScoreTest(UserCountryScoreServiceTestCase):
     def test_forgetting_score_no_guess(self):
         service = UserCountryScoreService(self.user)
         service.datetime_now = self.now
@@ -81,8 +77,8 @@ class ComputeForgettingScoreTest(UserCountryScoreServiceTestCase):
         score = service._compute_forgetting_score(guess)
         self.assertGreater(score, 80)
 
-class ComputeWeightTest(UserCountryScoreServiceTestCase):
 
+class ComputeWeightTest(UserCountryScoreServiceTestCase):
     def test_weight_with_no_guesses(self):
         service = UserCountryScoreService(self.user)
         service.datetime_now = self.now
@@ -101,15 +97,19 @@ class ComputeWeightTest(UserCountryScoreServiceTestCase):
         self.assertIn("weight", result)
         self.assertTrue(0 < result["weight"] < 1)
 
-class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
+class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
     @patch("api.services.user_country_score.UserCountryScoreService.compute_weight")
     @patch("random.random")
     def test_compute_questions_weighted_random(self, mock_random, mock_weight):
         # Add multiple scores
         UserCountryScore.objects.all().delete()
         scores = [
-            UserCountryScoreFactory(user=self.user, country=CountryFactory(), user_guesses=GuessFactory.create_batch(2))
+            UserCountryScoreFactory(
+                user=self.user,
+                country=CountryFactory(),
+                user_guesses=GuessFactory.create_batch(2),
+            )
             for _ in range(3)
         ]
         # Update to avoid triggering the auto_now on the updated_at field
@@ -117,7 +117,13 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
         # Patch weights
         mock_weight.side_effect = [
-            {"user_country_score": score, "country": score.country, "weight": w, "failure_score": 0, "forgetting_score": 0}
+            {
+                "user_country_score": score,
+                "country": score.country,
+                "weight": w,
+                "failure_score": 0,
+                "forgetting_score": 0,
+            }
             for score, w in zip(scores, [0.1, 0.3, 0.6])
         ]
 
@@ -142,7 +148,7 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
             user=self.user,
             country=CountryFactory(name_en="Papua New Guinea", iso2_code="PG"),
             user_guesses=[guess],
-            updated_at=self.now - timedelta(minutes=1)
+            updated_at=self.now - timedelta(minutes=1),
         )
         # New guess updates the score
         # Update to avoid triggering the auto_now on the updated_at field
@@ -150,7 +156,11 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
         # Score 2: Last guess was old enough → should be included
         guess = GuessFactory()
-        old_score = UserCountryScoreFactory(user=self.user, country=CountryFactory(name_en="Costa Rica", iso2_code="CR"), user_guesses=[guess])
+        old_score = UserCountryScoreFactory(
+            user=self.user,
+            country=CountryFactory(name_en="Costa Rica", iso2_code="CR"),
+            user_guesses=[guess],
+        )
         UserCountryScore.objects.filter(pk=old_score.pk).update(updated_at=self.now - timedelta(minutes=10))
 
         # Score 3: No guesses at all → should be included
@@ -178,7 +188,6 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         # Assert all selected countries are only from valid (non-recent) scores
         self.assertTrue(expected_countries.issubset(selected_countries))
         self.assertNotIn(recent_score.country.pk, selected_countries)
-
 
     def test_compute_questions_no_user_guesses(self):
         service = UserCountryScoreService(AnonymousUser())

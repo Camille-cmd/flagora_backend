@@ -7,6 +7,7 @@ from flagora.tests.base import FlagoraTestCase
 
 User = get_user_model()
 
+
 class TestApi(FlagoraTestCase):
     def setUp(self):
         super().setUp()
@@ -16,7 +17,6 @@ class TestApi(FlagoraTestCase):
         self.user_update_url = reverse("api-1.0.0:user_update")
         self.user_update_password_url = reverse("api-1.0.0:user_update_password")
         self.country_get_list_url = reverse("api-1.0.0:country_get_list")
-
 
     #### USER ME TESTS ####
     def test_user_me_authenticated(self):
@@ -51,7 +51,7 @@ class TestApi(FlagoraTestCase):
             self.user_set_language_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 200)
@@ -66,11 +66,7 @@ class TestApi(FlagoraTestCase):
         Unauthenticated user cannot set language.
         """
         payload = {"language": "fr"}
-        response = self.client.post(
-            self.user_set_language_url,
-            data=payload,
-            content_type="application/json"
-        )
+        response = self.client.post(self.user_set_language_url, data=payload, content_type="application/json")
 
         self.assertEqual(response.status_code, 401)
 
@@ -87,7 +83,7 @@ class TestApi(FlagoraTestCase):
             self.user_update_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 200)
@@ -108,7 +104,7 @@ class TestApi(FlagoraTestCase):
             self.user_update_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 400)
@@ -125,7 +121,7 @@ class TestApi(FlagoraTestCase):
             self.user_update_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 200)
@@ -139,16 +135,13 @@ class TestApi(FlagoraTestCase):
         """
         headers = self.user_do_login()
         new_password = "newsecurepassword456"
-        payload = {
-            "old_password": self.user_password,
-            "new_password": new_password
-        }
+        payload = {"old_password": self.user_password, "new_password": new_password}
 
         response = self.client.put(
             self.user_update_password_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 200)
@@ -165,14 +158,14 @@ class TestApi(FlagoraTestCase):
         headers = self.user_do_login()
         payload = {
             "old_password": "wrongpassword",
-            "new_password": "newsecurepassword456"
+            "new_password": "newsecurepassword456",
         }
 
         response = self.client.put(
             self.user_update_password_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
 
         self.assertEqual(response.status_code, 400)
@@ -188,17 +181,14 @@ class TestApi(FlagoraTestCase):
         """
         headers = self.user_do_login()
         new_password = "another_new_password_789"
-        payload = {
-            "old_password": self.user_password,
-            "new_password": new_password
-        }
+        payload = {"old_password": self.user_password, "new_password": new_password}
 
         # Update password
         response = self.client.put(
             self.user_update_password_url,
             data=payload,
             content_type="application/json",
-            headers=headers
+            headers=headers,
         )
         self.assertEqual(response.status_code, 200)
 
@@ -206,7 +196,7 @@ class TestApi(FlagoraTestCase):
         login_attempt = self.client.post(
             self.login_url,
             data={"email": self.user.email, "password": self.user_password},
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(login_attempt.status_code, 401)
 
@@ -214,7 +204,7 @@ class TestApi(FlagoraTestCase):
         login_attempt = self.client.post(
             self.login_url,
             data={"email": self.user.email, "password": new_password},
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(login_attempt.status_code, 200)
 
@@ -226,7 +216,7 @@ class TestApi(FlagoraTestCase):
         response = self.client.get(
             self.country_get_list_url,
             HTTP_ACCEPT_LANGUAGE="fr",
-            content_type="application/json"
+            content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
@@ -243,10 +233,7 @@ class TestApi(FlagoraTestCase):
         self.user.save()
         headers = self.user_do_login()
 
-        response = self.client.get(
-            self.country_get_list_url,
-            headers=headers
-        )
+        response = self.client.get(self.country_get_list_url, headers=headers)
 
         self.assertEqual(response.status_code, 200)
         countries = response.json()["countries"]
@@ -264,7 +251,7 @@ class TestApi(FlagoraTestCase):
         response = self.client.get(
             self.country_get_list_url,
             HTTP_ACCEPT_LANGUAGE="en",
-            content_type="application/json"
+            content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 200)

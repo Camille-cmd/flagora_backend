@@ -1,22 +1,25 @@
 from django.http import HttpRequest
 from django.utils import translation
+from django.utils.translation import gettext as _
 from ninja import Router
-from django.utils.translation import gettext as _, get_language
+
 from api.schema import (
-    UserLanguageSet,
-    ResponseUserOut,
+    CountriesOut,
+    CountryOut,
     ResponseError,
+    ResponseUserOut,
+    UserLanguageSet,
     UserUpdate,
-    UserUpdatePassword, CountryOut, CountriesOut,
+    UserUpdatePassword,
 )
-from core.models import User, Country
+from core.models import Country, User
 
 router = Router(by_alias=True)
 
 
-@router.get("user/me", auth=None, response={ 200: ResponseUserOut, 401: ResponseError })
+@router.get("user/me", auth=None, response={200: ResponseUserOut, 401: ResponseError})
 def user_me(request: HttpRequest):
-    """"
+    """ "
     Get the current user information.
     """
     # Tell frontend that the user is not authenticated
@@ -25,6 +28,7 @@ def user_me(request: HttpRequest):
 
     user = request.user
     return 200, user.user_out
+
 
 @router.post("user/set-language", response={200: dict})
 def user_set_language(request, payload: UserLanguageSet):
@@ -84,10 +88,7 @@ def country_get_list(request: HttpRequest):
 
     countries = []
     for country in countries_qs:
-        country_out = CountryOut(
-            name=country[name_field],
-            iso2_code=country["iso2_code"]
-        )
+        country_out = CountryOut(name=country[name_field], iso2_code=country["iso2_code"])
         countries.append(country_out)
 
     return 200, CountriesOut(countries=countries)

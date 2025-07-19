@@ -1,13 +1,13 @@
+from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import path
 from django.utils.html import format_html
-from django import forms
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from core.models import Country, City, User
+from core.models import City, Country, User
 from core.services import country_update
 
 
@@ -22,10 +22,12 @@ class UserAdminAdmin(UserAdmin):
 
         return fieldsets
 
+
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
     list_display = ("name_en",)
     search_fields = ("name_en", "name_fr")
+
 
 class CapitalCitiesInline(admin.TabularInline):
     model = Country.cities.through
@@ -39,6 +41,7 @@ class CapitalCitiesInline(admin.TabularInline):
         """
         qs = super().get_queryset(request)
         return qs.filter(city__is_capital=True)
+
 
 class CountryAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -59,12 +62,23 @@ class CountryAdminForm(forms.ModelForm):
             return None  # Retourne explicitement None si aucun fichier n'est fourni
         return flag
 
+
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ("name_en", "display_flag", "continent")
     search_fields = ("name_en", "name_fr", "name_native")
-    fields = ("name_en", "name_fr", "name_native", "continent", "iso2_code", "iso3_code", "wikidata_id", "display_flag", "flag")
-    readonly_fields = ['display_flag']  # this is for the change form
+    fields = (
+        "name_en",
+        "name_fr",
+        "name_native",
+        "continent",
+        "iso2_code",
+        "iso3_code",
+        "wikidata_id",
+        "display_flag",
+        "flag",
+    )
+    readonly_fields = ["display_flag"]  # this is for the change form
     inlines = [CapitalCitiesInline]
     list_filter = [
         "continent",
@@ -77,16 +91,18 @@ class CountryAdmin(admin.ModelAdmin):
         Génère le HTML pour afficher l'image du drapeau dans l'administration.
         """
         if obj.flag:  # Vérifiez si un drapeau est disponible
-            return format_html(
-                f'<img src="{obj.flag.url}" style="width: 80px; height: auto;" alt="Flag">'
-            )
+            return format_html(f'<img src="{obj.flag.url}" style="width: 80px; height: auto;" alt="Flag">')
         return _("(No Flag)")
 
     def get_urls(self):
         urls = super().get_urls()
 
         additional_urls = [
-            path("<path:object_id>/update/", self.admin_site.admin_view(self.update), name="core_country_update"),
+            path(
+                "<path:object_id>/update/",
+                self.admin_site.admin_view(self.update),
+                name="core_country_update",
+            ),
         ]
 
         return additional_urls + urls
@@ -99,15 +115,23 @@ class CountryAdmin(admin.ModelAdmin):
         try:
             country_update(country)
 
-            messages.success(request, _("The country '{name_en}' has been updated successfully!").format(name_en=country.name_en))
+            messages.success(
+                request,
+                _("The country '{name_en}' has been updated successfully!").format(name_en=country.name_en),
+            )
             messages.warning(
                 request,
-                _("Note: native name is not a field that can be updated. "
-                "Please update manually in the database if needed.")
+                _(
+                    "Note: native name is not a field that can be updated. "
+                    "Please update manually in the database if needed."
+                ),
             )
 
         except Exception as e:
-            messages.error(request, _("Failed to update the country '{name_en}': {error}").format(name_en=country.name_en, error=str(e)))
+            messages.error(
+                request,
+                _("Failed to update the country '{name_en}': {error}").format(name_en=country.name_en, error=str(e)),
+            )
 
         # Redirect back to the detail page
         return redirect("admin:core_country_change", object_id)

@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 from core.models import User
 
+
 def user_check_token(uid: str, token: str) -> User:
     """
     Check if the token is valid.

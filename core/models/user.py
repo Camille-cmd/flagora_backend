@@ -15,11 +15,10 @@ class CustomUsernameValidator(UnicodeUsernameValidator):
     Prevent the username from containing any @ character.
     This allows to log in the user with either the username or the email.
     """
+
     regex = r"^[\w.-]+\Z"
-    message = _(
-        "Enter a valid username. This value may contain only letters, "
-        "numbers, and ./-/_ characters."
-    )
+    message = _("Enter a valid username. This value may contain only letters, numbers, and ./-/_ characters.")
+
 
 class User(AbstractUser):
     username_validator = CustomUsernameValidator()
@@ -28,7 +27,10 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False, verbose_name=_("is email verified"))
     language = models.CharField(max_length=2, choices=settings.LANGUAGES, verbose_name=_("language"))
     verification_uuid = models.UUIDField(
-        default=uuid.uuid4, verbose_name=_("Email verification uuid"), editable=False, unique=True
+        default=uuid.uuid4,
+        verbose_name=_("Email verification uuid"),
+        editable=False,
+        unique=True,
     )
 
     def __str__(self):

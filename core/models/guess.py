@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class Guess(models.Model):
     created_at = models.DateTimeField(db_index=True, auto_now_add=True, verbose_name=_("created at"))
     is_correct = models.BooleanField(verbose_name=_("is correct"))

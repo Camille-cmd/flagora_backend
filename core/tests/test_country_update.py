@@ -1,5 +1,6 @@
-from unittest.mock import patch, Mock
-from core.models import Country, City
+from unittest.mock import Mock, patch
+
+from core.models import City, Country
 from core.services import country_update
 from flagora.tests.base import FlagoraTestCase
 
@@ -12,21 +13,21 @@ class CountryUpdateTest(FlagoraTestCase):
 
         self.mock_sparql_data = {
             "results": {
-                "bindings": [{
-                    "name_en": {"value": "Exampleland"},
-                    "name_fr": {"value": "Exemplepays"},
-                    "iso2": {"value": "EX"},
-                    "iso3": {"value": "EXP"},
-                    "flag": {"value": "https://commons.wikimedia.org/wiki/Special:FilePath/Example_Flag.svg"},
-                    "capitalLabel_en": {"value": "Example City"},
-                    "capitalLabel_fr": {"value": "Ville Exemple"},
-                }]
+                "bindings": [
+                    {
+                        "name_en": {"value": "Exampleland"},
+                        "name_fr": {"value": "Exemplepays"},
+                        "iso2": {"value": "EX"},
+                        "iso3": {"value": "EXP"},
+                        "flag": {"value": "https://commons.wikimedia.org/wiki/Special:FilePath/Example_Flag.svg"},
+                        "capitalLabel_en": {"value": "Example City"},
+                        "capitalLabel_fr": {"value": "Ville Exemple"},
+                    }
+                ]
             }
         }
 
-        self.mock_continents = {
-            "EX": "EU"
-        }
+        self.mock_continents = {"EX": "EU"}
 
     def mock_requests_get(self, url, params=None, **kwargs):
         mock_response = Mock()
@@ -87,14 +88,7 @@ class CountryUpdateTest(FlagoraTestCase):
 
     @patch("core.services.requests.get")
     def test_missing_name_fields(self, mock_get):
-        broken_data = {
-            "results": {
-                "bindings": [{
-                    "iso2": {"value": "EX"},
-                    "iso3": {"value": "EXP"}
-                }]
-            }
-        }
+        broken_data = {"results": {"bindings": [{"iso2": {"value": "EX"}, "iso3": {"value": "EXP"}}]}}
         mock_response = Mock()
         mock_response.json.return_value = broken_data
         mock_response.raise_for_status = Mock()
@@ -108,10 +102,12 @@ class CountryUpdateTest(FlagoraTestCase):
     def test_missing_iso_fields(self, mock_get):
         broken_data = {
             "results": {
-                "bindings": [{
-                    "name_en": {"value": "Exampleland"},
-                    "name_fr": {"value": "Exemplepays"}
-                }]
+                "bindings": [
+                    {
+                        "name_en": {"value": "Exampleland"},
+                        "name_fr": {"value": "Exemplepays"},
+                    }
+                ]
             }
         }
         mock_response = Mock()
@@ -136,14 +132,16 @@ class CountryUpdateTest(FlagoraTestCase):
     def test_missing_capital(self, mock_save_flag, mock_get):
         no_capital = {
             "results": {
-                "bindings": [{
-                    "name_en": {"value": "Exampleland"},
-                    "name_fr": {"value": "Exemplepays"},
-                    "iso2": {"value": "EX"},
-                    "iso3": {"value": "EXP"},
-                    "flag": {"value": "https://commons.wikimedia.org/wiki/Special:FilePath/Example_Flag.svg"},
-                    # No capital data
-                }]
+                "bindings": [
+                    {
+                        "name_en": {"value": "Exampleland"},
+                        "name_fr": {"value": "Exemplepays"},
+                        "iso2": {"value": "EX"},
+                        "iso3": {"value": "EXP"},
+                        "flag": {"value": "https://commons.wikimedia.org/wiki/Special:FilePath/Example_Flag.svg"},
+                        # No capital data
+                    }
+                ]
             }
         }
 

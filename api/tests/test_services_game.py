@@ -7,18 +7,19 @@ from django.test import override_settings
 from django.utils import timezone
 
 from api.services.game import GameService
-from core.models import UserCountryScore, Guess
+from core.models import Guess, UserCountryScore
 from flagora.tests.base import FlagoraTestCase
 
 
-@override_settings(CACHES={
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'isolated-test-cache',
+@override_settings(
+    CACHES={
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "isolated-test-cache",
+        }
     }
-})
+)
 class GameServiceTest(FlagoraTestCase):
-
     def setUp(self):
         super().setUp()
         cache.clear()
@@ -108,7 +109,6 @@ class GameServiceTest(FlagoraTestCase):
 
         self.assertFalse(is_correct)
         self.assertIsNone(country)
-
 
     def test_guess_register(self):
         self.assertEqual(UserCountryScore.objects.count(), 0)

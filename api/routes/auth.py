@@ -1,27 +1,26 @@
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from ninja import Router
-from django.contrib.auth import login, logout, authenticate
 from django.http import HttpRequest
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext as _
+from ninja import Router
 
 from api.schema import (
-    ResponseLogin,
-    Register,
-    Login,
-    ResponseUserOut,
-    ResponseError,
-    ResponseCheckUsername,
     CheckUsername,
+    Login,
+    Register,
     ResetPassword,
     ResetPasswordConfirm,
+    ResponseCheckUsername,
+    ResponseError,
+    ResponseLogin,
+    ResponseUserOut,
 )
-from api.services.emails import send_email_welcome, send_email_reset_password, send_email_email_verification
-
+from api.services.emails import send_email_email_verification, send_email_reset_password, send_email_welcome
 from api.utils import user_check_token
 from core.models import User
 
@@ -85,6 +84,7 @@ def user_register(request: HttpRequest, payload: Register):
 
     return 201, user.user_out
 
+
 @auth_router.post("/reset_password", auth=None, response={200: dict})
 def user_reset_password(request: HttpRequest, payload: ResetPassword):
     """
@@ -128,7 +128,7 @@ def user_reset_password_confirm(request: HttpRequest, payload: ResetPasswordConf
 
     try:
         validate_password(payload.password)
-    except ValidationError as e:
+    except ValidationError:
         return 400, {"error_message": _("The password do not meet the requirements")}
 
     user.set_password(payload.password)

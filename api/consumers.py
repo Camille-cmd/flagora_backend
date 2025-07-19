@@ -1,7 +1,7 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.utils.translation import get_language
 
-from api.schema import WebsocketMessage, AnswerResult, SetUserWebsocket
+from api.schema import AnswerResult, SetUserWebsocket, WebsocketMessage
 from api.services.game import GameService
 
 
@@ -32,7 +32,7 @@ class GameConsumer(JsonWebsocketConsumer):
             type="user_accept",
             payload={
                 "is_user_authenticated": is_user_authenticated,
-            }
+            },
         )
         self.send_json(message.model_dump(by_alias=True))
 
@@ -42,10 +42,7 @@ class GameConsumer(JsonWebsocketConsumer):
     def send_questions(self):
         questions = GameService.get_questions(self.channel_name)
         self.questions = questions
-        message = WebsocketMessage(
-            type="new_questions",
-            payload=questions.model_dump(by_alias=True)
-        )
+        message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
 
     def answer_result(self, content: dict[int, str], skipped: bool = False):
@@ -75,8 +72,8 @@ class GameConsumer(JsonWebsocketConsumer):
                 is_correct=is_correct,
                 correct_answer=correct_answer,
                 code=code,
-                wikipedia_link=wikipedia_link
-            ).model_dump(by_alias=True)
+                wikipedia_link=wikipedia_link,
+            ).model_dump(by_alias=True),
         )
 
         self.send_json(message.model_dump(by_alias=True))
