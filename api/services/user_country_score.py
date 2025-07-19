@@ -127,7 +127,7 @@ class UserCountryScoreService:
         for _ in range(pack_len):
             # Step 3: Weighted random selection
             # picking a random point.
-            rand_val = random.random()
+            rand_val = random.random()  # nosec
             cumulative = 0
             for q in scored_questions:
                 # Cumulative is a way of checking each weight, the bigger the weight the more likely it is to be in the rand_val

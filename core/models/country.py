@@ -56,7 +56,7 @@ class Country(models.Model):
             self.flag.delete(save=False)
 
         headers = {"User-Agent": "FlagoraBot/0.0"}
-        response = requests.get(flag_url, headers=headers)
+        response = requests.get(flag_url, headers=headers, timeout=10)
         if response.status_code == 200:
             file_name = "flag.svg"
             self.flag.save(file_name, ContentFile(response.content), save=True)

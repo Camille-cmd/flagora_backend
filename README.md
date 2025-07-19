@@ -50,5 +50,5 @@ make migrate                # Apply migrations
 make manage ARGS="shell"    # Run an arbitrary manage.py command
 make messages               # Run django makemessages
 make compilemessages        # Run django compilemessages
-make bandit                 # Run a bandit scan across the project
+make bandit TARGET_DIR=./api/ # Run a bandit scan across the project
 ```

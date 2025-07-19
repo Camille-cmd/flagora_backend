@@ -35,8 +35,8 @@ makemessages:
 	./manage.py makemessages --all --no-obsolete $(IGNORE_DIRS)
 
 compilemessages:
-    ./manage.py compilemessages
+	./manage.py compilemessages
 
 # Bandit scan
 bandit:
-    bandit -r .
+	bandit -c pyproject.toml -r $(TARGET_DIR)

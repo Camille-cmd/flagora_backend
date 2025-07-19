@@ -35,7 +35,7 @@ def country_update(country_obj: Country) -> None:
     }}
     """
 
-    response = requests.get(sparql_url, params={"query": query, "format": "json"})
+    response = requests.get(sparql_url, params={"query": query, "format": "json"}, timeout=30)
     response.raise_for_status()
 
     results = response.json().get("results", {}).get("bindings", [])
@@ -63,7 +63,7 @@ def country_update(country_obj: Country) -> None:
     country_obj.iso3_code = iso3
 
     # Handle continent
-    continents_data = requests.get(continents_url).json()
+    continents_data = requests.get(continents_url, timeout=10).json()
     continent = CONTINENT_MAPPING.get(continents_data.get(iso2), "Unknown")
     country_obj.continent = continent
 

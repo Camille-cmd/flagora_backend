@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict
 
 import requests
+from asgiref.timeout import timeout
 from django.core.management import BaseCommand
 
 from core.management.commands.generate_countries_json_backup import (
@@ -41,7 +42,7 @@ class Command(BaseCommand):
             request_addition = ""
             if country_name:
                 request_addition = f"&where=name_en='{country_name}'"
-            response = requests.get(f"{countries_url}?limit={limit}&offset={offset}{request_addition}")
+            response = requests.get(f"{countries_url}?limit={limit}&offset={offset}{request_addition}", timeout=10)
             results = response.json()["results"]
 
             if len(results) == 0:
@@ -90,7 +91,7 @@ class Command(BaseCommand):
         """
 
         # GET request to SPARQL API
-        response = requests.get(sparql_url, params={"query": query, "format": "json"})
+        response = requests.get(sparql_url, params={"query": query, "format": "json"}, timeout=10)
         response.raise_for_status()
 
         results = response.json().get("results", {}).get("bindings", [])
@@ -138,7 +139,7 @@ class Command(BaseCommand):
         :param country_name: The name of a single country to import.
         """
         countries = self.fetch_countries(country_name)
-        continents_data = requests.get(continents_url).json()
+        continents_data = requests.get(continents_url, timeout=10).json()
         countries_wikidata_ids = [country["wikidata"] for country in countries if country.get("wikidata")]
         capitals_data = self.get_countries_capitals_from_wikidata(countries_wikidata_ids)
 

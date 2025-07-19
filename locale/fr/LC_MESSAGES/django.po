@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-19 22:08+0000\n"
+"POT-Creation-Date: 2025-07-19 23:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: api/routes/api.py:24
+#: api/routes/api.py:27
 msgid "User not authenticated"
 msgstr "Non authentifié"
 
-#: api/routes/api.py:50 api/routes/auth.py:72
+#: api/routes/api.py:54 api/routes/auth.py:71
 msgid "Username already registered"
 msgstr "Nom d'utilisateur déjà enregistré"
 
-#: api/routes/api.py:66
+#: api/routes/api.py:70
 msgid "Old password is incorrect"
 msgstr "Ancien mot de passe incorrect"
 
-#: api/routes/auth.py:44
+#: api/routes/auth.py:43
 msgid "Email or password incorrect"
 msgstr "Email ou mot de passe incorrect"
 
-#: api/routes/auth.py:75
+#: api/routes/auth.py:74
 msgid "Email already registered"
 msgstr "Adresse e-mail déjà enregistrée"
 
@@ -66,20 +66,20 @@ msgstr "Flagora - Bienvenue"
 msgid "Flagora - Confirm your email address"
 msgstr "Flagora - Confirmer votre adresse e-mail"
 
-#: core/admin.py:34
+#: core/admin.py:36
 msgid "Capital Cities"
 msgstr "Capitales"
 
-#: core/admin.py:83
+#: core/admin.py:95
 msgid "(No Flag)"
 msgstr "(Aucun drapeau)"
 
-#: core/admin.py:102
+#: core/admin.py:120
 #, python-brace-format
 msgid "The country '{name_en}' has been updated successfully!"
 msgstr "Le pays '{name_en}' a été mis à jour avec succès !"
 
-#: core/admin.py:105
+#: core/admin.py:125
 msgid ""
 "Note: native name is not a field that can be updated. Please update manually "
 "in the database if needed."
@@ -87,86 +87,86 @@ msgstr ""
 "Note : le nom natif n'est pas un champ pouvant être mis à jour. Veuillez le "
 "mettre à jour manuellement dans la base de données si nécessaire."
 
-#: core/admin.py:110
+#: core/admin.py:133
 #, python-brace-format
 msgid "Failed to update the country '{name_en}': {error}"
 msgstr "Échec de la mise à jour du pays '{name_en}' : {error}"
 
-#: core/models/city.py:5 core/models/country.py:31
+#: core/models/city.py:6 core/models/country.py:32
 msgid "French name"
 msgstr "Nom français"
 
-#: core/models/city.py:6 core/models/country.py:30
+#: core/models/city.py:7 core/models/country.py:31
 msgid "English name"
 msgstr "Nom anglais"
 
-#: core/models/city.py:10
+#: core/models/city.py:11
 msgid "Is capital city"
 msgstr "Est une capitale"
 
-#: core/models/city.py:11
+#: core/models/city.py:12
 msgid "Several cities can be capital cities of a country (e.g, South Africa)."
 msgstr ""
 "Plusieurs villes peuvent être des capitales d’un pays (par ex. Afrique du "
 "Sud)."
 
-#: core/models/city.py:16
+#: core/models/city.py:17
 msgid "city"
 msgstr "ville"
 
-#: core/models/city.py:17
+#: core/models/city.py:18
 msgid "cities"
 msgstr "villes"
 
-#: core/models/country.py:32
+#: core/models/country.py:33
 msgid "Native name"
 msgstr "Nom natif"
 
-#: core/models/country.py:33
+#: core/models/country.py:34
 msgid "iso2 code"
 msgstr "Code iso2"
 
-#: core/models/country.py:34
+#: core/models/country.py:35
 msgid "iso3 code"
 msgstr "Code iso3"
 
-#: core/models/country.py:35
+#: core/models/country.py:36
 msgid "Flag"
 msgstr "(Aucun drapeau)"
 
-#: core/models/country.py:36
+#: core/models/country.py:37
 msgid "Cities"
 msgstr "villes"
 
-#: core/models/country.py:37
+#: core/models/country.py:38
 msgid "Continent"
 msgstr "Continent"
 
-#: core/models/country.py:39
+#: core/models/country.py:40
 msgid "Wikidata ID"
 msgstr "ID Wikidata"
 
-#: core/models/country.py:43 core/models/user_country_score.py:14
+#: core/models/country.py:44 core/models/user_country_score.py:18
 msgid "country"
 msgstr "pays"
 
-#: core/models/country.py:44
+#: core/models/country.py:45
 msgid "countries"
 msgstr "pays"
 
-#: core/models/guess.py:5 core/models/user_country_score.py:12
+#: core/models/guess.py:6 core/models/user_country_score.py:12
 msgid "created at"
 msgstr "Créé le"
 
-#: core/models/guess.py:6
+#: core/models/guess.py:7
 msgid "is correct"
 msgstr "Est correct"
 
-#: core/models/guess.py:10
+#: core/models/guess.py:11
 msgid "guess"
 msgstr "guess"
 
-#: core/models/guess.py:11
+#: core/models/guess.py:12
 msgid "guesses"
 msgstr "guesses"
 
@@ -178,11 +178,11 @@ msgstr ""
 "Entrez un nom d’utilisateur valide. Cette valeur peut contenir uniquement "
 "des lettres, des chiffres et les caractères ./-/_."
 
-#: core/models/user.py:28
+#: core/models/user.py:27
 msgid "is email verified"
 msgstr "L’adresse e-mail est vérifiée"
 
-#: core/models/user.py:29
+#: core/models/user.py:28
 msgid "language"
 msgstr "langue"
 
@@ -202,24 +202,23 @@ msgstr "Deviner la capitale à partir du pays"
 msgid "updated at"
 msgstr "Mis à jour le"
 
-#: core/models/user_country_score.py:15
+#: core/models/user_country_score.py:24
 msgid "user"
 msgstr "utilisateur"
 
-#: core/models/user_country_score.py:16
+#: core/models/user_country_score.py:26
 msgid "game mode"
 msgstr "mode de jeu"
 
-#: core/models/user_country_score.py:17
-#| msgid "guesses"
+#: core/models/user_country_score.py:27
 msgid "user guesses"
 msgstr "tentatives de l'utilisateur"
 
-#: core/models/user_country_score.py:22
+#: core/models/user_country_score.py:32
 msgid "user country score"
 msgstr "score utilisateur par pays"
 
-#: core/models/user_country_score.py:23
+#: core/models/user_country_score.py:33
 msgid "user country scores"
 msgstr "scores utilisateur par pays"
 
@@ -244,14 +243,14 @@ msgstr ""
 msgid "Missing iso2 or iso3 for Wikidata ID: {id}"
 msgstr "Code iso2 ou iso3 manquant pour l’identifiant Wikidata : {id}"
 
-#: core/services.py:77
+#: core/services.py:78
 #, python-brace-format
 msgid "No capital data found for country {name_en} with Wikidata ID {id}"
 msgstr ""
 "Aucune donnée de capitale trouvée pour le pays {name_en} avec l’identifiant "
 "Wikidata {id}"
 
-#: core/services.py:94
+#: core/services.py:98
 #, python-brace-format
 msgid "Could not save flag for country {name_en}"
 msgstr "Impossible d’enregistrer le drapeau pour le pays {name_en}"
@@ -298,7 +297,6 @@ msgid "Security note:"
 msgstr "Note de sécurité :"
 
 #: templates/emails/email_verify.html:82 templates/emails/email_verify.txt:12
-#| msgid "The link will expire in 1 hour for security reasons."
 msgid "This link will expire in 24 hours. If you did not create an account on"
 msgstr "Le lien expirera dans 24h pour des raisons de sécurité."
 
@@ -312,7 +310,6 @@ msgid "Why confirm your email?"
 msgstr "Pourquoi confirmer votre e-mail ?"
 
 #: templates/emails/email_verify.html:95 templates/emails/email_verify.txt:15
-#| msgid "Secure your account against unauthorized access"
 msgid "Protect your account against unauthorized access"
 msgstr "Sécuriser votre compte contre tout accès non autorisé"
 
@@ -331,7 +328,8 @@ msgid ""
 "If the button doesn't work, you can copy and paste the following link into "
 "your browser:"
 msgstr ""
-"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant dans votre navigateur :"
+"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant "
+"dans votre navigateur :"
 
 #: templates/emails/email_verify.html:118 templates/emails/email_verify.txt:19
 msgid "See you soon on"
@@ -345,26 +343,25 @@ msgstr "L'"
 msgid "team"
 msgstr "équipe"
 
-#: templates/emails/email_verify.html:129 templates/emails/email_verify.txt:22
+#: templates/emails/email_verify.html:129
 msgid "If you have any questions, please contact us at"
 msgstr ""
 
-#: templates/emails/email_verify.html:131 templates/emails/email_verify.txt:24
+#: templates/emails/email_verify.html:131
 msgid "Privacy Policy"
 msgstr ""
 
-#: templates/emails/email_verify.html:132 templates/emails/email_verify.txt:25
+#: templates/emails/email_verify.html:132
 msgid "Terms of Service"
 msgstr ""
 
-#: templates/emails/email_verify.html:134 templates/emails/email_verify.txt:27
+#: templates/emails/email_verify.html:134 templates/emails/email_verify.txt:22
 #: templates/emails/reset_password.html:116 templates/emails/welcome.html:150
 #: templates/emails/welcome.txt:20
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
 #: templates/emails/email_verify.txt:2
-#| msgid "Confirm your email address"
 msgid "Confirm your email address - Flagora"
 msgstr "Confirmer votre adresse e-mail - Flagora"
 
@@ -378,7 +375,8 @@ msgstr ""
 msgid ""
 "If the button doesn’t work, copy and paste the above link into your browser."
 msgstr ""
-"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant dans votre navigateur :"
+"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant "
+"dans votre navigateur :"
 
 #: templates/emails/reset_password.html:8
 msgid "Password reset"
@@ -480,24 +478,21 @@ msgstr ""
 "le lien suivant dans votre navigateur :"
 
 #: templates/emails/welcome.txt:2
-#| msgid "Welcome to"
 msgid "Welcome to Flagora!"
 msgstr "Bienvenue sur Flagora"
 
 #: templates/emails/welcome.txt:6
-#| msgid "Please confirm your email address."
 msgid "Please confirm your email address by clicking the link below:"
 msgstr "Confirmer votre adresse e-mail en cliquant sur le lien suivant :"
 
 #: templates/emails/welcome.txt:10
-#| msgid ""
 msgid ""
 "If you are unable to click the link, you can copy and paste it into your "
 "browser."
 msgstr ""
-"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant dans votre navigateur :"
+"Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant "
+"dans votre navigateur :"
 
 #: templates/emails/welcome.txt:18
-#| msgid "The Flagora Team!"
 msgid "The Flagora Team"
 msgstr "L’équipe Flagora."

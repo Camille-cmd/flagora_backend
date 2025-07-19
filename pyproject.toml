@@ -68,3 +68,6 @@ exclude = [
 
 [tool.autoflake]
 imports = ["django", "requests", "urllib3"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "migrations"]
