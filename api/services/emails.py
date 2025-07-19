@@ -10,7 +10,7 @@ from flagora.settings import FRONTEND_URL
 
 def send_email_reset_password(user: User, uid: str, token: str):
     with translation.override(user.language):
-        subject = _("Flagora - Réinitialisation de votre mot de passe")
+        subject = _("Flagora - Reset your password")
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = [user.email]
 
@@ -52,7 +52,7 @@ def send_email_welcome(user: User):
 
 def send_email_email_verification(user: User):
     with translation.override(user.language):
-        subject = _("Flagora - Vérification de votre adresse email")
+        subject = _("Flagora - Confirm your email address")
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = [user.email]
 

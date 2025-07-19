@@ -19,9 +19,4 @@
 {% blocktrans %}See you soon on{% endblocktrans %} Flagora,
 {% blocktrans %}The{% endblocktrans %} Flagora {% blocktrans %}team{% endblocktrans %}
 
-{% blocktrans %}If you have any questions, please contact us at{% endblocktrans %} support@{{ app_domain }}
-
-{{ privacy_url }} - {% blocktrans %}Privacy Policy{% endblocktrans %}
-{{ terms_url }} - {% blocktrans %}Terms of Service{% endblocktrans %}
-
 © {{ current_year }} Flagora. {% blocktrans %}All rights reserved.{% endblocktrans %}
