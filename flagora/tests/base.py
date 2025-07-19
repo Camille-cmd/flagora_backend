@@ -1,8 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from ninja.testing import TestClient
 
-from api.routes.auth import auth_router
 from core.tests.factories import UserFactory, CountryFactory, CityFactory
 
 

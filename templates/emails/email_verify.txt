@@ -1,0 +1,27 @@
+{% load i18n %}
+{% blocktrans %}Confirm your email address - Flagora{% endblocktrans %}
+
+{% blocktrans %}Hello{% endblocktrans %} {{ user_name }},
+
+{% blocktrans %}To activate your account, please confirm your email address by clicking the link below:{% endblocktrans %}
+
+{{ confirmation_url }}
+
+{% blocktrans %}If the button doesn’t work, copy and paste the above link into your browser.{% endblocktrans %}
+
+{% blocktrans %}Security note:{% endblocktrans %} {% blocktrans %}This link will expire in 24 hours. If you did not create an account on{% endblocktrans %} Flagora, {% blocktrans %}please ignore this email.{% endblocktrans %}
+
+{% blocktrans %}Why confirm your email?{% endblocktrans %}
+- {% blocktrans %}Protect your account against unauthorized access{% endblocktrans %}
+- {% blocktrans %}Receive important notifications{% endblocktrans %}
+- {% blocktrans %}Easily recover your account if you forget your password{% endblocktrans %}
+
+{% blocktrans %}See you soon on{% endblocktrans %} Flagora,
+{% blocktrans %}The{% endblocktrans %} Flagora {% blocktrans %}team{% endblocktrans %}
+
+{% blocktrans %}If you have any questions, please contact us at{% endblocktrans %} support@{{ app_domain }}
+
+{{ privacy_url }} - {% blocktrans %}Privacy Policy{% endblocktrans %}
+{{ terms_url }} - {% blocktrans %}Terms of Service{% endblocktrans %}
+
+© {{ current_year }} Flagora. {% blocktrans %}All rights reserved.{% endblocktrans %}

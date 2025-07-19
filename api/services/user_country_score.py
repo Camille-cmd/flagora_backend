@@ -10,6 +10,8 @@ from core.models import Country, User, UserCountryScore, Guess
 class UserCountryScoreService:
     DECAY_CONSTANT = 4000
     COOLDOWN = 5
+    DEFAULT_FORGETTING_SCORE = 70
+    DEFAULT_FAILURE_SCORE = 70
 
     def __init__(self, user: User):
         self.user = user
@@ -27,7 +29,7 @@ class UserCountryScoreService:
 
         """
         if len(guesses) == 0:
-            return 70  # on met un score au milieu
+            return self.DEFAULT_FAILURE_SCORE  # on met un score au milieu
 
         total_weight = 0
         failure_weight = 0
@@ -53,7 +55,7 @@ class UserCountryScoreService:
         Returns:
         """
         if not last_guess:
-            return 70  # middle score
+            return self.DEFAULT_FORGETTING_SCORE  # middle score
 
         last_asked = last_guess["created_at"]
         t_minutes = max((self.datetime_now - last_asked).total_seconds() / 60, 1)
@@ -64,6 +66,10 @@ class UserCountryScoreService:
 
         return min(100 - retention_factor, 100)
 
+    @staticmethod
+    def _compute_question_weight(failure_score: float, forgetting_score: float):
+        return (failure_score * 0.7 + forgetting_score * 0.4) / 100
+
     def compute_weight(self, user_country_score: UserCountryScore):
         guesses = user_country_score.user_guesses.values("created_at", "is_correct")
         guesses = list(guesses)
@@ -72,13 +78,26 @@ class UserCountryScoreService:
         failure_score = self._compute_failure_score(guesses)
         forgetting_score = self._compute_forgetting_score(last_guess)
 
-        question_weight = (failure_score * 0.7 + forgetting_score * 0.4) / 100
+        question_weight = self._compute_question_weight(failure_score, forgetting_score)
 
         return {
             "user_country_score": user_country_score,
+            "country": user_country_score.country,
             "weight":  round(question_weight, 4),
             "failure_score": round(failure_score, 2),
             "forgetting_score": round(forgetting_score, 2)
+        }
+
+    def get_default_weight(self, country: Country):
+        """
+        Weight for a country without any UserCountryScore yet. Default values.
+        """
+        return {
+            "user_country_score": None,
+            "country": country,
+            "weight": self._compute_question_weight(self.DEFAULT_FAILURE_SCORE, self.DEFAULT_FORGETTING_SCORE),
+            "failure_score": self.DEFAULT_FAILURE_SCORE,
+            "forgetting_score": self.DEFAULT_FORGETTING_SCORE
         }
 
 
@@ -90,9 +109,13 @@ class UserCountryScoreService:
         # TODO : GAME MODE
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
         self.user_country_scores = UserCountryScore.objects.filter(user=self.user, updated_at__lte=cooldown_threshold)
+        countries_without_score = Country.objects.filter(country_scores__isnull=True)
 
         # Step 1: Compute weights
         scored_questions = [self.compute_weight(q) for q in self.user_country_scores]
+        # Add never seen countries if any (no score yet, but we need to ask)
+        if countries_without_score.exists():
+            scored_questions.extend([self.get_default_weight(c) for c in countries_without_score])
 
         # Step 2: Normalize the weights (total amount of "chance" available)
         total_weight = sum(q["weight"] for q in scored_questions)
@@ -113,7 +136,7 @@ class UserCountryScoreService:
                 cumulative += q["normalized_weight"]
                 # The first time the cumulative chance exceeds the rand_val, we stop
                 if rand_val <= cumulative:
-                    chosen = q["user_country_score"].country
+                    chosen = q["country"]
                     selection.append(chosen)
                     break
 

@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from core.models import UserCountryScore
+
+
+@admin.register(UserCountryScore)
+class UserCountryScoreAdmin(admin.ModelAdmin):
+    pass

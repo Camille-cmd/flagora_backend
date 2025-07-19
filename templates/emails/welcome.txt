@@ -1,0 +1,20 @@
+{% load i18n %}
+{% blocktrans %}Welcome to Flagora!{% endblocktrans %}
+
+{% blocktrans %}Hello,{% endblocktrans %}
+
+{% blocktrans %}Thank you for creating your account on{% endblocktrans %} Flagora. {% blocktrans %}Please confirm your email address by clicking the link below:{% endblocktrans %}
+
+{{ confirmation_url }}
+
+{% blocktrans %}If you are unable to click the link, you can copy and paste it into your browser.{% endblocktrans %}
+
+{% blocktrans %}Why confirm your email?{% endblocktrans %}
+- {% blocktrans %}Secure your account against unauthorized access{% endblocktrans %}
+- {% blocktrans %}Receive important notifications regarding your account{% endblocktrans %}
+- {% blocktrans %}Easily recover your account if you forget your password{% endblocktrans %}
+
+{% blocktrans %}Have a nice day!{% endblocktrans %}
+{% blocktrans %}The Flagora Team{% endblocktrans %}
+
+© {{ current_year }} Flagora {% blocktrans %}All rights reserved.{% endblocktrans %}

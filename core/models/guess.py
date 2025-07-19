@@ -12,6 +12,3 @@ class Guess(models.Model):
 
     def __str__(self):
         return f"{self.is_correct} on {str(self.created_at)}"
-
-    def weight(self):
-        pass

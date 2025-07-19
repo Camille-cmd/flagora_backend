@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 
 from api.services.user_country_score import UserCountryScoreService
+from core.models import UserCountryScore
 from core.tests.factories import (
     CountryFactory,
     GuessFactory,
@@ -106,14 +107,17 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
     @patch("random.random")
     def test_compute_questions_weighted_random(self, mock_random, mock_weight):
         # Add multiple scores
+        UserCountryScore.objects.all().delete()
         scores = [
             UserCountryScoreFactory(user=self.user, country=CountryFactory(), user_guesses=GuessFactory.create_batch(2))
             for _ in range(3)
         ]
+        # Update to avoid triggering the auto_now on the updated_at field
+        UserCountryScore.objects.all().update(updated_at=self.now - timedelta(minutes=10))
 
         # Patch weights
         mock_weight.side_effect = [
-            {"user_country_score": score, "weight": w, "failure_score": 0, "forgetting_score": 0}
+            {"user_country_score": score, "country": score.country, "weight": w, "failure_score": 0, "forgetting_score": 0}
             for score, w in zip(scores, [0.1, 0.3, 0.6])
         ]
 
@@ -134,23 +138,28 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
         # Score 1: Last guess was just now → should be excluded
         guess = GuessFactory()
-        recent_score = UserCountryScoreFactory(user=self.user, country=CountryFactory(iso2_code="TT"), user_guesses=[guess])
+        recent_score = UserCountryScoreFactory(
+            user=self.user,
+            country=CountryFactory(name_en="Papua New Guinea", iso2_code="PG"),
+            user_guesses=[guess],
+            updated_at=self.now - timedelta(minutes=1)
+        )
         # New guess updates the score
-        recent_score.updated_at=self.now - timedelta(minutes=1)
-        recent_score.save()
+        # Update to avoid triggering the auto_now on the updated_at field
+        UserCountryScore.objects.filter(pk=recent_score.pk).update(updated_at=self.now - timedelta(minutes=1))
 
         # Score 2: Last guess was old enough → should be included
         guess = GuessFactory()
-        old_score = UserCountryScoreFactory(user=self.user, country=CountryFactory(iso2_code="DD"), user_guesses=[guess])
-        old_score.updated_at=self.now - timedelta(minutes=10)
-        old_score.save()
+        old_score = UserCountryScoreFactory(user=self.user, country=CountryFactory(name_en="Costa Rica", iso2_code="CR"), user_guesses=[guess])
+        UserCountryScore.objects.filter(pk=old_score.pk).update(updated_at=self.now - timedelta(minutes=10))
 
         # Score 3: No guesses at all → should be included
-        no_guess_score = UserCountryScoreFactory(user=self.user, country=CountryFactory(iso2_code="PP"))
+        no_guess_country = self.country
 
         # Patch compute_weight to make test predictable
         mock_weight.side_effect = lambda score: {
             "user_country_score": score,
+            "country": score.country,
             "weight": 1.0,
             "failure_score": 50,
             "forgetting_score": 50,
@@ -164,7 +173,7 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         selected_countries = {c.pk for c in questions}
         expected_countries = {
             old_score.country.pk,
-            no_guess_score.country.pk,
+            no_guess_country.pk,
         }
         # Assert all selected countries are only from valid (non-recent) scores
         self.assertTrue(expected_countries.issubset(selected_countries))
