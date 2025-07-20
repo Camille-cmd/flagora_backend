@@ -1,3 +1,4 @@
+from abc import ABC
 from uuid import UUID
 
 from django.contrib.auth.models import AnonymousUser
@@ -6,13 +7,11 @@ from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
 
-from api.flag_store import flag_store
 from api.schema import NewQuestions
-from api.services.user_country_score import UserCountryScoreService
 from core.models import Country, Guess, User, UserCountryScore
 
 
-class GameService:
+class GameService(ABC):
     CACHE_TIMEOUT_SECONDS = 86400
 
     @classmethod
@@ -50,25 +49,7 @@ class GameService:
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:
-        """
-        Get the selected questions.
-        Append questions in the cache for answer checking after.
-        """
-        questions_with_answer = cache.get(session_id) or {}
-        len_previous_data = len(questions_with_answer)
-
-        new_questions = {}
-        user = cls.user_get(session_id)
-        countries = UserCountryScoreService(user).compute_questions()
-
-        for index, country in enumerate(countries):
-            next_index = len_previous_data + index
-            new_questions[next_index] = flag_store.get_path(country.iso2_code) or ""
-            questions_with_answer[next_index] = country.iso2_code
-
-        cache.set(session_id, questions_with_answer, timeout=cls.CACHE_TIMEOUT_SECONDS)
-        print("CAMILLE IS CHEATING", questions_with_answer)
-        return NewQuestions(questions=new_questions)
+        pass
 
     @classmethod
     def check_answer(
@@ -78,22 +59,11 @@ class GameService:
         answer_submitted: str,
         user: User | AnonymousUser,
     ) -> (bool, Country | None):
-        """
-        Return whether the answer received is the expected one.
-        """
-        questions = cache.get(session_id)
+        pass
 
-        if not questions or question_index not in questions:
-            return False, None
-
-        country_to_guess_iso2_code = questions.get(question_index)
-        is_correct = country_to_guess_iso2_code == answer_submitted
-
-        country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
-        if user.is_authenticated:
-            cls.guess_register(user, is_correct, country)
-
-        return is_correct, country
+    @classmethod
+    def get_correct_answer(cls, user: User, country: Country) -> dict[str, str | None]:
+        pass
 
     @classmethod
     @transaction.atomic
@@ -104,7 +74,7 @@ class GameService:
         score, _ = UserCountryScore.objects.get_or_create(
             user=user,
             country=country,
-            game_mode=UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG,  # TODO: le front doit envoyer le mode de jeu
+            game_mode=cls.GAME_MODE,
         )
         guess = Guess.objects.create(is_correct=is_correct)
         score.user_guesses.add(guess)

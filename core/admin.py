@@ -7,7 +7,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from core.models import City, Country, User
+from core.models import City, Country, Guess, User
 from core.services import country_update
 
 
@@ -135,3 +135,8 @@ class CountryAdmin(admin.ModelAdmin):
 
         # Redirect back to the detail page
         return redirect("admin:core_country_change", object_id)
+
+
+@admin.register(Guess)
+class GuessAdmin(admin.ModelAdmin):
+    pass

@@ -1,12 +1,13 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-from django.utils.translation import get_language
 
+from api.game_registery import GameServiceRegistry
 from api.schema import AnswerResult, SetUserWebsocket, WebsocketMessage
-from api.services.game import GameService
+from api.services.game_modes.base_game import GameService
 
 
 class GameConsumer(JsonWebsocketConsumer):
     questions = []
+    game_service: GameService
 
     def connect(self):
         self.accept()
@@ -24,9 +25,12 @@ class GameConsumer(JsonWebsocketConsumer):
             case _:
                 raise ValueError(f"Unknown message type: {content['type']}")
 
-    def store_user(self, content: SetUserWebsocket):
-        token = content["token"]
-        is_user_authenticated = GameService.user_accept(self.channel_name, token)
+    def store_user(self, content: dict):
+        data = SetUserWebsocket.model_validate(content, by_alias=True)
+        self.game_service = GameServiceRegistry.get_game_service(data.game_mode)
+
+        token = data.token
+        is_user_authenticated = self.game_service.user_accept(self.channel_name, token)
 
         message = WebsocketMessage(
             type="user_accept",
@@ -40,7 +44,7 @@ class GameConsumer(JsonWebsocketConsumer):
         self.send_questions()
 
     def send_questions(self):
-        questions = GameService.get_questions(self.channel_name)
+        questions = self.game_service.get_questions(self.channel_name)
         self.questions = questions
         message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
@@ -48,31 +52,23 @@ class GameConsumer(JsonWebsocketConsumer):
     def answer_result(self, content: dict[int, str], skipped: bool = False):
         question_id = int(content["id"])
         answer_submitted = content["answer"] if not skipped else ""
-        user = GameService.user_get(self.channel_name)
+        user = self.game_service.user_get(self.channel_name)
 
-        is_correct, country = GameService.check_answer(self.channel_name, question_id, answer_submitted, user)
+        is_correct, country = self.game_service.check_answer(self.channel_name, question_id, answer_submitted, user)
 
-        correct_answer = ""
-        code = ""
-        wikipedia_link = ""
+        correct_answer_data = {}
         if skipped:
             # On skips, we send the correct answer to the frontend
-            user_language = get_language()
-            if user.is_authenticated:
-                user_language = user.language
-            name_field = f"name_{user_language}"
-            correct_answer = getattr(country, name_field)
-            code = country.iso2_code
-            wikipedia_link = f"https://fr.wikipedia.org/wiki/{correct_answer}"
+            correct_answer_data = self.game_service.get_correct_answer(user, country)
 
         message = WebsocketMessage(
             type="answer_result",
             payload=AnswerResult(
                 id=content["id"],
                 is_correct=is_correct,
-                correct_answer=correct_answer,
-                code=code,
-                wikipedia_link=wikipedia_link,
+                correct_answer=correct_answer_data.get("correct_answer", ""),
+                code=correct_answer_data.get("code", ""),
+                wikipedia_link=correct_answer_data.get("wikipedia_link", ""),
             ).model_dump(by_alias=True),
         )
 

@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 from ninja import Router
 
 from api.schema import (
+    CitiesOut,
+    CityOut,
     CountriesOut,
     CountryOut,
     ResponseError,
@@ -12,7 +14,8 @@ from api.schema import (
     UserUpdate,
     UserUpdatePassword,
 )
-from core.models import Country, User
+from api.utils import user_get_language
+from core.models import City, Country, User
 
 router = Router(by_alias=True)
 
@@ -80,10 +83,8 @@ def country_get_list(request: HttpRequest):
     """
     Return the list of all countries' names in the user-selected language.
     """
-    language = request.LANGUAGE_CODE
-    if request.user.is_authenticated:
-        language = request.user.language
-    name_field = f"name_{language}"
+    user_language = user_get_language(request.user)
+    name_field = f"name_{user_language}"
     countries_qs = Country.objects.all().values(name_field, "iso2_code").order_by(name_field)
 
     countries = []
@@ -92,3 +93,20 @@ def country_get_list(request: HttpRequest):
         countries.append(country_out)
 
     return 200, CountriesOut(countries=countries)
+
+
+@router.get("city/list", response={200: CitiesOut}, auth=None)
+def city_get_list(request: HttpRequest):
+    """
+    Return the list of all cities' names in the user-selected language.
+    """
+    user_language = user_get_language(request.user)
+    name_field = f"name_{user_language}"
+    cities_qs = City.objects.all().values(name_field).order_by(name_field)
+
+    cities = []
+    for city in cities_qs:
+        city_out = CityOut(name=city[name_field])
+        cities.append(city_out)
+
+    return 200, CitiesOut(cities=cities)

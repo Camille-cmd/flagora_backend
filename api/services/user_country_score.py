@@ -1,6 +1,7 @@
 import math
 import random
 
+from django.db.models import Q
 from django.utils import timezone
 
 from core.models import Country, User, UserCountryScore
@@ -12,10 +13,11 @@ class UserCountryScoreService:
     DEFAULT_FORGETTING_SCORE = 70
     DEFAULT_FAILURE_SCORE = 70
 
-    def __init__(self, user: User):
+    def __init__(self, user: User, game_mode: UserCountryScore.GameModes):
         self.user = user
         self.datetime_now = timezone.now()
         self.user_country_scores = []
+        self.game_mode = game_mode
 
     def _compute_failure_score(self, guesses: list):
         """
@@ -104,10 +106,13 @@ class UserCountryScoreService:
         if not self.user.is_authenticated:
             return Country.objects.order_by("?")[0:pack_len]
 
-        # TODO : GAME MODE
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
-        self.user_country_scores = UserCountryScore.objects.filter(user=self.user, updated_at__lte=cooldown_threshold)
-        countries_without_score = Country.objects.filter(country_scores__isnull=True)
+        self.user_country_scores = UserCountryScore.objects.filter(
+            user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
+        )
+        countries_without_score = Country.objects.filter(
+            Q(country_scores__isnull=True) | ~Q(country_scores__game_mode=self.game_mode)
+        )
 
         # Step 1: Compute weights
         scored_questions = [self.compute_weight(q) for q in self.user_country_scores]

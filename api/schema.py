@@ -1,6 +1,8 @@
 from ninja import Schema
 from pydantic.v1.utils import to_lower_camel
 
+from core.models import UserCountryScore
+
 
 class BaseSchema(Schema):
     pass
@@ -105,10 +107,19 @@ class CountryOut(BaseSchema):
     name: str
 
 
+class CityOut(BaseSchema):
+    name: str
+
+
 class CountriesOut(BaseSchema):
     countries: list[CountryOut]
+
+
+class CitiesOut(BaseSchema):
+    cities: list[CityOut]
 
 
 class SetUserWebsocket(BaseSchema):
     type: str
     token: str
+    game_mode: UserCountryScore.GameModes
