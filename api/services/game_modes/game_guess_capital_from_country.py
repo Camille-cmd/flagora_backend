@@ -29,8 +29,6 @@ class GameServiceGuessCapitalFromCountry(GameService):
         countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE).compute_questions()
         user_language = user_get_language(user)
         name_field = f"name_{user_language}"
-        # Keep the language in the cache to be sure to get the correct field in answer correction
-        # questions_with_answer["language"] = user_language
 
         question_index = 0
         for country in countries:
@@ -38,7 +36,8 @@ class GameServiceGuessCapitalFromCountry(GameService):
                 continue
             next_index = len_previous_data + question_index
             new_questions[next_index] = getattr(country, name_field)
-            questions_with_answer[next_index] = list(country.cities.values_list("id", flat=True))
+            # Send name field to keep a consistent answer check
+            questions_with_answer[next_index] = (list(country.cities.values_list("id", flat=True)), name_field)
 
             question_index += 1
 
@@ -62,14 +61,15 @@ class GameServiceGuessCapitalFromCountry(GameService):
         if not questions or question_index not in questions:
             return False, None
 
-        cities_ids_list = questions.get(question_index)
-        user_language = user_get_language(user)
-        name_field = f"name_{user_language}"
+        cities_ids_list, name_field = questions.get(question_index)
 
         cities_names = City.objects.filter(id__in=cities_ids_list).values_list(name_field, flat=True)
         is_correct = answer_submitted in cities_names
 
-        country = Country.objects.get(cities__in=cities_ids_list)
+        countries = Country.objects.filter(cities__in=cities_ids_list).distinct()
+        if countries.count() != 1:
+            raise ValueError(f"Multiple countries found for cities: {list(cities_names)}")
+        country = countries.first()
         if user.is_authenticated:
             cls.guess_register(user, is_correct, country)
 

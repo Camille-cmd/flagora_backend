@@ -34,7 +34,7 @@ class TestEmails(FlagoraTestCase):
         email = mail.outbox[0]
 
         # Subject and recipient check
-        self.assertIn("Flagora - Réinitialisation de votre mot de passe", email.subject)
+        self.assertIn("Flagora - Réinitialiser votre mot de passe", email.subject)
         self.assertIn(self.user.email, email.to)
 
         # URL and language check
@@ -93,7 +93,7 @@ class TestEmails(FlagoraTestCase):
         email = mail.outbox[0]
 
         # Check subject and recipient
-        self.assertIn("Flagora - Vérification de votre adresse email", email.subject)
+        self.assertIn("Flagora - Confirmer votre adresse e-mail", email.subject)
         self.assertIn(self.user.email, email.to)
 
         # Check email content

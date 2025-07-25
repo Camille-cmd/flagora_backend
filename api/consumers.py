@@ -1,4 +1,5 @@
 from channels.generic.websocket import JsonWebsocketConsumer
+from django.utils.translation import gettext as _
 
 from api.game_registery import GameServiceRegistry
 from api.schema import AnswerResult, SetUserWebsocket, WebsocketMessage
@@ -28,6 +29,8 @@ class GameConsumer(JsonWebsocketConsumer):
     def store_user(self, content: dict):
         data = SetUserWebsocket.model_validate(content, by_alias=True)
         self.game_service = GameServiceRegistry.get_game_service(data.game_mode)
+        if self.game_service is None:
+            raise ValueError(_("Unknown game mode: {game_mode}".format(game_mode=data.game_mode)))
 
         token = data.token
         is_user_authenticated = self.game_service.user_accept(self.channel_name, token)

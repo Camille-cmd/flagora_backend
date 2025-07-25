@@ -28,14 +28,15 @@ class GameServiceGuessCountryFromFlag(GameService):
         new_questions = {}
         user = cls.user_get(session_id)
         countries = UserCountryScoreService(user, cls.GAME_MODE).compute_questions()
+        user_language = user_get_language(user)
+        name_field = f"name_{user_language.split('-')[0]}"
 
         for index, country in enumerate(countries):
             next_index = len_previous_data + index
             new_questions[next_index] = flag_store.get_path(country.iso2_code) or ""
-            questions_with_answer[next_index] = country.iso2_code
+            questions_with_answer[next_index] = (getattr(country, name_field), country.iso2_code)
 
         cache.set(session_id, questions_with_answer, timeout=cls.CACHE_TIMEOUT_SECONDS)
-        print("CAMILLE IS CHEATING", questions_with_answer)
         return NewQuestions(questions=new_questions)
 
     @classmethod
@@ -54,8 +55,8 @@ class GameServiceGuessCountryFromFlag(GameService):
         if not questions or question_index not in questions:
             return False, None
 
-        country_to_guess_iso2_code = questions.get(question_index)
-        is_correct = country_to_guess_iso2_code == answer_submitted
+        country_to_guess_name, country_to_guess_iso2_code = questions.get(question_index)
+        is_correct = country_to_guess_name.lower() == answer_submitted.lower()
 
         country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
         if user.is_authenticated:
