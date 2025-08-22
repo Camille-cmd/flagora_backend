@@ -11,11 +11,13 @@ from api.schema import (
     ResponseError,
     ResponseUserOut,
     UserLanguageSet,
+    UserStatsByGameMode,
     UserUpdate,
     UserUpdatePassword,
 )
 from api.utils import user_get_language
 from core.models import City, Country, User
+from core.services.stats_sevices import user_get_stats
 
 router = Router(by_alias=True)
 
@@ -110,3 +112,9 @@ def city_get_list(request: HttpRequest):
         cities.append(city_out)
 
     return 200, CitiesOut(cities=cities)
+
+
+@router.get("user/stats", response={200: list[UserStatsByGameMode]})
+def user_stats(request: HttpRequest):
+    stats = user_get_stats(request.user)
+    return 200, stats

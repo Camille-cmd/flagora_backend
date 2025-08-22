@@ -1,7 +1,7 @@
 from unittest.mock import Mock, patch
 
 from core.models import City, Country
-from core.services import country_update
+from core.services.country_services import country_update
 from flagora.tests.base import FlagoraTestCase
 
 

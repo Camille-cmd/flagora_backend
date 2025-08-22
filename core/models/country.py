@@ -66,3 +66,10 @@ class Country(models.Model):
             return True
 
         return False
+
+    @property
+    def capitals(self) -> models.QuerySet["City"]:
+        return self.cities.filter(is_capital=True)
+
+    def get_capitals_names(self, name_field) -> list["City"]:
+        return list(self.capitals.values_list(name_field, flat=True))

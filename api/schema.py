@@ -107,8 +107,19 @@ class CountryOut(BaseSchema):
     name: str
 
 
+class CountryOutStats(CountryOut):
+    flag: str
+    success_rate: float = 0.0
+
+
 class CityOut(BaseSchema):
     name: str
+
+
+class CityOutStats(CityOut):
+    name: list  # a country can have multiple capital cities
+    country: CountryOutStats
+    success_rate: float = 0.0
 
 
 class CountriesOut(BaseSchema):
@@ -123,3 +134,15 @@ class SetUserWebsocket(BaseSchema):
     type: str
     token: str
     game_mode: UserCountryScore.GameModes
+
+
+class UserStats(BaseSchema):
+    most_strikes: int
+    most_failed: CountryOutStats | CityOutStats
+    most_correctly_guessed: CountryOutStats | CityOutStats
+    success_rate: float = 0.0
+
+
+class UserStatsByGameMode(BaseSchema):
+    game_mode: UserCountryScore.GameModes
+    stats: UserStats

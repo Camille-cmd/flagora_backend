@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from core.models import City, Country, Guess, User
-from core.services import country_update
+from core.services.country_services import country_update
 
 
 @admin.register(User)
