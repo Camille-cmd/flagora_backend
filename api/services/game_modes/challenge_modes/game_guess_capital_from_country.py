@@ -1,0 +1,8 @@
+from api.game_registery import GameServiceRegistry
+from api.services.game_modes.game_guess_capital_from_country_base import GameServiceGuessCapitalFromCountryBase
+from core.models.user_country_score import GameModes
+
+
+@GameServiceRegistry.register(GameModes.GUESS_CAPITAL_FROM_COUNTRY_CHALLENGE_COMBO)
+class GameServiceGuessCapitalFromCountryChallengeCombo(GameServiceGuessCapitalFromCountryBase):
+    GAME_MODE = GameModes.GUESS_CAPITAL_FROM_COUNTRY_CHALLENGE_COMBO

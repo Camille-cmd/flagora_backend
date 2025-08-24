@@ -12,9 +12,8 @@ from api.utils import user_get_language
 from core.models import Country, User, UserCountryScore
 
 
-@GameServiceRegistry.register(UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
-class GameServiceGuessCountryFromFlag(GameService):
-    GAME_MODE = UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG
+class GameServiceGuessCountryFromFlagBase(GameService):
+    GAME_MODE = ""
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:
@@ -46,7 +45,7 @@ class GameServiceGuessCountryFromFlag(GameService):
         question_index: int,
         answer_submitted: str,
         user: User | AnonymousUser,
-    ) -> (bool, Country | None):
+    ) -> tuple[bool, Country | None]:
         """
         Return whether the answer received is the expected one.
         """
@@ -57,7 +56,6 @@ class GameServiceGuessCountryFromFlag(GameService):
 
         country_to_guess_name, country_to_guess_iso2_code = questions.get(question_index)
         is_correct = country_to_guess_name.lower() == answer_submitted.lower()
-
         country = Country.objects.get(iso2_code=country_to_guess_iso2_code)
         if user.is_authenticated:
             cls.guess_register(user, is_correct, country)

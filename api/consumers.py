@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from api.game_registery import GameServiceRegistry
 from api.schema import AnswerResult, SetUserWebsocket, WebsocketMessage
 from api.services.game_modes.base_game import GameService
+from core.services.user_services import user_get_beast_steak
 
 
 class GameConsumer(JsonWebsocketConsumer):
@@ -59,9 +60,14 @@ class GameConsumer(JsonWebsocketConsumer):
 
         is_correct, country = self.game_service.check_answer(self.channel_name, question_id, answer_submitted, user)
 
+        current_streak, game_over, best_streak = self.game_service.user_get_streak_score(
+            self.channel_name, user, is_correct
+        )
+
         correct_answer_data = {}
-        if skipped:
+        if skipped or game_over:
             # On skips, we send the correct answer to the frontend
+            # On a challenge, game over is possible, we also send the correct answer to the frontend
             correct_answer_data = self.game_service.get_correct_answer(user, country)
 
         message = WebsocketMessage(
@@ -69,6 +75,8 @@ class GameConsumer(JsonWebsocketConsumer):
             payload=AnswerResult(
                 id=content["id"],
                 is_correct=is_correct,
+                current_streak=current_streak,
+                best_streak=best_streak,
                 correct_answer=correct_answer_data.get("correct_answer", ""),
                 code=correct_answer_data.get("code", ""),
                 wikipedia_link=correct_answer_data.get("wikipedia_link", ""),

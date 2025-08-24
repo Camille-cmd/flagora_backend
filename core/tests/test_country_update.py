@@ -38,7 +38,7 @@ class CountryUpdateTest(FlagoraTestCase):
         mock_response.raise_for_status = Mock()
         return mock_response
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     @patch.object(Country, "save_flag", return_value=True)
     def test_successful_update(self, mock_save_flag, mock_get):
         mock_get.side_effect = self.mock_requests_get
@@ -63,7 +63,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("Wikidata ID is missing", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     def test_empty_results_from_sparql(self, mock_get):
         mock_response = Mock()
         mock_response.json.return_value = {"results": {"bindings": []}}
@@ -74,7 +74,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("No results found", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     def test_too_many_results(self, mock_get):
         too_many = {"results": {"bindings": self.mock_sparql_data["results"]["bindings"] * 4}}
         mock_response = Mock()
@@ -86,7 +86,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("Too many results found", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     def test_missing_name_fields(self, mock_get):
         broken_data = {"results": {"bindings": [{"iso2": {"value": "EX"}, "iso3": {"value": "EXP"}}]}}
         mock_response = Mock()
@@ -98,7 +98,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("Missing name_en or name_fr", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     def test_missing_iso_fields(self, mock_get):
         broken_data = {
             "results": {
@@ -119,7 +119,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("Missing iso2 or iso3", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     @patch.object(Country, "save_flag", return_value=False)
     def test_flag_not_saved(self, mock_save_flag, mock_get):
         mock_get.side_effect = self.mock_requests_get
@@ -127,7 +127,7 @@ class CountryUpdateTest(FlagoraTestCase):
             country_update(self.country)
         self.assertIn("Could not save flag", str(ctx.exception))
 
-    @patch("core.services.requests.get")
+    @patch("core.services.country_services.requests.get")
     @patch.object(Country, "save_flag", return_value=True)
     def test_missing_capital(self, mock_save_flag, mock_get):
         no_capital = {

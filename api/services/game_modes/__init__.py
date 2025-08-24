@@ -1,7 +1,11 @@
-from .game_guess_capital_from_country import GameServiceGuessCapitalFromCountry
-from .game_guess_country_from_flag import GameServiceGuessCountryFromFlag
+from .challenge_modes.game_guess_capital_from_country import GameServiceGuessCapitalFromCountryChallengeCombo
+from .challenge_modes.game_guess_country_from_flag import GameServiceGuessCountryFromFlagChallengeCombo
+from .training_modes.game_guess_capital_from_country import GameServiceGuessCapitalFromCountryTrainingInfinite
+from .training_modes.game_guess_country_from_flag import GameServiceGuessCountryFromFlagTrainingInfinite
 
 __all__ = [
-    "GameServiceGuessCountryFromFlag",
-    "GameServiceGuessCapitalFromCountry",
+    "GameServiceGuessCountryFromFlagTrainingInfinite",
+    "GameServiceGuessCapitalFromCountryTrainingInfinite",
+    "GameServiceGuessCapitalFromCountryChallengeCombo",
+    "GameServiceGuessCountryFromFlagChallengeCombo",
 ]

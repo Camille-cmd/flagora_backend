@@ -1,0 +1,8 @@
+from api.game_registery import GameServiceRegistry
+from api.services.game_modes.game_guess_country_from_flag_base import GameServiceGuessCountryFromFlagBase
+from core.models.user_country_score import GameModes
+
+
+@GameServiceRegistry.register(GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+class GameServiceGuessCountryFromFlagChallengeCombo(GameServiceGuessCountryFromFlagBase):
+    GAME_MODE = GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO

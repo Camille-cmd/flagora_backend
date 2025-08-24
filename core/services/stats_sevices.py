@@ -7,6 +7,7 @@ from api.flag_store import flag_store
 from api.schema import CityOutStats, CountryOutStats, UserStats, UserStatsByGameMode
 from api.utils import user_get_language
 from core.models import Guess, User, UserCountryScore
+from core.models.user_country_score import GameModes
 
 
 def user_get_stats(user: User) -> UserStatsByGameMode:
@@ -14,13 +15,10 @@ def user_get_stats(user: User) -> UserStatsByGameMode:
     name_field = f"name_{user_language}"
     max_threshold = timezone.now() - timezone.timedelta(days=365)
 
-    return [
-        _get_game_mode_stats(user, game_mode, name_field, max_threshold)
-        for game_mode in UserCountryScore.GameModes.values
-    ]
+    return [get_game_mode_stats(user, game_mode, name_field, max_threshold) for game_mode in GameModes.values]
 
 
-def _get_game_mode_stats(user: User, game_mode: str, name_field: str, max_threshold: datetime) -> UserStatsByGameMode:
+def get_game_mode_stats(user: User, game_mode: str, name_field: str, max_threshold: datetime) -> UserStatsByGameMode:
     """Get statistics for a specific game mode."""
     user_scores = UserCountryScore.objects.filter(user=user, game_mode=game_mode)
     user_guesses = Guess.objects.filter(
@@ -32,7 +30,7 @@ def _get_game_mode_stats(user: User, game_mode: str, name_field: str, max_thresh
     total = user_guesses.count()
     correct = user_guesses.filter(is_correct=True).count()
     success_rate = round(correct / total * 100, 2) if total else 0
-    max_streak = _calculate_max_streak(user_guesses)
+    max_streak = calculate_max_streak(user_guesses)
 
     # Annotated scores for most failed/correct analysis
     annotated_scores = user_scores.annotate(
@@ -45,7 +43,7 @@ def _get_game_mode_stats(user: User, game_mode: str, name_field: str, max_thresh
     most_correct_obj = annotated_scores.order_by("-corrects").first()
 
     # Create appropriate stats objects based on game mode
-    most_failed, most_correct = _create_stats_objects(game_mode, most_failed_obj, most_correct_obj, name_field)
+    most_failed, most_correct = create_stats_objects(game_mode, most_failed_obj, most_correct_obj, name_field)
 
     return UserStatsByGameMode(
         game_mode=game_mode,
@@ -58,7 +56,7 @@ def _get_game_mode_stats(user: User, game_mode: str, name_field: str, max_thresh
     )
 
 
-def _calculate_max_streak(user_guesses) -> int:
+def calculate_max_streak(user_guesses) -> int:
     """Calculate the maximum correct streak from guesses."""
     streak = max_streak = 0
     for guess in user_guesses:
@@ -70,14 +68,14 @@ def _calculate_max_streak(user_guesses) -> int:
     return max_streak
 
 
-def _calculate_success_rate(obj) -> float:
+def calculate_success_rate(obj) -> float:
     """Calculate success rate for a score object."""
     if obj and obj.total:
         return round(obj.corrects / obj.total * 100, 2)
     return 0
 
 
-def _create_country_stats(country, name_field: str, success_rate: float = 0) -> CountryOutStats:
+def create_country_stats(country, name_field: str, success_rate: float = 0) -> CountryOutStats:
     """Create CountryOutStats object."""
     if not country:
         return CountryOutStats(flag="", name="", iso2_code="", success_rate=success_rate)
@@ -90,35 +88,36 @@ def _create_country_stats(country, name_field: str, success_rate: float = 0) -> 
     )
 
 
-def _create_city_stats(score_obj, name_field: str) -> CityOutStats:
+def create_city_stats(score_obj, name_field: str) -> CityOutStats:
     """Create CityOutStats object."""
     if not score_obj:
-        return CityOutStats(name=[""], success_rate=0, country=_create_country_stats(None, name_field))
+        return CityOutStats(name=[""], success_rate=0, country=create_country_stats(None, name_field))
 
     country = score_obj.country
     city_name = country.get_capitals_names(name_field)
-    success_rate = _calculate_success_rate(score_obj)
+    success_rate = calculate_success_rate(score_obj)
 
     return CityOutStats(
         name=city_name,
         success_rate=success_rate,
-        country=_create_country_stats(country, name_field),
+        country=create_country_stats(country, name_field),
     )
 
 
-def _create_stats_objects(game_mode: str, most_failed_obj, most_correct_obj, name_field: str):
+def create_stats_objects(game_mode: str, most_failed_obj, most_correct_obj, name_field: str):
     """Create appropriate stats objects based on game mode."""
-    if game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG:
-        most_failed = _create_country_stats(
-            most_failed_obj.country if most_failed_obj else None, name_field, _calculate_success_rate(most_failed_obj)
+    guess_country_from_flag_modes = [gm for gm in GameModes.values if "GCFF" in gm]
+    if game_mode in guess_country_from_flag_modes:
+        most_failed = create_country_stats(
+            most_failed_obj.country if most_failed_obj else None, name_field, calculate_success_rate(most_failed_obj)
         )
-        most_correct = _create_country_stats(
+        most_correct = create_country_stats(
             most_correct_obj.country if most_correct_obj else None,
             name_field,
-            _calculate_success_rate(most_correct_obj),
+            calculate_success_rate(most_correct_obj),
         )
     else:  # capital guessing
-        most_failed = _create_city_stats(most_failed_obj, name_field)
-        most_correct = _create_city_stats(most_correct_obj, name_field)
+        most_failed = create_city_stats(most_failed_obj, name_field)
+        most_correct = create_city_stats(most_correct_obj, name_field)
 
     return most_failed, most_correct

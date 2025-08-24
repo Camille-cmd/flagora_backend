@@ -3,17 +3,15 @@ from uuid import UUID
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
-from api.game_registery import GameServiceRegistry
 from api.schema import NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
 from api.utils import user_get_language
-from core.models import City, Country, User, UserCountryScore
+from core.models import City, Country, User
 
 
-@GameServiceRegistry.register(UserCountryScore.GameModes.GUESS_CAPITAL_FROM_COUNTRY)
-class GameServiceGuessCapitalFromCountry(GameService):
-    GAME_MODE = UserCountryScore.GameModes.GUESS_CAPITAL_FROM_COUNTRY
+class GameServiceGuessCapitalFromCountryBase(GameService):
+    GAME_MODE = ""
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:
@@ -52,7 +50,7 @@ class GameServiceGuessCapitalFromCountry(GameService):
         question_index: int,
         answer_submitted: str,
         user: User | AnonymousUser,
-    ) -> (bool, Country | None):
+    ) -> tuple[bool, Country | None]:
         """
         Return whether the answer received is the expected one.
         """
@@ -63,7 +61,7 @@ class GameServiceGuessCapitalFromCountry(GameService):
 
         cities_ids_list, name_field = questions.get(question_index)
 
-        cities_names = City.objects.filter(id__in=cities_ids_list).values_list(name_field, flat=True)
+        cities_names = City.objects.filter(id__in=cities_ids_list, is_capital=True).values_list(name_field, flat=True)
         is_correct = answer_submitted in cities_names
 
         countries = Country.objects.filter(cities__in=cities_ids_list).distinct()
@@ -79,7 +77,7 @@ class GameServiceGuessCapitalFromCountry(GameService):
     def get_correct_answer(cls, user: User, country: Country) -> dict[str, str | None]:
         user_language = user_get_language(user)
         name_field = f"name_{user_language}"
-        cities = list(country.cities.values_list(name_field, flat=True))
+        cities = list(country.cities.filter(is_capital=True).values_list(name_field, flat=True))
         correct_answer = ", ".join(cities)
         wikipedia_link = f"https://fr.wikipedia.org/wiki/{cities[0]}"  # Todo how to handle several cities?
 

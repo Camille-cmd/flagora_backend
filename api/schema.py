@@ -2,6 +2,7 @@ from ninja import Schema
 from pydantic.v1.utils import to_lower_camel
 
 from core.models import UserCountryScore
+from core.models.user_country_score import GameModes
 
 
 class BaseSchema(Schema):
@@ -100,6 +101,8 @@ class AnswerResult(BaseSchema):
     correct_answer: str = ""
     code: str = ""
     wikipedia_link: str = ""
+    current_streak: int = 0
+    best_streak: int = 0
 
 
 class CountryOut(BaseSchema):
@@ -133,7 +136,7 @@ class CitiesOut(BaseSchema):
 class SetUserWebsocket(BaseSchema):
     type: str
     token: str
-    game_mode: UserCountryScore.GameModes
+    game_mode: GameModes
 
 
 class UserStats(BaseSchema):
@@ -144,5 +147,5 @@ class UserStats(BaseSchema):
 
 
 class UserStatsByGameMode(BaseSchema):
-    game_mode: UserCountryScore.GameModes
+    game_mode: GameModes
     stats: UserStats

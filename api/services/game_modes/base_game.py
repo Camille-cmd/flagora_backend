@@ -8,11 +8,14 @@ from django.db import transaction
 from django.utils import timezone
 
 from api.schema import NewQuestions
-from core.models import Country, Guess, User, UserCountryScore
+from api.services.user_country_score import UserCountryScoreService
+from core.models import Country, Guess, User, UserCountryScore, UserStats
+from core.services.user_services import user_get_beast_steak
 
 
 class GameService(ABC):
     CACHE_TIMEOUT_SECONDS = 86400
+    GAME_MODE = ""
 
     @classmethod
     def user_accept(cls, session_id: UUID, session_token: UUID) -> bool:
@@ -27,6 +30,8 @@ class GameService(ABC):
 
             # Cache it for later requests
             cache.set(f"{session_id}_user_id", user.id, timeout=cls.CACHE_TIMEOUT_SECONDS)
+            # Reset streak in case of a new game
+            cache.set(f"{session_id}_user_streak", 0, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
             return True
         except (Session.DoesNotExist, User.DoesNotExist):
@@ -48,6 +53,10 @@ class GameService(ABC):
         return AnonymousUser()
 
     @classmethod
+    def clear_cache(cls, session_id: UUID) -> None:
+        cache.delete(f"{session_id}_user_id")
+
+    @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:
         pass
 
@@ -58,7 +67,7 @@ class GameService(ABC):
         question_index: int,
         answer_submitted: str,
         user: User | AnonymousUser,
-    ) -> (bool, Country | None):
+    ) -> tuple[bool, Country | None]:
         pass
 
     @classmethod
@@ -81,3 +90,39 @@ class GameService(ABC):
 
         score.updated_at = timezone.now()
         score.save()
+
+    @classmethod
+    def user_get_streak_score(cls, session_id: UUID, user: User, is_correct: bool) -> tuple[int, bool, int]:
+        cache_streak_key = f"{session_id}_user_streak"
+        current_streak = cache.get(cache_streak_key) or 0
+
+        game_over = False
+        best_streak = 0
+        if not is_correct:
+            # reset streak
+            current_score = current_streak
+
+            if "challenge" in cls.GAME_MODE.lower():
+                game_over = True
+
+            best_streak = user_get_beast_steak(user, cls.GAME_MODE)
+
+            if current_streak > best_streak:
+                UserStats.objects.update_or_create(
+                    user=user,
+                    game_mode=cls.GAME_MODE,
+                    defaults={"best_streak": current_streak},
+                )
+                best_streak = current_streak
+
+        else:
+            # update streak
+            current_score = current_streak + 1
+
+        cache.set(cache_streak_key, current_score, timeout=cls.CACHE_TIMEOUT_SECONDS)
+
+        return (
+            current_score,
+            game_over,
+            best_streak,
+        )

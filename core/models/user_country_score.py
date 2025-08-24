@@ -4,11 +4,26 @@ from django.utils.translation import gettext_lazy as _
 from core.models import Country, Guess
 
 
-class UserCountryScore(models.Model):
-    class GameModes(models.TextChoices):
-        GUESS_COUNTRY_FROM_FLAG = "GUESS_COUNTRY_FROM_FLAG", _("Guess Country From Flag")
-        GUESS_CAPITAL_FROM_COUNTRY = "GUESS_CAPITAL_FROM_COUNTRY", _("Guess Capital From Country")
+class GameModes(models.TextChoices):
+    GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE = (
+        "GCFF_TRAINING_INFINITE",
+        _("Guess Country From Flag - Training Infinite"),
+    )
+    GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO = (
+        "GCFF_CHALLENGE_COMBO",
+        _("Guess Country From Flag - Challenge Combo"),
+    )
+    GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE = (
+        "GCFC_TRAINING_INFINITE",
+        _("Guess Capital From Country - Training Infinite"),
+    )
+    GUESS_CAPITAL_FROM_COUNTRY_CHALLENGE_COMBO = (
+        "GCFC_CHALLENGE_COMBO",
+        _("Guess Capital From Country - Challenge Combo"),
+    )
 
+
+class UserCountryScore(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
     country = models.ForeignKey(

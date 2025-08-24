@@ -6,6 +6,7 @@ from django.utils import timezone
 from freezegun import freeze_time
 
 from core.models import Guess, UserCountryScore
+from core.models.user_country_score import GameModes
 from core.services.stats_sevices import user_get_stats
 from core.tests.factories import CityFactory, CountryFactory, GuessFactory, UserCountryScoreFactory
 from flagora.tests.base import FlagoraTestCase
@@ -83,13 +84,13 @@ class UserStatsTestCase(FlagoraTestCase):
             (self.country3, [True, True, False]),  # 66.67% success rate, 2 fails total
         ]
 
-        self.create_user_scores_and_guesses(UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG, country_guess_data)
+        self.create_user_scores_and_guesses(GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE, country_guess_data)
 
         # Call the function
         results = user_get_stats(self.user)
 
         # Find the flag guessing mode result
-        flag_result = next(r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
 
         # Assertions
         self.assertEqual(flag_result.stats.success_rate, 54.55)
@@ -113,12 +114,15 @@ class UserStatsTestCase(FlagoraTestCase):
             (self.country2, [False, False, True]),  # 1 correct, 2 fails
         ]
 
-        self.create_user_scores_and_guesses(UserCountryScore.GameModes.GUESS_CAPITAL_FROM_COUNTRY, country_guess_data)
+        self.create_user_scores_and_guesses(
+            GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE,
+            country_guess_data,
+        )
 
         results = user_get_stats(self.user)
 
         capital_result = next(
-            r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_CAPITAL_FROM_COUNTRY
+            r for r in results if r.game_mode == GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE
         )
 
         # Assertions
@@ -135,10 +139,10 @@ class UserStatsTestCase(FlagoraTestCase):
         results = user_get_stats(self.user)
 
         # Should still return results for all game modes, but with zeros
-        self.assertEqual(len(results), len(UserCountryScore.GameModes.values))
-
+        self.assertEqual(len(results), len(GameModes.values))
         for result in results:
-            if result.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG:
+            # Cities is a list of dicts, so we need to check the name attribute
+            if "GCFF" in result.game_mode:
                 expected_name = ""
             else:
                 expected_name = [""]
@@ -153,7 +157,7 @@ class UserStatsTestCase(FlagoraTestCase):
         mock_flag_store.get_path.return_value = "/flags/test.png"
 
         score = UserCountryScoreFactory(
-            user=self.user, country=self.country, game_mode=UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG
+            user=self.user, country=self.country, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
         )
         # Create old guess (should be filtered out)
         guess1 = GuessFactory(is_correct=True)
@@ -165,7 +169,7 @@ class UserStatsTestCase(FlagoraTestCase):
         score.user_guesses.add(guess1, guess2)
 
         results = user_get_stats(self.user)
-        flag_result = next(r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
 
         # Should only count the recent guess
         self.assertEqual(flag_result.stats.success_rate, 0.0)  # Only the False guess counted
@@ -176,7 +180,7 @@ class UserStatsTestCase(FlagoraTestCase):
         mock_flag_store.get_path.return_value = "/flags/test.png"
 
         score = UserCountryScoreFactory(
-            user=self.user, country=self.country, game_mode=UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG
+            user=self.user, country=self.country, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
         )
 
         # Create a pattern: T,T,T,F,T,T,F,T,T,T,T (max streak = 4)
@@ -188,7 +192,7 @@ class UserStatsTestCase(FlagoraTestCase):
             score.user_guesses.add(guess)
 
         results = user_get_stats(self.user)
-        flag_result = next(r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
 
         self.assertEqual(flag_result.stats.most_strikes, 4)
 
@@ -202,7 +206,7 @@ class UserStatsTestCase(FlagoraTestCase):
         self.user.save()
 
         score = UserCountryScoreFactory(
-            user=self.user, country=self.country, game_mode=UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG
+            user=self.user, country=self.country, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
         )
 
         guess = GuessFactory(is_correct=False)
@@ -210,7 +214,7 @@ class UserStatsTestCase(FlagoraTestCase):
 
         results = user_get_stats(self.user)
 
-        flag_result = next(r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
 
         # Should use French name
         self.assertEqual(flag_result.stats.most_failed.name, "Groenland")
@@ -221,14 +225,14 @@ class UserStatsTestCase(FlagoraTestCase):
         mock_flag_store.get_path.return_value = "/flags/test.png"
 
         score = UserCountryScoreFactory(
-            user=self.user, country=self.country, game_mode=UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG
+            user=self.user, country=self.country, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
         )
 
         guess = GuessFactory(is_correct=True)
         score.user_guesses.add(guess)
 
         results = user_get_stats(self.user)
-        flag_result = next(r for r in results if r.game_mode == UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
 
         self.assertEqual(flag_result.stats.success_rate, 100.0)
         self.assertEqual(flag_result.stats.most_strikes, 1)
@@ -238,6 +242,6 @@ class UserStatsTestCase(FlagoraTestCase):
         results = user_get_stats(self.user)
 
         returned_game_modes = {r.game_mode for r in results}
-        expected_game_modes = set(UserCountryScore.GameModes.values)
+        expected_game_modes = set(GameModes.values)
 
         self.assertEqual(returned_game_modes, expected_game_modes)

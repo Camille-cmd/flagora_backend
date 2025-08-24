@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from core.models import Country, User, UserCountryScore
+from core.models.user_country_score import GameModes
 
 
 class UserCountryScoreService:
@@ -13,7 +14,7 @@ class UserCountryScoreService:
     DEFAULT_FORGETTING_SCORE = 70
     DEFAULT_FAILURE_SCORE = 70
 
-    def __init__(self, user: User, game_mode: UserCountryScore.GameModes):
+    def __init__(self, user: User, game_mode: GameModes):
         self.user = user
         self.datetime_now = timezone.now()
         self.user_country_scores = []
@@ -101,11 +102,24 @@ class UserCountryScoreService:
             "forgetting_score": self.DEFAULT_FORGETTING_SCORE,
         }
 
+    @property
+    def is_game_mode_challenge(self):
+        return "challenge" in self.game_mode.lower()
+
+    @property
+    def is_game_mode_training(self):
+        return "training" in self.game_mode.lower()
+
     def compute_questions(self) -> list[Country]:
         pack_len = 10
-        if not self.user.is_authenticated:
+        # Challenge mode does not need the algorithm, just classic radom
+        if not self.user.is_authenticated or self.is_game_mode_challenge:
             return Country.objects.order_by("?")[0:pack_len]
+        else:
+            # Apply the algorithm
+            return self.personalized_questions(pack_len)
 
+    def personalized_questions(self, pack_len: int) -> list[Country]:
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
         self.user_country_scores = UserCountryScore.objects.filter(
             user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode

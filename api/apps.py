@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from django.apps import AppConfig
 
 
@@ -6,5 +8,10 @@ class ApiConfig(AppConfig):
     name = "api"
 
     def ready(self):
+        from django.db.backends.signals import connection_created
+
         # Import to trigger @register decorators
-        import api.services.game_modes  # noqa
+        def setup_game_services(sender, **kwargs):
+            import_module("api.services.game_modes")
+
+        connection_created.connect(setup_game_services)

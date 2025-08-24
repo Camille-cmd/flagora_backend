@@ -6,8 +6,9 @@ from django.test import TransactionTestCase, override_settings
 
 from api.consumers import GameConsumer
 from api.routing import websocket_urlpatterns
-from core.models import UserCountryScore
+from core.models.user_country_score import GameModes
 from core.tests.factories import UserFactory
+from core.tests.mocks import MockGameService
 
 
 @override_settings(
@@ -36,15 +37,18 @@ class GameConsumerTestCase(TransactionTestCase):
         communicator = WebsocketCommunicator(self.application, self.url)
         await communicator.connect()
 
-        mock_service = MagicMock()
-        mock_service.user_accept.return_value = True
+        mock_service = MockGameService()
         mock_questions = MagicMock()
         mock_questions.model_dump.return_value = {"questions": ["France", "Japan"]}
         mock_service.get_questions.return_value = mock_questions
         mock_get_game_service.return_value = mock_service
 
         await communicator.send_json_to(
-            {"type": "user_accept", "gameMode": UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG, "token": self.token}
+            {
+                "type": "user_accept",
+                "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "token": self.token,
+            }
         )
 
         auth_response = await communicator.receive_json_from()
@@ -66,11 +70,12 @@ class GameConsumerTestCase(TransactionTestCase):
         with self.assertRaises(ValueError):
             await communicator.receive_json_from()
 
+    @patch("api.consumers.GameServiceRegistry.get_game_service")
     async def test_request_questions_sends_questions(self, mock_get_game_service):
         communicator = WebsocketCommunicator(self.application, self.url)
         await communicator.connect()
 
-        mock_service = MagicMock()
+        mock_service = MockGameService()
         mock_questions = MagicMock()
         mock_questions.model_dump.return_value = {"questions": ["Brazil", "Kenya"]}
         mock_service.get_questions.return_value = mock_questions
@@ -81,7 +86,7 @@ class GameConsumerTestCase(TransactionTestCase):
         await communicator.send_json_to(
             {
                 "type": "user_accept",
-                "gameMode": UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG,
+                "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
             }
         )
@@ -100,11 +105,7 @@ class GameConsumerTestCase(TransactionTestCase):
         communicator = WebsocketCommunicator(self.application, self.url)
         await communicator.connect()
 
-        mock_service = MagicMock()
-        mock_user = MagicMock()
-        mock_service.user_get.return_value = mock_user
-        mock_service.check_answer.return_value = (True, MagicMock())
-        mock_service.user_accept.return_value = True
+        mock_service = MockGameService(check_answer_result=True)
         mock_service.get_questions.return_value.model_dump.return_value = {"questions": []}
         mock_get_game_service.return_value = mock_service
 
@@ -112,7 +113,7 @@ class GameConsumerTestCase(TransactionTestCase):
         await communicator.send_json_to(
             {
                 "type": "user_accept",
-                "gameMode": UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG,
+                "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
             }
         )
@@ -127,35 +128,16 @@ class GameConsumerTestCase(TransactionTestCase):
         self.assertEqual(response["payload"]["id"], 1)
         self.assertTrue(response["payload"]["isCorrect"])
 
-    @patch("api.consumers.GameServiceRegistry.get_game_service")
-    async def test_question_skipped_sends_correct_info(self, mock_get_game_service):
+    @patch("api.consumers.GameServiceRegistry.get_game_service", return_value=MockGameService())
+    async def test_question_skipped_sends_correct_info(self, _mock_get_game_service):
         communicator = WebsocketCommunicator(self.application, self.url)
         await communicator.connect()
-
-        country = MagicMock()
-        setattr(country, "name_fr", "Allemagne")
-        country.iso2_code = "DE"
-
-        user = MagicMock()
-        user.language = "fr"
-
-        mock_service = MagicMock()
-        mock_service.user_accept.return_value = True
-        mock_service.user_get.return_value = user
-        mock_service.check_answer.return_value = (False, country)
-        mock_service.get_correct_answer.return_value = {
-            "correct_answer": "Allemagne",
-            "code": "DE",
-            "wikipedia_link": "https://fr.wikipedia.org/wiki/Allemagne",
-        }
-        mock_service.get_questions.return_value.model_dump.return_value = {"questions": []}
-        mock_get_game_service.return_value = mock_service
 
         # Authenticate first
         await communicator.send_json_to(
             {
                 "type": "user_accept",
-                "gameMode": UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG,
+                "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
             }
         )
