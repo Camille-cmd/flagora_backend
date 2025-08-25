@@ -3,13 +3,11 @@ from uuid import UUID
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
-from api.flag_store import flag_store
-from api.game_registery import GameServiceRegistry
 from api.schema import NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
 from api.utils import user_get_language
-from core.models import Country, User, UserCountryScore
+from core.models import Country, User
 
 
 class GameServiceGuessCountryFromFlagBase(GameService):
@@ -21,6 +19,8 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         Get the selected questions.
         Append questions in the cache for answer checking after.
         """
+        from api.flag_store import flag_store
+
         questions_with_answer = cache.get(session_id) or {}
         len_previous_data = len(questions_with_answer)
 

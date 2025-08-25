@@ -100,7 +100,7 @@ class GameService(ABC):
         best_streak = 0
         if not is_correct:
             # reset streak
-            current_score = current_streak
+            current_score = 0
 
             if "challenge" in cls.GAME_MODE.lower():
                 game_over = True
