@@ -2,6 +2,7 @@ from django.http import HttpRequest
 from django.utils import translation
 from django.utils.translation import gettext as _
 from ninja import Router
+from pygments.lexer import default
 
 from api.schema import (
     CitiesOut,
@@ -14,9 +15,10 @@ from api.schema import (
     UserStatsByGameMode,
     UserUpdate,
     UserUpdatePassword,
+    UserUpdatePreferences,
 )
 from api.utils import user_get_language
-from core.models import City, Country, User
+from core.models import City, Country, User, UserPreferenceGameMode
 from core.services.stats_sevices import user_get_stats
 
 router = Router(by_alias=True)
@@ -32,6 +34,17 @@ def user_me(request: HttpRequest):
         return 401, {"error_message": _("User not authenticated")}
 
     user = request.user
+    return 200, user.user_out
+
+
+@router.put("user/me/", response={200: ResponseUserOut, 401: ResponseError})
+def user_me_preferences(request: HttpRequest, payload: UserUpdatePreferences):
+    """Set user preferences"""
+    user = request.user
+    # Create or update the user preferences (only show_tips for now)
+    UserPreferenceGameMode.objects.update_or_create(
+        user=user, game_mode=payload.game_mode, defaults={"show_tips": payload.show_tips}
+    )
     return 200, user.user_out
 
 

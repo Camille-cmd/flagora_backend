@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 
+from api.schema import UserPreferences
 from flagora import settings
 
 
@@ -41,12 +42,28 @@ class User(AbstractUser):
         """
         Return the user information to be sent to the frontend.
         """
+        from .user_preference_game_mode import UserPreferenceGameMode
+
+        tooltip_preferences = []
+        try:
+            user_preferences = UserPreferenceGameMode.objects.filter(user=self).values("game_mode", "show_tips")
+            for user_preference in user_preferences:
+                tooltip_preferences.append(
+                    UserPreferences(
+                        show_tips=user_preference["show_tips"],
+                        game_mode=user_preference["game_mode"],
+                    )
+                )
+        except UserPreferenceGameMode.DoesNotExist:
+            tooltip_preferences = None
+
         return {
             "user_id": self.id,
             "username": self.username,
             "email": self.email,
             "is_email_verified": self.is_email_verified,
             "language": self.language,
+            "tooltip_preferences": tooltip_preferences,
         }
 
     @property

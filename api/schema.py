@@ -2,7 +2,6 @@ from ninja import Schema
 from pydantic import Field
 from pydantic.v1.utils import to_lower_camel
 
-from core.models import UserCountryScore
 from core.models.user_country_score import GameModes
 
 
@@ -18,12 +17,18 @@ class ResponseRegister(BaseSchema):
     user_id: int
 
 
+class UserPreferences(BaseSchema):
+    show_tips: bool
+    game_mode: GameModes
+
+
 class ResponseUserOut(BaseSchema):
     user_id: int
     username: str
     email: str
     is_email_verified: bool
     language: str
+    tooltip_preferences: list[UserPreferences]
 
 
 class ResponseLogin(BaseSchema):
@@ -80,6 +85,11 @@ class UserLanguageSet(BaseSchema):
 
 class UserUpdate(BaseSchema):
     username: str
+
+
+class UserUpdatePreferences(BaseSchema):
+    show_tips: bool
+    game_mode: GameModes
 
 
 class UserUpdatePassword(BaseSchema):
@@ -141,7 +151,7 @@ class CitiesOut(BaseSchema):
 
 class SetUserWebsocket(BaseSchema):
     type: str
-    token: str
+    token: str | None
     game_mode: GameModes
 
 

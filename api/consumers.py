@@ -4,7 +4,6 @@ from django.utils.translation import gettext as _
 from api.game_registery import GameServiceRegistry
 from api.schema import AnswerResult, CorrectAnswer, SetUserWebsocket, WebsocketMessage
 from api.services.game_modes.base_game import GameService
-from core.services.user_services import user_get_beast_steak
 
 
 class GameConsumer(JsonWebsocketConsumer):
@@ -39,7 +38,7 @@ class GameConsumer(JsonWebsocketConsumer):
         message = WebsocketMessage(
             type="user_accept",
             payload={
-                "is_user_authenticated": is_user_authenticated,
+                "isUserAuthenticated": is_user_authenticated,
             },
         )
         self.send_json(message.model_dump(by_alias=True))
