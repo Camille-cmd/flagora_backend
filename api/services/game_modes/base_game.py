@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
 
-from api.schema import NewQuestions
+from api.schema import CorrectAnswer, NewQuestions
 from api.services.user_country_score import UserCountryScoreService
 from core.models import Country, Guess, User, UserCountryScore, UserStats
 from core.services.user_services import user_get_beast_steak
@@ -71,8 +71,11 @@ class GameService(ABC):
         pass
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> dict[str, str | None]:
-        pass
+    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
+        """
+        As a country can have multiple capitals, we need to return a list of correct answers everytime,
+        even if there is only one.
+        """
 
     @classmethod
     @transaction.atomic
@@ -92,7 +95,9 @@ class GameService(ABC):
         score.save()
 
     @classmethod
-    def user_get_streak_score(cls, session_id: UUID, user: User, is_correct: bool) -> tuple[int, bool, int]:
+    def user_get_streak_score(
+        cls, session_id: UUID, user: User, is_correct: bool, remaining_to_guess: int
+    ) -> tuple[int, bool, int]:
         cache_streak_key = f"{session_id}_user_streak"
         current_streak = cache.get(cache_streak_key) or 0
 
@@ -114,7 +119,10 @@ class GameService(ABC):
                     defaults={"best_streak": current_streak},
                 )
                 best_streak = current_streak
-
+        # Update streak only if all answers have been guessed
+        elif remaining_to_guess > 0:
+            # update streak
+            current_score = current_streak
         else:
             # update streak
             current_score = current_streak + 1

@@ -1,4 +1,5 @@
 from ninja import Schema
+from pydantic import Field
 from pydantic.v1.utils import to_lower_camel
 
 from core.models import UserCountryScore
@@ -95,14 +96,19 @@ class NewQuestions(BaseSchema):
     questions: dict[int, str]
 
 
+class CorrectAnswer(BaseSchema):
+    name: str = ""
+    code: str = ""
+    wikipedia_link: str = ""
+
+
 class AnswerResult(BaseSchema):
     id: int
     is_correct: bool
-    correct_answer: str = ""
-    code: str = ""
-    wikipedia_link: str = ""
+    correct_answer: list[CorrectAnswer] = Field(default_factory=list)
     current_streak: int = 0
     best_streak: int = 0
+    remaining_to_guess: int = 0
 
 
 class CountryOut(BaseSchema):

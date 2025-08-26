@@ -3,7 +3,7 @@ from uuid import UUID
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
-from api.schema import NewQuestions
+from api.schema import CorrectAnswer, NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
 from api.utils import user_get_language
@@ -63,15 +63,11 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         return is_correct, country
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> dict[str, str | None]:
+    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
         user_language = user_get_language(user)
         name_field = f"name_{user_language}"
         correct_answer = getattr(country, name_field)
         code = country.iso2_code
         wikipedia_link = f"https://fr.wikipedia.org/wiki/{correct_answer}"
 
-        return {
-            "correct_answer": correct_answer,
-            "code": code,
-            "wikipedia_link": wikipedia_link,
-        }
+        return [CorrectAnswer(name=correct_answer, code=code, wikipedia_link=wikipedia_link)]

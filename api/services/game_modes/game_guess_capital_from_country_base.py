@@ -3,7 +3,7 @@ from uuid import UUID
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
-from api.schema import NewQuestions
+from api.schema import CorrectAnswer, NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
 from api.utils import user_get_language
@@ -35,7 +35,12 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
             next_index = len_previous_data + question_index
             new_questions[next_index] = getattr(country, name_field)
             # Send name field to keep a consistent answer check
-            questions_with_answer[next_index] = (list(country.cities.values_list("id", flat=True)), name_field)
+            found_capitals = []
+            questions_with_answer[next_index] = (
+                list(country.cities.values_list("id", flat=True)),
+                name_field,
+                found_capitals,
+            )
 
             question_index += 1
 
@@ -50,39 +55,53 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         question_index: int,
         answer_submitted: str,
         user: User | AnonymousUser,
-    ) -> tuple[bool, Country | None]:
+    ) -> tuple[bool, Country | None, int]:
         """
-        Return whether the answer received is the expected one.
+        Return whether the answer received is the expected one comparing it with what is stored in the cache.
         """
         questions = cache.get(session_id)
 
         if not questions or question_index not in questions:
-            return False, None
+            return False, None, 0
 
-        cities_ids_list, name_field = questions.get(question_index)
+        cities_ids_list, name_field, found_capitals_names = questions.get(question_index)
 
         cities_names = City.objects.filter(id__in=cities_ids_list, is_capital=True).values_list(name_field, flat=True)
         is_correct = answer_submitted in cities_names
+
+        # Case of a country with multiple capitals
+        remaining_cities = 0
+        if len(cities_ids_list) > 1:
+            if answer_submitted not in found_capitals_names:
+                found_capitals_names.append(answer_submitted)
+            remaining_cities = len(cities_ids_list) - len(found_capitals_names)
+            # cache what has been found so far
+            questions[question_index] = (cities_ids_list, name_field, found_capitals_names)
+            cache.set(session_id, questions, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         countries = Country.objects.filter(cities__in=cities_ids_list).distinct()
         if countries.count() != 1:
             raise ValueError(f"Multiple countries found for cities: {list(cities_names)}")
         country = countries.first()
+
         if user.is_authenticated:
             cls.guess_register(user, is_correct, country)
 
-        return is_correct, country
+        return is_correct, country, remaining_cities
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> dict[str, str | None]:
+    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
+        """
+        As a country can have multiple capitals, we need to return a list of correct answers.
+        """
         user_language = user_get_language(user)
         name_field = f"name_{user_language}"
         cities = list(country.cities.filter(is_capital=True).values_list(name_field, flat=True))
-        correct_answer = ", ".join(cities)
-        wikipedia_link = f"https://fr.wikipedia.org/wiki/{cities[0]}"  # Todo how to handle several cities?
 
-        return {
-            "correct_answer": correct_answer,
-            "code": "",
-            "wikipedia_link": wikipedia_link,
-        }
+        correct_answer_data = []
+        for city_name in cities:
+            correct_answer_data.append(
+                CorrectAnswer(name=city_name, code="", wikipedia_link=f"https://fr.wikipedia.org/wiki/{city_name}")
+            )
+
+        return correct_answer_data

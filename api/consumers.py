@@ -2,7 +2,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.utils.translation import gettext as _
 
 from api.game_registery import GameServiceRegistry
-from api.schema import AnswerResult, SetUserWebsocket, WebsocketMessage
+from api.schema import AnswerResult, CorrectAnswer, SetUserWebsocket, WebsocketMessage
 from api.services.game_modes.base_game import GameService
 from core.services.user_services import user_get_beast_steak
 
@@ -58,17 +58,22 @@ class GameConsumer(JsonWebsocketConsumer):
         answer_submitted = content["answer"] if not skipped else ""
         user = self.game_service.user_get(self.channel_name)
 
-        is_correct, country = self.game_service.check_answer(self.channel_name, question_id, answer_submitted, user)
-
-        current_streak, game_over, best_streak = self.game_service.user_get_streak_score(
-            self.channel_name, user, is_correct
+        is_correct, country, *remaining_to_guess = self.game_service.check_answer(
+            self.channel_name, question_id, answer_submitted, user
         )
 
-        correct_answer_data = {}
+        # for countries with several cities as capital
+        remaining_to_guess = remaining_to_guess[0] if remaining_to_guess else None
+
+        current_streak, game_over, best_streak = self.game_service.user_get_streak_score(
+            self.channel_name, user, is_correct, remaining_to_guess
+        )
+
+        correct_answer: CorrectAnswer = []  # needs to be a lis, as countries can have several cities as capital
         if skipped or game_over:
             # On skips, we send the correct answer to the frontend
-            # On a challenge, game over is possible, we also send the correct answer to the frontend
-            correct_answer_data = self.game_service.get_correct_answer(user, country)
+            # On a challenge; game over is possible, we also send the correct answer to the frontend
+            correct_answer: CorrectAnswer = self.game_service.get_correct_answer(user, country)
 
         message = WebsocketMessage(
             type="answer_result",
@@ -77,9 +82,8 @@ class GameConsumer(JsonWebsocketConsumer):
                 is_correct=is_correct,
                 current_streak=current_streak,
                 best_streak=best_streak,
-                correct_answer=correct_answer_data.get("correct_answer", ""),
-                code=correct_answer_data.get("code", ""),
-                wikipedia_link=correct_answer_data.get("wikipedia_link", ""),
+                correct_answer=correct_answer,
+                remaining_to_guess=remaining_to_guess,
             ).model_dump(by_alias=True),
         )
 
