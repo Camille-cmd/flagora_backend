@@ -5,7 +5,7 @@ import freezegun
 from django.utils import timezone
 from freezegun import freeze_time
 
-from core.models import Guess, UserCountryScore
+from core.models import Guess, UserCountryScore, UserStats
 from core.models.user_country_score import GameModes
 from core.services.stats_sevices import user_get_stats
 from core.tests.factories import CityFactory, CountryFactory, GuessFactory, UserCountryScoreFactory
@@ -49,6 +49,10 @@ class UserStatsTestCase(FlagoraTestCase):
         with freeze_time("2025-08-22 18:00:00"):
             self.now = timezone.now()
 
+        self.stats = UserStats.objects.create(
+            user=self.user, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+
     def create_user_scores_and_guesses(self, game_mode, country_guess_data):
         """
         Helper method to create user scores and guesses for testing.
@@ -86,6 +90,10 @@ class UserStatsTestCase(FlagoraTestCase):
 
         self.create_user_scores_and_guesses(GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE, country_guess_data)
 
+        # update best streak
+        self.stats.best_streak = 3
+        self.stats.save()
+
         # Call the function
         results = user_get_stats(self.user)
 
@@ -117,6 +125,11 @@ class UserStatsTestCase(FlagoraTestCase):
         self.create_user_scores_and_guesses(
             GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE,
             country_guess_data,
+        )
+
+        # create best streak
+        UserStats.objects.create(
+            user=self.user, game_mode=GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE, best_streak=1
         )
 
         results = user_get_stats(self.user)
@@ -175,28 +188,6 @@ class UserStatsTestCase(FlagoraTestCase):
         self.assertEqual(flag_result.stats.success_rate, 0.0)  # Only the False guess counted
 
     @patch("api.flag_store.flag_store")
-    def test_streak_calculation(self, mock_flag_store):
-        """Test that streak calculation works correctly."""
-        mock_flag_store.get_path.return_value = "/flags/test.png"
-
-        score = UserCountryScoreFactory(
-            user=self.user, country=self.country, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
-        )
-
-        # Create a pattern: T,T,T,F,T,T,F,T,T,T,T (max streak = 4)
-        correct_pattern = [True, True, True, False, True, True, False, True, True, True, True]
-
-        for i, is_correct in enumerate(correct_pattern):
-            guess = GuessFactory(is_correct=is_correct)
-            Guess.objects.filter(pk=guess.pk).update(created_at=self.now - timedelta(minutes=i))
-            score.user_guesses.add(guess)
-
-        results = user_get_stats(self.user)
-        flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-
-        self.assertEqual(flag_result.stats.most_strikes, 4)
-
-    @patch("api.flag_store.flag_store")
     def test_user_language_handling(self, mock_flag_store):
         mock_flag_store.get_path.return_value = "/flags/test.png"
 
@@ -230,6 +221,10 @@ class UserStatsTestCase(FlagoraTestCase):
 
         guess = GuessFactory(is_correct=True)
         score.user_guesses.add(guess)
+
+        # update best streak
+        self.stats.best_streak = 1
+        self.stats.save()
 
         results = user_get_stats(self.user)
         flag_result = next(r for r in results if r.game_mode == GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)

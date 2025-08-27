@@ -6,7 +6,7 @@ from core.models import Country
 
 class FlagStore:
     def __init__(self):
-        self._cache_flags()
+        pass
 
     @staticmethod
     def get_path(country_iso2: int) -> str | None:
@@ -15,7 +15,7 @@ class FlagStore:
     def reload_flag(self, country_iso2: int) -> None:
         self._cache_flag(country_iso2)
 
-    def reload_all_flags(self) -> None:
+    def reload_all_flags(self, **kwargs) -> None:
         self._cache_flags()
 
     def _cache_flag(self, country_iso2: int) -> None:

@@ -1,7 +1,6 @@
 import math
 import random
 
-from django.db.models import Q
 from django.utils import timezone
 
 from core.models import Country, User, UserCountryScore
@@ -124,8 +123,9 @@ class UserCountryScoreService:
         self.user_country_scores = UserCountryScore.objects.filter(
             user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
         )
-        countries_without_score = Country.objects.filter(
-            Q(country_scores__isnull=True) | ~Q(country_scores__game_mode=self.game_mode)
+        countries_without_score = Country.objects.exclude(
+            country_scores__game_mode=self.game_mode,
+            country_scores__user=self.user,
         )
 
         # Step 1: Compute weights

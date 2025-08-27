@@ -53,7 +53,7 @@ class GameConsumerTestCase(TransactionTestCase):
 
         auth_response = await communicator.receive_json_from()
         self.assertEqual(auth_response["type"], "user_accept")
-        self.assertTrue(auth_response["payload"]["is_user_authenticated"])
+        self.assertTrue(auth_response["payload"]["isUserAuthenticated"])
 
         question_response = await communicator.receive_json_from()
         self.assertEqual(question_response["type"], "new_questions")
@@ -149,9 +149,12 @@ class GameConsumerTestCase(TransactionTestCase):
 
         self.assertEqual(response["type"], "answer_result")
         self.assertFalse(response["payload"]["isCorrect"])
-        self.assertEqual(response["payload"]["correctAnswer"], "Allemagne")
-        self.assertEqual(response["payload"]["code"], "DE")
-        self.assertEqual(response["payload"]["wikipediaLink"], "https://fr.wikipedia.org/wiki/Allemagne")
+        self.assertEqual(len(response["payload"]["correctAnswer"]), 1)
+        self.assertEqual(response["payload"]["correctAnswer"][0]["name"], "Allemagne")
+        self.assertEqual(response["payload"]["correctAnswer"][0]["code"], "DE")
+        self.assertEqual(
+            response["payload"]["correctAnswer"][0]["wikipediaLink"], "https://fr.wikipedia.org/wiki/Allemagne"
+        )
 
     async def test_receive_json_invalid_type_raises(self):
         consumer = GameConsumer()

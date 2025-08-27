@@ -1,7 +1,24 @@
-# RuntimeWarning because of App ready imports
-#docker exec -it flagora_backend python -W ignore::RuntimeWarning -m coverage run manage.py test "$@"
-#docker exec -it flagora_backend coverage report -m
+#!/bin/bash
+set -e
 
-docker exec -it flagora_backend python3 manage.py test "$@"
+# Default: no coverage
+WITH_COVERAGE=false
 
-#docker exec -it flagora_backend coverage html
+# Parse flags
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --coverage) WITH_COVERAGE=true ;;
+        *) TEST_ARGS="$TEST_ARGS $1" ;;
+    esac
+    shift
+done
+
+if [ "$WITH_COVERAGE" = true ]; then
+    echo "Running tests with coverage..."
+    docker exec -it flagora_backend python3 -m coverage run manage.py test --settings=flagora.settings_test $TEST_ARGS
+    docker exec -it flagora_backend coverage report -m
+    docker exec -it flagora_backend coverage html
+else
+    echo "Running tests without coverage..."
+    docker exec -it flagora_backend python3 manage.py test --settings=flagora.settings_test $TEST_ARGS
+fi

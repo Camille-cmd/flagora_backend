@@ -1,18 +1,23 @@
 from unittest.mock import patch
 from uuid import uuid4
 
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
 from django.core.cache import cache
 from django.test import override_settings
 from django.utils import timezone
 
+from api.schema import CorrectAnswer
+from api.services.game_modes.challenge_modes.game_guess_country_from_flag import (
+    GameServiceGuessCountryFromFlagChallengeCombo,
+)
 from api.services.game_modes.training_modes.game_guess_capital_from_country import (
     GameServiceGuessCapitalFromCountryTrainingInfinite,
 )
 from api.services.game_modes.training_modes.game_guess_country_from_flag import (
     GameServiceGuessCountryFromFlagTrainingInfinite,
 )
-from core.models import Guess, UserCountryScore
+from core.models import Guess, User, UserCountryScore, UserStats
 from core.tests.factories import CityFactory, CountryFactory
 from flagora.tests.base import FlagoraTestCase
 
@@ -135,6 +140,107 @@ class GameServiceTest(FlagoraTestCase):
         self.assertEqual(score.country, self.country)
         self.assertTrue(score.user_guesses.first().is_correct)
 
+    def test_user_get_streak_score_no_remaining(self):
+        cache.set(f"{self.session_id}_user_streak", 2)  # current streak is 2
+
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=True, remaining_to_guess=0)
+
+        self.assertEqual(current_score, 3)
+        self.assertFalse(game_over)
+        self.assertEqual(best_streak, None)  # beast streak only if failure
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 3)
+
+    def test_user_get_streak_score_with_remaining(self):
+        cache.set(f"{self.session_id}_user_streak", 2)  # the current streak is 2
+
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=True, remaining_to_guess=1)
+
+        self.assertEqual(current_score, 2)  # score is not incremented as we have remaining to guess
+        self.assertFalse(game_over)
+        self.assertEqual(best_streak, None)  # beast streak only if failure
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)
+
+    def test_user_get_streak_score_incorrect(self):
+        cache.set(f"{self.session_id}_user_streak", 2)  # the current streak is 2
+
+        # unauthenticated user
+        user = AnonymousUser()
+
+        # training mode, no game over
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = self.game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
+
+        self.assertEqual(current_score, 2)  # score is not incremented as we have an incorrect answer
+        self.assertFalse(game_over)
+        self.assertEqual(best_streak, None)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
+
+        # challenge mode, game over
+        cache.set(f"{self.session_id}_user_streak", 2)  # reset streak
+        game_service = GameServiceGuessCountryFromFlagChallengeCombo
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
+
+        self.assertEqual(current_score, 2)  # score is not incremented as we have a game over
+        self.assertTrue(game_over)
+        self.assertEqual(best_streak, None)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
+
+    def test_user_get_streak_score_authenticated_user(self):
+        # No best streak stored yet, should create one
+        cache.set(f"{self.session_id}_user_streak", 9)
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
+
+        self.assertEqual(current_score, 9)
+        self.assertFalse(game_over)  # training mode, no game over
+        self.assertEqual(best_streak, 9)  # new best streak
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+        created_stats = UserStats.objects.get(user=self.user, game_mode=self.game_service.GAME_MODE)
+        self.assertEqual(created_stats.best_streak, 9)
+
+        # Take the previous best streak into account
+        cache.set(f"{self.session_id}_user_streak", 2)
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
+        self.assertEqual(current_score, 2)
+        self.assertEqual(best_streak, 9)  # got the already stored best streak
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+
+        # Combo has another best streak
+        cache.set(f"{self.session_id}_user_streak", 4)
+        game_service = GameServiceGuessCountryFromFlagChallengeCombo
+        UserStats.objects.create(user=self.user, game_mode=game_service.GAME_MODE, best_streak=10)
+        (
+            current_score,
+            game_over,
+            best_streak,
+        ) = game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
+        self.assertEqual(current_score, 4)
+        self.assertTrue(game_over)
+        self.assertEqual(best_streak, 10)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+
 
 @override_settings(
     CACHES={
@@ -177,7 +283,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
 
     def test_check_answer_correct(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
-        is_correct, country = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
+        is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
             self.session_id,
             0,
             self.city.name_fr,
@@ -188,7 +294,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
 
     def test_check_answer_incorrect(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
-        is_correct, country = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
+        is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
             self.session_id, 0, "WrongCity", self.user
         )
         self.assertFalse(is_correct)
@@ -196,23 +302,27 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
 
     def test_check_answer_invalid_question_index(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
-        is_correct, country = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
+        is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
             self.session_id, 999, "Paris", self.user
         )
         self.assertFalse(is_correct)
         self.assertIsNone(country)
+        self.assertEqual(remaining_cities, 0)
 
     def test_get_correct_answer(self):
         result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_correct_answer(self.user, self.country)
-        self.assertIn("correct_answer", result)
-        self.assertIn("wikipedia_link", result)
-        self.assertTrue(result["correct_answer"].startswith(self.city.name_en))
+        self.assertEqual(len(result), 1)
+        self.assertTrue(result[0].name.startswith(self.city.name_en))
+        self.assertEqual(result[0].wikipedia_link, f"https://en.wikipedia.org/wiki/{self.city.name_en}")
 
     def test_check_answer_raises_value_error_if_multiple_countries(self):
+        # Create a second country with the same city as the first one:
+        # in theory, it is not possible, it should raise an error
         country2 = CountryFactory(name_en="Country2")
-        city2 = CityFactory(name_en="City2")
-        country2.cities.add(city2)
-        questions_with_answer = {0: ([self.city.id, city2.id], "name_en")}
+        country2.cities.add(self.city)
+
+        # Cache questions
+        questions_with_answer = {0: ([self.city.id], "name_en", [])}
         cache.set(self.session_id, questions_with_answer)
 
         with self.assertRaises(ValueError) as cm:

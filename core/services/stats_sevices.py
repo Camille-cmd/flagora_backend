@@ -8,6 +8,7 @@ from api.schema import CityOutStats, CountryOutStats, UserStats, UserStatsByGame
 from api.utils import user_get_language
 from core.models import Guess, User, UserCountryScore
 from core.models.user_country_score import GameModes
+from core.services.user_services import user_get_best_steak
 
 
 def user_get_stats(user: User) -> UserStatsByGameMode:
@@ -30,7 +31,7 @@ def get_game_mode_stats(user: User, game_mode: str, name_field: str, max_thresho
     total = user_guesses.count()
     correct = user_guesses.filter(is_correct=True).count()
     success_rate = round(correct / total * 100, 2) if total else 0
-    max_streak = calculate_max_streak(user_guesses)
+    max_streak = user_get_best_steak(user, game_mode)
 
     # Annotated scores for most failed/correct analysis
     annotated_scores = user_scores.annotate(
@@ -54,18 +55,6 @@ def get_game_mode_stats(user: User, game_mode: str, name_field: str, max_thresho
             most_correctly_guessed=most_correct,
         ),
     )
-
-
-def calculate_max_streak(user_guesses) -> int:
-    """Calculate the maximum correct streak from guesses."""
-    streak = max_streak = 0
-    for guess in user_guesses:
-        if guess.is_correct:
-            streak += 1
-            max_streak = max(max_streak, streak)
-        else:
-            streak = 0
-    return max_streak
 
 
 def calculate_success_rate(obj) -> float:

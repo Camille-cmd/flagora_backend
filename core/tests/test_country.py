@@ -158,3 +158,68 @@ class CountryUpdateTest(FlagoraTestCase):
 
         country_update(self.country)
         self.assertEqual(self.country.name_en, "Exampleland")
+
+
+class CountryFlagTest(FlagoraTestCase):
+    def setUp(self):
+        super().setUp()
+
+    @patch("core.models.country.requests.get")
+    @patch("api.flag_store.flag_store.reload_flag")
+    def test_save_flag_success(self, mock_reload_flag, mock_requests_get):
+        # Mock requests.get to return 200 with fake SVG
+        mock_requests_get.return_value.status_code = 200
+        mock_requests_get.return_value.content = b"<svg>fakeflag</svg>"
+
+        result = self.country.save_flag("http://fake-url/flag.svg")
+
+        self.assertTrue(result)
+        self.country.refresh_from_db()
+        self.assertTrue("flag_" in self.country.flag.name)
+        mock_reload_flag.assert_called_once_with(self.country.iso2_code)
+
+    @patch("core.models.country.requests.get")
+    @patch("api.flag_store.flag_store.reload_flag")
+    def test_save_flag_failure(self, mock_reload_flag, mock_requests_get):
+        # Mock requests.get to fail
+        mock_requests_get.return_value.status_code = 404
+
+        result = self.country.save_flag("http://fake-url/flag.svg")
+
+        self.assertFalse(result)
+        self.assertFalse(bool(self.country.flag))
+        mock_reload_flag.assert_not_called()
+
+    @patch("core.models.country.requests.get")
+    @patch("api.flag_store.flag_store.reload_flag")
+    def test_old_flag_deleted_when_requested(self, mock_reload_flag, mock_requests_get):
+        # Save first flag
+        mock_requests_get.return_value.status_code = 200
+        mock_requests_get.return_value.content = b"<svg>flag1</svg>"
+        self.country.save_flag("http://fake-url/flag.svg")
+
+        old_flag_path = self.country.flag.path
+
+        # Save new flag with delete_current=True (default)
+        mock_requests_get.return_value.content = b"<svg>flag2</svg>"
+        self.country.save_flag("http://fake-url/flag.svg", delete_current=True)
+
+        # Old file should no longer exist
+        self.assertFalse(self.country.flag.storage.exists(old_flag_path))
+
+    @patch("core.models.country.requests.get")
+    @patch("api.flag_store.flag_store.reload_flag")
+    def test_old_flag_kept_when_delete_disabled(self, mock_reload_flag, mock_requests_get):
+        # Save first flag
+        mock_requests_get.return_value.status_code = 200
+        mock_requests_get.return_value.content = b"<svg>flag1</svg>"
+        self.country.save_flag("http://fake-url/flag.svg")
+
+        old_flag_path = self.country.flag.path
+
+        # Save new flag with delete_current=False
+        mock_requests_get.return_value.content = b"<svg>flag2</svg>"
+        self.country.save_flag("http://fake-url/flag.svg", delete_current=False)
+
+        # Old file should still exist
+        self.assertTrue(self.country.flag.storage.exists(old_flag_path))

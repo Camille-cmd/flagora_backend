@@ -62,7 +62,7 @@ class GameConsumer(JsonWebsocketConsumer):
         )
 
         # for countries with several cities as capital
-        remaining_to_guess = remaining_to_guess[0] if remaining_to_guess else None
+        remaining_to_guess = remaining_to_guess[0] if remaining_to_guess else 0
 
         current_streak, game_over, best_streak = self.game_service.user_get_streak_score(
             self.channel_name, user, is_correct, remaining_to_guess

@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock
 
+from api.schema import CorrectAnswer
+
 
 class MockGameService:
     def __init__(self, check_answer_result=False):
@@ -18,11 +20,13 @@ class MockGameService:
         self.user_get = MagicMock(return_value=self._user)
         self.check_answer = MagicMock(return_value=(check_answer_result, self._country))
         self.get_correct_answer = MagicMock(
-            return_value={
-                "correct_answer": "Allemagne",
-                "code": "DE",
-                "wikipedia_link": "https://fr.wikipedia.org/wiki/Allemagne",
-            }
+            return_value=[
+                CorrectAnswer(
+                    name="Allemagne",
+                    code="DE",
+                    wikipedia_link="https://fr.wikipedia.org/wiki/Allemagne",
+                )
+            ]
         )
         self.user_get_streak_score = MagicMock(return_value=(0, False, 0))
 

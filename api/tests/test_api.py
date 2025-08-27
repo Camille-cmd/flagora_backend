@@ -1,8 +1,12 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import Client
 from django.urls import reverse
 
-from core.tests.factories import CountryFactory
+from core.models import UserPreferenceGameMode
+from core.models.user_country_score import GameModes
+from core.tests.factories import CityFactory, CountryFactory
 from flagora.tests.base import FlagoraTestCase
 
 User = get_user_model()
@@ -17,6 +21,9 @@ class TestApi(FlagoraTestCase):
         self.user_update_url = reverse("api-1.0.0:user_update")
         self.user_update_password_url = reverse("api-1.0.0:user_update_password")
         self.country_get_list_url = reverse("api-1.0.0:country_get_list")
+        self.city_get_list_url = reverse("api-1.0.0:city_get_list")
+        self.user_update_preferences_url = reverse("api-1.0.0:user_me_preferences")
+        self.user_stats_url = reverse("api-1.0.0:user_stats")
 
     #### USER ME TESTS ####
     def test_user_me_authenticated(self):
@@ -256,4 +263,78 @@ class TestApi(FlagoraTestCase):
 
         self.assertEqual(response.status_code, 200)
         country_names = [c["name"] for c in response.json()["countries"]]
-        self.assertEqual(country_names, sorted(country_names))
+        self.assertEqual(country_names, sorted(country_names))  ###
+
+    #### TEST USER PREFERENCE ####
+    def test_authenticated_user_creates_preferences(self):
+        headers = self.user_do_login()
+        game_mode = GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+
+        payload = {"game_mode": game_mode, "show_tips": True}
+
+        response = self.client.put(
+            self.user_update_preferences_url, payload, content_type="application/json", headers=headers
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Check preferences created
+        pref = UserPreferenceGameMode.objects.get(user=self.user, game_mode=game_mode)
+        self.assertTrue(pref.show_tips)
+
+        # Check response contains user data
+        self.assertEqual(response.json()["username"], self.user.username)
+
+    def test_authenticated_user_updates_preferences(self):
+        headers = self.user_do_login()
+        game_mode = GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        # Create initial preference that should be updated
+        UserPreferenceGameMode.objects.create(user=self.user, game_mode=game_mode, show_tips=False)
+
+        payload = {"game_mode": game_mode, "show_tips": True}
+
+        response = self.client.put(
+            self.user_update_preferences_url, payload, content_type="application/json", headers=headers
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Check preference updated
+        pref = UserPreferenceGameMode.objects.get(user=self.user, game_mode=game_mode)
+        self.assertTrue(pref.show_tips)
+
+    #### TEST CITIES LIST ####
+    def test_city_list_default_language(self):
+        country = CountryFactory(name_fr="France", name_en="France", iso2_code="FR")
+        city2 = CityFactory(name_fr="ParisFR", name_en="ParisEN")
+        country.cities.add(city2)
+
+        response = self.client.get(self.city_get_list_url, HTTP_ACCEPT_LANGUAGE="en")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Check that all cities are returned in English
+        city_names = [c["name"] for c in data["cities"]]
+        self.assertEqual(city_names, sorted(city_names))  # should be alphabetically ordered
+        self.assertIn(self.city.name_en, city_names)
+        self.assertIn(city2.name_en, city_names)
+
+    def test_city_list_in_french(self):
+        country = CountryFactory(name_fr="France", name_en="France", iso2_code="FR")
+        city2 = CityFactory(name_fr="ParisFR", name_en="ParisEN")
+        country.cities.add(city2)
+
+        response = self.client.get(self.city_get_list_url, HTTP_ACCEPT_LANGUAGE="fr")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        city_names = [c["name"] for c in data["cities"]]
+        self.assertIn(city2.name_fr, city_names)
+
+    #### TEST STATS ####
+    @patch("api.routes.api.user_get_stats")
+    def test_user_get_stats(self, user_get_stats_mock):
+        user_get_stats_mock.return_value = []  # tested in stats_service_test
+        headers = self.user_do_login()
+
+        response = self.client.get(self.user_stats_url, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])

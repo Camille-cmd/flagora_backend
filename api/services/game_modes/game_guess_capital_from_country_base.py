@@ -101,7 +101,11 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         correct_answer_data = []
         for city_name in cities:
             correct_answer_data.append(
-                CorrectAnswer(name=city_name, code="", wikipedia_link=f"https://fr.wikipedia.org/wiki/{city_name}")
+                CorrectAnswer(
+                    name=city_name,
+                    code="",
+                    wikipedia_link=f"https://{user_language}.wikipedia.org/wiki/{city_name}",
+                )
             )
 
         return correct_answer_data

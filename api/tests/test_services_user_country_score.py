@@ -6,7 +6,7 @@ from django.utils import timezone
 from freezegun import freeze_time
 
 from api.services.user_country_score import UserCountryScoreService
-from core.models import UserCountryScore
+from core.models import Guess, UserCountryScore
 from core.models.user_country_score import GameModes
 from core.tests.factories import CountryFactory, GuessFactory, UserCountryScoreFactory
 from flagora.tests.base import FlagoraTestCase
@@ -143,11 +143,13 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
     def test_compute_questions_no_recent_guesses(self, mock_weight):
         # Delete all existing scores for this user
         self.user.user_scores.all().delete()
+        Guess.objects.all().delete()
 
         # Score 1: Last guess was just now → should be excluded
         guess = GuessFactory()
         recent_score = UserCountryScoreFactory(
             user=self.user,
+            game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
             country=CountryFactory(name_en="Papua New Guinea", iso2_code="PG"),
             user_guesses=[guess],
         )
@@ -160,6 +162,7 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         old_score = UserCountryScoreFactory(
             user=self.user,
             country=CountryFactory(name_en="Costa Rica", iso2_code="CR"),
+            game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
             user_guesses=[guess],
         )
         UserCountryScore.objects.filter(pk=old_score.pk).update(updated_at=self.now - timedelta(minutes=10))
@@ -176,7 +179,7 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
             "forgetting_score": 50,
         }
 
-        service = UserCountryScoreService(self.user, UserCountryScore.GameModes.GUESS_COUNTRY_FROM_FLAG)
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
         service.datetime_now = self.now
 
         questions = list(service.compute_questions())

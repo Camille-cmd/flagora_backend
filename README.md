@@ -41,6 +41,13 @@ pre-commit install
 
 ## Development shortcuts
 
+### run tests
+```bash
+./run_tests.sh
+./run_tests.sh --coverage
+./run_tests.sh api.tests.test_services_game.GameServiceTest.test_user_get_streak_score_no_remaining
+```
+
 Run Django management commands via Makefile:
 
 ```bash

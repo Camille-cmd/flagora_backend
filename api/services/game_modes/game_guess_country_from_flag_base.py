@@ -28,7 +28,7 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         user = cls.user_get(session_id)
         countries = UserCountryScoreService(user, cls.GAME_MODE).compute_questions()
         user_language = user_get_language(user)
-        name_field = f"name_{user_language.split('-')[0]}"
+        name_field = f"name_{user_language}"
 
         for index, country in enumerate(countries):
             next_index = len_previous_data + index
@@ -68,6 +68,6 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         name_field = f"name_{user_language}"
         correct_answer = getattr(country, name_field)
         code = country.iso2_code
-        wikipedia_link = f"https://fr.wikipedia.org/wiki/{correct_answer}"
+        wikipedia_link = f"https://{user_language}.wikipedia.org/wiki/{correct_answer}"
 
         return [CorrectAnswer(name=correct_answer, code=code, wikipedia_link=wikipedia_link)]

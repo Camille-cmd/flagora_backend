@@ -117,7 +117,7 @@ class AnswerResult(BaseSchema):
     is_correct: bool
     correct_answer: list[CorrectAnswer] = Field(default_factory=list)
     current_streak: int = 0
-    best_streak: int = 0
+    best_streak: int | None = None
     remaining_to_guess: int = 0
 
 

@@ -8,9 +8,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from api.schema import CorrectAnswer, NewQuestions
-from api.services.user_country_score import UserCountryScoreService
 from core.models import Country, Guess, User, UserCountryScore, UserStats
-from core.services.user_services import user_get_beast_steak
+from core.services.user_services import user_get_best_steak
 
 
 class GameService(ABC):
@@ -97,37 +96,38 @@ class GameService(ABC):
     @classmethod
     def user_get_streak_score(
         cls, session_id: UUID, user: User, is_correct: bool, remaining_to_guess: int
-    ) -> tuple[int, bool, int]:
+    ) -> tuple[int, bool, int | None]:
         cache_streak_key = f"{session_id}_user_streak"
         current_streak = cache.get(cache_streak_key) or 0
 
         game_over = False
-        best_streak = 0
+        best_streak = None
         if not is_correct:
-            # reset streak
-            current_score = 0
+            # stop streak
+            current_score = current_streak
 
             if "challenge" in cls.GAME_MODE.lower():
                 game_over = True
 
-            best_streak = user_get_beast_steak(user, cls.GAME_MODE)
+            if user.is_authenticated:
+                best_streak = user_get_best_steak(user, cls.GAME_MODE)
 
-            if current_streak > best_streak:
-                UserStats.objects.update_or_create(
-                    user=user,
-                    game_mode=cls.GAME_MODE,
-                    defaults={"best_streak": current_streak},
-                )
-                best_streak = current_streak
+                if current_streak > best_streak:
+                    UserStats.objects.update_or_create(
+                        user=user,
+                        game_mode=cls.GAME_MODE,
+                        defaults={"best_streak": current_streak},
+                    )
+                    best_streak = current_streak
         # Update streak only if all answers have been guessed
         elif remaining_to_guess > 0:
-            # update streak
+            # do not update streak
             current_score = current_streak
         else:
             # update streak
             current_score = current_streak + 1
 
-        cache.set(cache_streak_key, current_score, timeout=cls.CACHE_TIMEOUT_SECONDS)
+        cache.set(cache_streak_key, current_score if is_correct else 0, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         return (
             current_score,
