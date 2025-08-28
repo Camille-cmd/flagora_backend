@@ -1,1 +1,13 @@
 .venv
+.env*
+.idea
+.gitignore
+.git
+htmlcov
+.ruff_cache
+.pre-commit-config.yaml
+Dockerfile*
+run_test.sh
+.dockerignore
+.coverage
+media

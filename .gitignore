@@ -12,8 +12,7 @@ wheels/
 .idea/*
 .idea
 
-.env
-.envrc
+.env*
 
 media/flags
 media

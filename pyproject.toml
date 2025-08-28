@@ -12,8 +12,6 @@ dependencies = [
     "django-cors-headers>=4.7.0",
     "django-ninja>=1.4.1",
     "dotenv>=0.9.9",
-    "factory-boy>=3.3.3",
-    "freezegun>=1.5.2",
     "pillow>=11.2.1",
     "psycopg2>=2.9.10",
     "requests>=2.32.3",
@@ -23,7 +21,12 @@ dependencies = [
 dev = [
     "bandit>=1.8.6",
     "coverage>=7.9.2",
+    "factory-boy>=3.3.3",
+    "freezegun>=1.5.5",
     "pre-commit>=4.2.0",
+]
+production = [
+    "whitenoise>=6.9.0",
 ]
 
 [tool.coverage.run]
