@@ -1,5 +1,5 @@
 # Name of the Django service in docker-compose.yml
-SERVICE=flagora_backend
+SERVICE=flagora_backend_dev
 
 # Command runner
 RUN=docker exec -it $(SERVICE)

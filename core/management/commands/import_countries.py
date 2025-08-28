@@ -10,6 +10,7 @@ from core.management.commands.generate_countries_json_backup import (
 )
 from core.models import City, Country
 from core.models.country import CONTINENT_MAPPING
+from core.services.utils import get_sparql_headers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -91,7 +92,9 @@ class Command(BaseCommand):
         """
 
         # GET request to SPARQL API
-        response = requests.get(sparql_url, params={"query": query, "format": "json"}, timeout=10)
+        response = requests.get(
+            sparql_url, params={"query": query, "format": "json"}, timeout=30, headers=get_sparql_headers()
+        )
         response.raise_for_status()
 
         results = response.json().get("results", {}).get("bindings", [])

@@ -16,7 +16,7 @@ ENV UV_LINK_MODE=copy
 # Then, add the rest of the project source code and install it
 # Installing separately from its dependencies allows optimal layer caching
 COPY . /app
-RUN uv sync --frozen --no-goup production
+RUN uv sync --frozen --no-group production
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"

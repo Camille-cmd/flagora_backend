@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 
 from core.management.commands.import_countries import CONTINENT_MAPPING, continents_url
 from core.models import City, Country
+from core.services.utils import get_sparql_headers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,7 +36,9 @@ def country_update(country_obj: Country) -> None:
     }}
     """
 
-    response = requests.get(sparql_url, params={"query": query, "format": "json"}, timeout=30)
+    response = requests.get(
+        sparql_url, params={"query": query, "format": "json"}, timeout=30, headers=get_sparql_headers()
+    )
     response.raise_for_status()
 
     results = response.json().get("results", {}).get("bindings", [])

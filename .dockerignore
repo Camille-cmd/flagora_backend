@@ -11,3 +11,4 @@ run_test.sh
 .dockerignore
 .coverage
 media
+__pycache__/
