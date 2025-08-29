@@ -14,7 +14,7 @@ class GameServiceGuessCountryFromFlagBase(GameService):
     GAME_MODE = ""
 
     @classmethod
-    def get_questions(cls, session_id: UUID) -> NewQuestions:
+    def get_questions(cls, session_id: UUID, user_language: str) -> NewQuestions:
         """
         Get the selected questions.
         Append questions in the cache for answer checking after.
@@ -27,7 +27,6 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         new_questions = {}
         user = cls.user_get(session_id)
         countries = UserCountryScoreService(user, cls.GAME_MODE).compute_questions()
-        user_language = user_get_language(user)
         name_field = f"name_{user_language}"
 
         for index, country in enumerate(countries):
@@ -63,8 +62,7 @@ class GameServiceGuessCountryFromFlagBase(GameService):
         return is_correct, country
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
-        user_language = user_get_language(user)
+    def get_correct_answer(cls, user: User, country: Country, user_language: str) -> list[CorrectAnswer]:
         name_field = f"name_{user_language}"
         correct_answer = getattr(country, name_field)
         code = country.iso2_code

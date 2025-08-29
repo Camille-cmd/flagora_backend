@@ -22,4 +22,9 @@ def user_get_language(user: User) -> str:
         user_language = user.language
     else:
         user_language = get_language()
-    return user_language.split("-")[0]
+
+    # Safe check for language code
+    if len(user_language) > 2:
+        user_language = user_language[:2]
+
+    return user_language

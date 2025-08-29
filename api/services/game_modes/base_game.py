@@ -56,7 +56,7 @@ class GameService(ABC):
         cache.delete(f"{session_id}_user_id")
 
     @classmethod
-    def get_questions(cls, session_id: UUID) -> NewQuestions:
+    def get_questions(cls, session_id: UUID, user_language: str) -> NewQuestions:
         pass
 
     @classmethod
@@ -70,7 +70,7 @@ class GameService(ABC):
         pass
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
+    def get_correct_answer(cls, user: User, country: Country, user_language: str) -> list[CorrectAnswer]:
         """
         As a country can have multiple capitals, we need to return a list of correct answers everytime,
         even if there is only one.

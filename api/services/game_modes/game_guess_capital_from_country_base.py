@@ -14,7 +14,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
     GAME_MODE = ""
 
     @classmethod
-    def get_questions(cls, session_id: UUID) -> NewQuestions:
+    def get_questions(cls, session_id: UUID, user_language: str) -> NewQuestions:
         """
         Get the selected questions.
         Append questions in the cache for answer checking after.
@@ -25,7 +25,6 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         new_questions = {}
         user = cls.user_get(session_id)
         countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE).compute_questions()
-        user_language = user_get_language(user)
         name_field = f"name_{user_language}"
 
         question_index = 0
@@ -90,11 +89,10 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         return is_correct, country, remaining_cities
 
     @classmethod
-    def get_correct_answer(cls, user: User, country: Country) -> list[CorrectAnswer]:
+    def get_correct_answer(cls, user: User, country: Country, user_language: str) -> list[CorrectAnswer]:
         """
         As a country can have multiple capitals, we need to return a list of correct answers.
         """
-        user_language = user_get_language(user)
         name_field = f"name_{user_language}"
         cities = list(country.cities.filter(is_capital=True).values_list(name_field, flat=True))
 

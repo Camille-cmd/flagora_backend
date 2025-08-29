@@ -9,6 +9,7 @@ from api.services.game_modes.base_game import GameService
 class GameConsumer(JsonWebsocketConsumer):
     questions = []
     game_service: GameService
+    language: str = ""
 
     def connect(self):
         self.accept()
@@ -23,10 +24,15 @@ class GameConsumer(JsonWebsocketConsumer):
                 self.send_questions()
             case "question_skipped":
                 self.answer_result(content, skipped=True)
+            case "user_change_language":
+                self.language = content["language"]
             case _:
                 raise ValueError(f"Unknown message type: {content['type']}")
 
     def store_user(self, content: dict):
+        # First set the user-selected language
+        self.language = content["language"]
+
         data = SetUserWebsocket.model_validate(content, by_alias=True)
         self.game_service = GameServiceRegistry.get_game_service(data.game_mode)
         if self.game_service is None:
@@ -47,7 +53,7 @@ class GameConsumer(JsonWebsocketConsumer):
         self.send_questions()
 
     def send_questions(self):
-        questions = self.game_service.get_questions(self.channel_name)
+        questions = self.game_service.get_questions(self.channel_name, self.language)
         self.questions = questions
         message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
@@ -72,7 +78,7 @@ class GameConsumer(JsonWebsocketConsumer):
         if skipped or game_over:
             # On skips, we send the correct answer to the frontend
             # On a challenge; game over is possible, we also send the correct answer to the frontend
-            correct_answer: CorrectAnswer = self.game_service.get_correct_answer(user, country)
+            correct_answer: CorrectAnswer = self.game_service.get_correct_answer(user, country, self.language)
 
         message = WebsocketMessage(
             type="answer_result",
