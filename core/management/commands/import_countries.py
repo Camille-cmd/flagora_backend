@@ -182,7 +182,7 @@ class Command(BaseCommand):
                     "wikidata_id": wikidata_id or None,
                 },
             )
-            saved_flag = country_obj.save_flag(flag_url, delete_current=False)
+            saved_flag = country_obj.save_flag(flag_url, delete_current=True)
             if not saved_flag:
                 logger.warning(f"Could not save flag for country {name_en}.")
 
