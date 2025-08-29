@@ -1,3 +1,4 @@
+from anymail.exceptions import AnymailRequestsAPIError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
@@ -80,12 +81,16 @@ def user_register(request: HttpRequest, payload: Register):
         language=payload.language,
     )
 
-    send_email_welcome(user)
+    try:
+        send_email_welcome(user)
+    except AnymailRequestsAPIError:
+        user.delete()
+        return 400, {"error_message": _("An error occurred while creating your account. Please try again later.")}
 
     return 201, user.user_out
 
 
-@auth_router.post("/reset_password", auth=None, response={200: dict})
+@auth_router.post("/reset_password", auth=None, response={200: dict, 400: ResponseError})
 def user_reset_password(request: HttpRequest, payload: ResetPassword):
     """
     Sends a password reset email with a secure token.
@@ -95,7 +100,12 @@ def user_reset_password(request: HttpRequest, payload: ResetPassword):
     if user:
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
-        send_email_reset_password(user, uid, token)
+        try:
+            send_email_reset_password(user, uid, token)
+        except AnymailRequestsAPIError:
+            return 400, {
+                "error_message": _("The email to reset the password has been blocked. Please try again later.")
+            }
 
     # Always return 200 to avoid email enumeration
     return 200, {}
@@ -146,7 +156,10 @@ def user_send_email_verify(request: HttpRequest):
     if user.is_email_verified:
         return 400, {"error_message": _("The email is already verified. Thank you !")}
 
-    send_email_email_verification(user)
+    try:
+        send_email_email_verification(user)
+    except AnymailRequestsAPIError:
+        return 400, {"error_message": _("The email to verify your email has been blocked. Please try again later.")}
 
     return 200, {}
 

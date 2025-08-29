@@ -10,7 +10,7 @@ from core.management.commands.generate_countries_json_backup import (
 )
 from core.models import City, Country
 from core.models.country import CONTINENT_MAPPING
-from core.services.utils import get_sparql_headers
+from core.utils import get_sparql_headers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

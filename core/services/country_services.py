@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 
 from core.management.commands.import_countries import CONTINENT_MAPPING, continents_url
 from core.models import City, Country
-from core.services.utils import get_sparql_headers
+from core.utils import get_sparql_headers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

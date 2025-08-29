@@ -18,7 +18,8 @@ def user_check_token(uid: str, token: str) -> User:
 
 
 def user_get_language(user: User) -> str:
-    user_language = get_language()
     if user.is_authenticated:
         user_language = user.language
+    else:
+        user_language = get_language()
     return user_language.split("-")[0]

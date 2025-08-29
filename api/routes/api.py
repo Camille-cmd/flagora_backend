@@ -2,7 +2,6 @@ from django.http import HttpRequest
 from django.utils import translation
 from django.utils.translation import gettext as _
 from ninja import Router
-from pygments.lexer import default
 
 from api.schema import (
     CitiesOut,
