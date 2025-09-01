@@ -92,7 +92,7 @@ def user_update_password(request: HttpRequest, payload: UserUpdatePassword):
     return 200, {}
 
 
-@router.get("country/list", response={200: CountriesOut}, auth=None)
+@router.get("country/list", response={200: dict[str, str]}, auth=None)
 def country_get_list(request: HttpRequest):
     """
     Return the list of all countries' names in the user-selected language.
@@ -101,29 +101,27 @@ def country_get_list(request: HttpRequest):
     name_field = f"name_{user_language}"
     countries_qs = Country.objects.all().values(name_field, "iso2_code").order_by(name_field)
 
-    countries = []
+    countries = {}
     for country in countries_qs:
-        country_out = CountryOut(name=country[name_field], iso2_code=country["iso2_code"])
-        countries.append(country_out)
+        countries[country[name_field]] = country["iso2_code"]
 
-    return 200, CountriesOut(countries=countries)
+    return 200, countries
 
 
-@router.get("city/list", response={200: CitiesOut}, auth=None)
+@router.get("city/list", response={200: dict[str, int]}, auth=None)
 def city_get_list(request: HttpRequest):
     """
     Return the list of all cities' names in the user-selected language.
     """
     user_language = user_get_language(request.user)
     name_field = f"name_{user_language}"
-    cities_qs = City.objects.all().values(name_field).order_by(name_field)
+    cities_qs = City.objects.all().values(name_field, "pk").order_by(name_field)
 
-    cities = []
+    cities = {}
     for city in cities_qs:
-        city_out = CityOut(name=city[name_field])
-        cities.append(city_out)
+        cities[city[name_field]] = city["pk"]
 
-    return 200, CitiesOut(cities=cities)
+    return 200, cities
 
 
 @router.get("user/stats", response={200: list[UserStatsByGameMode]})

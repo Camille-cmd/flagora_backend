@@ -56,7 +56,7 @@ class GameService(ABC):
         cache.delete(f"{session_id}_user_id")
 
     @classmethod
-    def get_questions(cls, session_id: UUID, user_language: str) -> NewQuestions:
+    def get_questions(cls, session_id: UUID) -> NewQuestions:
         pass
 
     @classmethod

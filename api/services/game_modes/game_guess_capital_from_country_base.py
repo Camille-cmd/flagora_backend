@@ -14,7 +14,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
     GAME_MODE = ""
 
     @classmethod
-    def get_questions(cls, session_id: UUID, user_language: str) -> NewQuestions:
+    def get_questions(cls, session_id: UUID) -> NewQuestions:
         """
         Get the selected questions.
         Append questions in the cache for answer checking after.
@@ -25,19 +25,17 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         new_questions = {}
         user = cls.user_get(session_id)
         countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE).compute_questions()
-        name_field = f"name_{user_language}"
 
         question_index = 0
         for country in countries:
             if not country.cities.exists():
                 continue
             next_index = len_previous_data + question_index
-            new_questions[next_index] = getattr(country, name_field)
+            new_questions[next_index] = country.iso2_code
             # Send name field to keep a consistent answer check
             found_capitals = []
             questions_with_answer[next_index] = (
                 list(country.cities.values_list("id", flat=True)),
-                name_field,
                 found_capitals,
             )
 
@@ -63,24 +61,24 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         if not questions or question_index not in questions:
             return False, None, 0
 
-        cities_ids_list, name_field, found_capitals_names = questions.get(question_index)
+        cities_ids_list, found_capitals_ids = questions.get(question_index)
 
-        cities_names = City.objects.filter(id__in=cities_ids_list, is_capital=True).values_list(name_field, flat=True)
-        is_correct = answer_submitted in cities_names
+        cities_ids = City.objects.filter(id__in=cities_ids_list, is_capital=True).values_list("pk", flat=True)
+        is_correct = answer_submitted in cities_ids
 
         # Case of a country with multiple capitals
         remaining_cities = 0
         if len(cities_ids_list) > 1:
-            if answer_submitted not in found_capitals_names:
-                found_capitals_names.append(answer_submitted)
-            remaining_cities = len(cities_ids_list) - len(found_capitals_names)
+            if answer_submitted not in found_capitals_ids:
+                found_capitals_ids.append(answer_submitted)
+            remaining_cities = len(cities_ids_list) - len(found_capitals_ids)
             # cache what has been found so far
-            questions[question_index] = (cities_ids_list, name_field, found_capitals_names)
+            questions[question_index] = (cities_ids_list, cities_ids)
             cache.set(session_id, questions, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         countries = Country.objects.filter(cities__in=cities_ids_list).distinct()
         if countries.count() != 1:
-            raise ValueError(f"Multiple countries found for cities: {list(cities_names)}")
+            raise ValueError(f"Multiple countries found for cities: {list(cities_ids_list)}")
         country = countries.first()
 
         if user.is_authenticated:

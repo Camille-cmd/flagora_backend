@@ -53,7 +53,7 @@ class GameConsumer(JsonWebsocketConsumer):
         self.send_questions()
 
     def send_questions(self):
-        questions = self.game_service.get_questions(self.channel_name, self.language)
+        questions = self.game_service.get_questions(self.channel_name)
         self.questions = questions
         message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
