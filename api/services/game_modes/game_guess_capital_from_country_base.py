@@ -73,7 +73,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
                 found_capitals_ids.append(answer_submitted)
             remaining_cities = len(cities_ids_list) - len(found_capitals_ids)
             # cache what has been found so far
-            questions[question_index] = (cities_ids_list, cities_ids)
+            questions[question_index] = (cities_ids_list, found_capitals_ids)
             cache.set(session_id, questions, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         countries = Country.objects.filter(cities__in=cities_ids_list).distinct()

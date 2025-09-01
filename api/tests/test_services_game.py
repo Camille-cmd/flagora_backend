@@ -57,8 +57,8 @@ class GameServiceTest(FlagoraTestCase):
         super().tearDown()
         cache.clear()
 
-    def _set_cache(self, index, country_name, country_iso2_code):
-        cache.set(self.session_id, {index: (country_name, country_iso2_code)})
+    def _set_cache(self, index, country_iso2_code):
+        cache.set(self.session_id, {index: country_iso2_code})
 
     def test_user_accept_success(self):
         result = self.game_service.user_accept(self.session_id, self.session_token)
@@ -100,18 +100,18 @@ class GameServiceTest(FlagoraTestCase):
 
         # Check the internal cache structure (used for answer validation)
         questions_with_answers = cache.get(self.session_id)
-        self.assertEqual(questions_with_answers[0], (self.country.name_en, self.country.iso2_code))
+        self.assertEqual(questions_with_answers[0], self.country.iso2_code)
 
     def test_check_answer_correct(self):
-        self._set_cache(0, self.country.name_fr, self.country.iso2_code)
+        self._set_cache(0, self.country.iso2_code)
 
-        is_correct, country = self.game_service.check_answer(self.session_id, 0, self.country.name_fr, self.user)
+        is_correct, country = self.game_service.check_answer(self.session_id, 0, self.country.iso2_code, self.user)
 
         self.assertTrue(is_correct)
         self.assertEqual(country.iso2_code, self.country.iso2_code)
 
     def test_check_answer_incorrect(self):
-        self._set_cache(0, self.country.name_fr, self.country.iso2_code)
+        self._set_cache(0, self.country.iso2_code)
 
         is_correct, country = self.game_service.check_answer(self.session_id, 0, "FR", self.user)
 
@@ -119,7 +119,7 @@ class GameServiceTest(FlagoraTestCase):
         self.assertEqual(country.iso2_code, self.country.iso2_code)
 
     def test_check_answer_invalid_index(self):
-        self._set_cache(0, self.country.name_fr, self.country.iso2_code)
+        self._set_cache(0, self.country.iso2_code)
 
         is_correct, country = self.game_service.check_answer(self.session_id, 1, "FR", self.user)
 
@@ -274,19 +274,18 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
         result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
 
         self.assertIn(0, result.questions)
-        self.assertEqual(result.questions[0], self.country.name_en)
+        self.assertEqual(result.questions[0], self.country.iso2_code)
 
         cached_data = cache.get(self.session_id)
         self.assertIsNotNone(cached_data)
         self.assertIn(0, cached_data)
-        self.assertEqual(cached_data[0][1], "name_en")
 
     def test_check_answer_correct(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
         is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
             self.session_id,
             0,
-            self.city.name_fr,
+            self.city.pk,
             self.user,
         )
         self.assertTrue(is_correct)
@@ -295,7 +294,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
     def test_check_answer_incorrect(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
         is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
-            self.session_id, 0, "WrongCity", self.user
+            self.session_id, 0, 9889798798797987, self.user
         )
         self.assertFalse(is_correct)
         self.assertEqual(country, self.country)
@@ -303,14 +302,14 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
     def test_check_answer_invalid_question_index(self):
         GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
         is_correct, country, remaining_cities = GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
-            self.session_id, 999, "Paris", self.user
+            self.session_id, 999, self.city.pk, self.user
         )
         self.assertFalse(is_correct)
         self.assertIsNone(country)
         self.assertEqual(remaining_cities, 0)
 
     def test_get_correct_answer(self):
-        result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_correct_answer(self.user, self.country)
+        result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_correct_answer(self.user, self.country, "en")
         self.assertEqual(len(result), 1)
         self.assertTrue(result[0].name.startswith(self.city.name_en))
         self.assertEqual(result[0].wikipedia_link, f"https://en.wikipedia.org/wiki/{self.city.name_en}")
@@ -322,7 +321,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
         country2.cities.add(self.city)
 
         # Cache questions
-        questions_with_answer = {0: ([self.city.id], "name_en", [])}
+        questions_with_answer = {0: ([self.city.id], [])}
         cache.set(self.session_id, questions_with_answer)
 
         with self.assertRaises(ValueError) as cm:

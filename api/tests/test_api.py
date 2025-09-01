@@ -227,10 +227,10 @@ class TestApi(FlagoraTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        countries = response.json()["countries"]
+        countries = response.json()
+        expected_countries = {"Groenland": "GL"}
 
-        self.assertTrue(any(c["name"] == "Groenland" for c in countries))
-        self.assertTrue(any(c["iso2Code"] == "GL" for c in countries))
+        self.assertEqual(countries, expected_countries)
 
     def test_country_get_list_authenticated_user_language(self):
         """
@@ -243,10 +243,11 @@ class TestApi(FlagoraTestCase):
         response = self.client.get(self.country_get_list_url, headers=headers)
 
         self.assertEqual(response.status_code, 200)
-        countries = response.json()["countries"]
+        countries = response.json()
 
-        self.assertTrue(any(c["name"] == "Greenland" for c in countries))
-        self.assertTrue(any(c["iso2Code"] == "GL" for c in countries))
+        expected_countries = {"Greenland": "GL"}
+
+        self.assertEqual(countries, expected_countries)
 
     def test_country_list_is_ordered_by_name(self):
         """
@@ -262,7 +263,7 @@ class TestApi(FlagoraTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        country_names = [c["name"] for c in response.json()["countries"]]
+        country_names = list(response.json().keys())
         self.assertEqual(country_names, sorted(country_names))  ###
 
     #### TEST USER PREFERENCE ####
@@ -312,7 +313,7 @@ class TestApi(FlagoraTestCase):
         data = response.json()
 
         # Check that all cities are returned in English
-        city_names = [c["name"] for c in data["cities"]]
+        city_names = list(data.keys())
         self.assertEqual(city_names, sorted(city_names))  # should be alphabetically ordered
         self.assertIn(self.city.name_en, city_names)
         self.assertIn(city2.name_en, city_names)
@@ -326,7 +327,7 @@ class TestApi(FlagoraTestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
 
-        city_names = [c["name"] for c in data["cities"]]
+        city_names = list(data.keys())
         self.assertIn(city2.name_fr, city_names)
 
     #### TEST STATS ####

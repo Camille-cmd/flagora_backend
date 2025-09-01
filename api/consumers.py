@@ -31,6 +31,7 @@ class GameConsumer(JsonWebsocketConsumer):
 
     def store_user(self, content: dict):
         # First set the user-selected language
+        print("CONTENT LANGUAGE", content["language"])
         self.language = content["language"]
 
         data = SetUserWebsocket.model_validate(content, by_alias=True)

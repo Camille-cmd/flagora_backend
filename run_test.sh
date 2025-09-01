@@ -15,10 +15,10 @@ done
 
 if [ "$WITH_COVERAGE" = true ]; then
     echo "Running tests with coverage..."
-    docker exec -it flagora_backend python3 -m coverage run manage.py test --settings=flagora.settings_test $TEST_ARGS
-    docker exec -it flagora_backend coverage report -m
-    docker exec -it flagora_backend coverage html
+    docker exec -it flagora_backend_dev python3 -m coverage run manage.py test --settings=flagora.settings_test $TEST_ARGS
+    docker exec -it flagora_backend_dev coverage report -m
+    docker exec -it flagora_backend_dev coverage html
 else
     echo "Running tests without coverage..."
-    docker exec -it flagora_backend python3 manage.py test --settings=flagora.settings_test $TEST_ARGS
+    docker exec -it flagora_backend_dev python3 manage.py test --settings=flagora.settings_test $TEST_ARGS
 fi

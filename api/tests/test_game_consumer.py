@@ -48,6 +48,7 @@ class GameConsumerTestCase(TransactionTestCase):
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
+                "language": "en",
             }
         )
 
@@ -64,7 +65,7 @@ class GameConsumerTestCase(TransactionTestCase):
         await communicator.connect()
 
         await communicator.send_json_to(
-            {"type": "user_accept", "gameMode": "unsupported game mode", "token": self.token}
+            {"type": "user_accept", "gameMode": "unsupported game mode", "token": self.token, "language": "fr"}
         )
 
         with self.assertRaises(ValueError):
@@ -88,6 +89,7 @@ class GameConsumerTestCase(TransactionTestCase):
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
+                "language": "fr",
             }
         )
         await communicator.receive_json_from()  # auth
@@ -115,6 +117,7 @@ class GameConsumerTestCase(TransactionTestCase):
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
+                "language": "fr",
             }
         )
         await communicator.receive_json_from()  # auth
@@ -139,6 +142,7 @@ class GameConsumerTestCase(TransactionTestCase):
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
                 "token": self.token,
+                "language": "fr",
             }
         )
         await communicator.receive_json_from()  # auth
