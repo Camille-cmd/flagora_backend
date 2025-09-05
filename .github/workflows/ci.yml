@@ -122,33 +122,33 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/flagora-backend:latest
           file: ./Dockerfile.production
 #
-#  deploy:
-#    needs: [tests_and_lint, build]
-#
-#    runs-on: ubuntu-latest
-#
-#    # Only deploy from the default branch.
-#    if: github.ref_name == github.event.repository.default_branch
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Create SSH key
-#        run: |
-#          mkdir -p ~/.ssh/
-#          echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
-#          sudo chmod 600 ~/.ssh/private.key
-#          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-#        shell: bash
-#        env:
-#          SSH_PRIVATE_KEY: ${{secrets.SSH_DEPLOY_KEY}}
-#          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-#
-#      - name: Deploy
-#        # We just need to ssh into the server to trigger the deployment
-#        run: |
-#          ssh -T -i ~/.ssh/private.key $SSH_USER@$SSH_HOST -p $SSH_PORT
-#        env:
-#          SSH_USER: ${{secrets.SSH_USER}}
-#          SSH_HOST: ${{secrets.SSH_HOST}}
-#          SSH_PORT: ${{secrets.SSH_PORT}}
+  deploy:
+    needs: [tests_and_lint, build]
+
+    runs-on: ubuntu-latest
+
+    # Only deploy from the default branch.
+    if: github.ref_name == github.event.repository.default_branch
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
+          sudo chmod 600 ~/.ssh/private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_DEPLOY_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+
+      - name: Deploy
+        # We just need to ssh into the server to trigger the deployment
+        run: |
+          ssh -T -i ~/.ssh/private.key $SSH_USER@$SSH_HOST -p $SSH_PORT
+        env:
+          SSH_USER: ${{secrets.SSH_USER}}
+          SSH_HOST: ${{secrets.SSH_HOST}}
+          SSH_PORT: ${{secrets.SSH_PORT}}
