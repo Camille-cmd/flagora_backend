@@ -192,4 +192,4 @@ else:
     # Use console backend in development
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-DEFAULT_FROM_EMAIL = "perso@camillemeunier.fr"
+DEFAULT_FROM_EMAIL = os.environ["FROM_EMAIL"]
