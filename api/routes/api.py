@@ -4,10 +4,6 @@ from django.utils.translation import gettext as _
 from ninja import Router
 
 from api.schema import (
-    CitiesOut,
-    CityOut,
-    CountriesOut,
-    CountryOut,
     ResponseError,
     ResponseUserOut,
     UserLanguageSet,

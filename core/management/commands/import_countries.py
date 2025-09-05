@@ -2,7 +2,6 @@ import logging
 from collections import defaultdict
 
 import requests
-from asgiref.timeout import timeout
 from django.core.management import BaseCommand
 
 from core.management.commands.generate_countries_json_backup import (

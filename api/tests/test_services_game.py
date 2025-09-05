@@ -7,7 +7,6 @@ from django.core.cache import cache
 from django.test import override_settings
 from django.utils import timezone
 
-from api.schema import CorrectAnswer
 from api.services.game_modes.challenge_modes.game_guess_country_from_flag import (
     GameServiceGuessCountryFromFlagChallengeCombo,
 )
@@ -17,8 +16,8 @@ from api.services.game_modes.training_modes.game_guess_capital_from_country impo
 from api.services.game_modes.training_modes.game_guess_country_from_flag import (
     GameServiceGuessCountryFromFlagTrainingInfinite,
 )
-from core.models import Guess, User, UserCountryScore, UserStats
-from core.tests.factories import CityFactory, CountryFactory
+from core.models import Guess, UserCountryScore, UserStats
+from core.tests.factories import CountryFactory
 from flagora.tests.base import FlagoraTestCase
 
 

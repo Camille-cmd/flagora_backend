@@ -1,11 +1,10 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-import freezegun
 from django.utils import timezone
 from freezegun import freeze_time
 
-from core.models import Guess, UserCountryScore, UserStats
+from core.models import Guess, UserStats
 from core.models.user_country_score import GameModes
 from core.services.stats_sevices import user_get_stats
 from core.tests.factories import CityFactory, CountryFactory, GuessFactory, UserCountryScoreFactory

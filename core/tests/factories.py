@@ -3,7 +3,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from core.models import UserCountryScore
 from core.models.user_country_score import GameModes
 
 faker_fr = Faker("fr_FR")

@@ -6,7 +6,6 @@ from django.core.cache import cache
 from api.schema import CorrectAnswer, NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
-from api.utils import user_get_language
 from core.models import City, Country, User
 
 
