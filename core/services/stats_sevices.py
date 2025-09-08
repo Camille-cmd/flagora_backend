@@ -4,9 +4,9 @@ from django.db.models import Count, Q
 from django.utils import timezone
 
 from api.flag_store import flag_store
-from api.schema import CityOutStats, CountryOutStats, UserStats, UserStatsByGameMode
+from api.schema import CityOutStats, CountryOutStats, DepartmentOutStats, UserStats, UserStatsByGameMode
 from api.utils import user_get_language
-from core.models import Guess, User, UserCountryScore
+from core.models import Guess, User, UserCountryScore, UserDepartmentScore
 from core.models.user_country_score import GameModes
 from core.services.user_services import user_get_best_steak
 
@@ -21,11 +21,18 @@ def user_get_stats(user: User) -> UserStatsByGameMode:
 
 def get_game_mode_stats(user: User, game_mode: str, name_field: str, max_threshold: datetime) -> UserStatsByGameMode:
     """Get statistics for a specific game mode."""
-    user_scores = UserCountryScore.objects.filter(user=user, game_mode=game_mode)
-    user_guesses = Guess.objects.filter(
-        user_scores__in=user_scores,
-        created_at__gt=max_threshold,
-    ).order_by("created_at")
+    if "GDFN" in game_mode:
+        user_scores = UserDepartmentScore.objects.filter(user=user, game_mode=game_mode)
+        user_guesses = Guess.objects.filter(
+            user_department_scores__in=user_scores,
+            created_at__gt=max_threshold,
+        ).order_by("created_at")
+    else:
+        user_scores = UserCountryScore.objects.filter(user=user, game_mode=game_mode)
+        user_guesses = Guess.objects.filter(
+            user_scores__in=user_scores,
+            created_at__gt=max_threshold,
+        ).order_by("created_at")
 
     # Basic statistics
     total = user_guesses.count()
@@ -93,10 +100,22 @@ def create_city_stats(score_obj, name_field: str) -> CityOutStats:
     )
 
 
+def create_department_stats(score_obj) -> DepartmentOutStats:
+    """Create DepartmentOutStats object."""
+    if not score_obj:
+        return DepartmentOutStats(name="", number="", success_rate=0)
+
+    department = score_obj.department
+    return DepartmentOutStats(
+        name=department.name,
+        number=department.number,
+        success_rate=calculate_success_rate(score_obj),
+    )
+
+
 def create_stats_objects(game_mode: str, most_failed_obj, most_correct_obj, name_field: str):
     """Create appropriate stats objects based on game mode."""
-    guess_country_from_flag_modes = [gm for gm in GameModes.values if "GCFF" in gm]
-    if game_mode in guess_country_from_flag_modes:
+    if "GCFF" in game_mode:
         most_failed = create_country_stats(
             most_failed_obj.country if most_failed_obj else None, name_field, calculate_success_rate(most_failed_obj)
         )
@@ -105,6 +124,9 @@ def create_stats_objects(game_mode: str, most_failed_obj, most_correct_obj, name
             name_field,
             calculate_success_rate(most_correct_obj),
         )
+    elif "GDFN" in game_mode:  # department guessing
+        most_failed = create_department_stats(most_failed_obj)
+        most_correct = create_department_stats(most_correct_obj)
     else:  # capital guessing
         most_failed = create_city_stats(most_failed_obj, name_field)
         most_correct = create_city_stats(most_correct_obj, name_field)
