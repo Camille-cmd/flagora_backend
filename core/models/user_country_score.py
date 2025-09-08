@@ -21,6 +21,14 @@ class GameModes(models.TextChoices):
         "GCFC_CHALLENGE_COMBO",
         _("Guess Capital From Country - Challenge Combo"),
     )
+    GUESS_DEPARTMENT_FROM_NUMBER_TRAINING_INFINITE = (
+        "GDFN_TRAINING_INFINITE",
+        _("Guess Department From Number - Training Infinite"),
+    )
+    GUESS_DEPARTMENT_FROM_NUMBER_CHALLENGE_COMBO = (
+        "GDFN_CHALLENGE_COMBO",
+        _("Guess Department From Number - Challenge Combo"),
+    )
 
 
 class UserCountryScore(models.Model):

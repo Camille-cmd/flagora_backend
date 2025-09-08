@@ -4,6 +4,7 @@ import random
 from django.db.models import Count, Q, QuerySet
 from django.utils import timezone
 
+from api.services.adaptive_learning_algorithm import AdaptiveLearningAlgorithm
 from core.models import Country, User, UserCountryScore
 from core.models.user_country_score import GameModes
 
@@ -92,34 +93,12 @@ class UserCountryScoreService:
         return min(100 - retention_factor, 100)
 
     def compute_weight(self, user_country_score: UserCountryScore):
-        guesses = user_country_score.user_guesses.values("created_at", "is_correct")
-        guesses = list(guesses)
-        last_guess = max(guesses, key=lambda g: g["created_at"]) if guesses else None
-
-        failure_score = self._compute_failure_score(guesses)
-        forgetting_score = self._compute_forgetting_score(last_guess)
-
-        question_weight = self._compute_question_weight(failure_score, forgetting_score)
-
-        return {
-            "user_country_score": user_country_score,
-            "country": user_country_score.country,
-            "weight": round(question_weight, 4),
-            "failure_score": round(failure_score, 2),
-            "forgetting_score": round(forgetting_score, 2),
-        }
+        """Compute the learning weight for a specific country score"""
+        return self.algorithm.compute_weight(user_country_score)
 
     def get_default_weight(self, country: Country):
-        """
-        Weight for a country without any UserCountryScore yet. Default values.
-        """
-        return {
-            "user_country_score": None,
-            "country": country,
-            "weight": self._compute_question_weight(self.DEFAULT_FAILURE_SCORE, self.DEFAULT_FORGETTING_SCORE),
-            "failure_score": self.DEFAULT_FAILURE_SCORE,
-            "forgetting_score": self.DEFAULT_FORGETTING_SCORE,
-        }
+        """Weight for a country without any UserCountryScore yet. Default values."""
+        return self.algorithm.get_default_weight(country)
 
     def get_valid_countries_filter(self, queryset: QuerySet[Country]) -> QuerySet[Country]:
         if self.is_game_mode_gcff:

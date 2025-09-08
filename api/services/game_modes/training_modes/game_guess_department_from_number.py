@@ -1,0 +1,8 @@
+from api.game_registery import GameServiceRegistry
+from api.services.game_modes.game_guess_department_from_number_base import GameServiceGuessDepartmentFromNumberBase
+from core.models.user_country_score import GameModes
+
+
+@GameServiceRegistry.register(GameModes.GUESS_DEPARTMENT_FROM_NUMBER_TRAINING_INFINITE)
+class GameServiceGuessDepartmentFromNumberTrainingInfinite(GameServiceGuessDepartmentFromNumberBase):
+    GAME_MODE = GameModes.GUESS_DEPARTMENT_FROM_NUMBER_TRAINING_INFINITE
