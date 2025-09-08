@@ -1,7 +1,9 @@
 from .city import City  # noqa
 from .country import Country  # noqa
+from .department import Department  # noqa
 from .guess import Guess  # noqa
 from .user import User  # noqa
 from .user_country_score import UserCountryScore  # noqa
+from .user_department_score import UserDepartmentScore  # noqa
 from .user_stats import UserStats  # noqa
 from .user_preference_game_mode import UserPreferenceGameMode  # noqa

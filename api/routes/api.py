@@ -13,7 +13,7 @@ from api.schema import (
     UserUpdatePreferences,
 )
 from api.utils import user_get_language
-from core.models import City, Country, User, UserPreferenceGameMode
+from core.models import City, Country, Department, User, UserPreferenceGameMode
 from core.services.stats_sevices import user_get_stats
 
 router = Router(by_alias=True)
@@ -118,6 +118,20 @@ def city_get_list(request: HttpRequest):
         cities[city[name_field]] = city["pk"]
 
     return 200, cities
+
+
+@router.get("department/list", response={200: dict[str, str]}, auth=None)
+def department_get_list(request: HttpRequest):
+    """
+    Return the list of all French departments' names.
+    """
+    departments_qs = Department.objects.all().values("name", "number").order_by("number")
+
+    departments = {}
+    for department in departments_qs:
+        departments[department["name"]] = department["number"]
+
+    return 200, departments
 
 
 @router.get("user/stats", response={200: list[UserStatsByGameMode]})
