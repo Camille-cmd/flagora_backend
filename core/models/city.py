@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models.wikipedia_link import WikipediaLink
 
-class City(models.Model):
+
+class City(WikipediaLink):
     name_fr = models.CharField(max_length=100, verbose_name=_("French name"))
     name_en = models.CharField(max_length=100, verbose_name=_("English name"))
 
@@ -19,3 +21,7 @@ class City(models.Model):
 
     def __str__(self):
         return self.name_en
+
+    @classmethod
+    def get_wikipedia_field_name(cls) -> str:
+        return "name"

@@ -91,16 +91,13 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         As a country can have multiple capitals, we need to return a list of correct answers.
         """
         name_field = f"name_{user_language}"
-        cities = list(country.cities.filter(is_capital=True).values_list(name_field, flat=True))
+        wikipedia_field = f"wikipedia_link_{user_language}"
 
+        cities = list(country.cities.filter(is_capital=True).values(name_field, wikipedia_field))
         correct_answer_data = []
-        for city_name in cities:
-            correct_answer_data.append(
-                CorrectAnswer(
-                    name=city_name,
-                    code="",
-                    wikipedia_link=f"https://{user_language}.wikipedia.org/wiki/{city_name}",
-                )
-            )
+        for city in cities:
+            city_name = city[name_field]
+            wikipedia_link = city[wikipedia_field]
+            correct_answer_data.append(CorrectAnswer(name=city_name, code="", wikipedia_link=wikipedia_link))
 
         return correct_answer_data

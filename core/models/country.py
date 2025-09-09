@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from core.models.city import City
+from core.models.wikipedia_link import WikipediaLink
 
 # Mapping of continent codes to full names
 CONTINENT_MAPPING = {
@@ -27,7 +28,7 @@ def flag_upload_path(instance, filename):
     return f"flags/{instance.iso2_code}/{filename}"
 
 
-class Country(models.Model):
+class Country(WikipediaLink):
     name_en = models.CharField(max_length=100, verbose_name=_("English name"))
     name_fr = models.CharField(max_length=100, verbose_name=_("French name"))
     name_native = models.CharField(max_length=100, verbose_name=_("Native name"))
@@ -73,3 +74,7 @@ class Country(models.Model):
 
     def get_capitals_names(self, name_field) -> list["City"]:
         return list(self.capitals.values_list(name_field, flat=True))
+
+    @classmethod
+    def get_wikipedia_field_name(cls) -> str:
+        return "name"

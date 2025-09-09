@@ -19,6 +19,8 @@ class FlagoraTestCase(TestCase):
             name_fr="Nuuk",
             name_en="Nuuk",
             is_capital=True,
+            wikipedia_link_en="https://en.wikipedia.org/wiki/Nuuk",
+            wikipedia_link_fr="https://fr.wikipedia.org/wiki/Nuuk",
         )
 
         self.country = CountryFactory(
@@ -26,6 +28,8 @@ class FlagoraTestCase(TestCase):
             name_en="Greenland",
             iso2_code="GL",
             iso3_code="GRL",
+            wikipedia_link_en="https://en.wikipedia.org/wiki/Greenland",
+            wikipedia_link_fr="https://fr.wikipedia.org/wiki/Groenland",
         )
         self.country.cities.add(self.city)
 

@@ -311,7 +311,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
         result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_correct_answer(self.user, self.country, "en")
         self.assertEqual(len(result), 1)
         self.assertTrue(result[0].name.startswith(self.city.name_en))
-        self.assertEqual(result[0].wikipedia_link, f"https://en.wikipedia.org/wiki/{self.city.name_en}")
+        self.assertEqual(result[0].wikipedia_link, self.city.wikipedia_link_en)
 
     def test_check_answer_raises_value_error_if_multiple_countries(self):
         # Create a second country with the same city as the first one:

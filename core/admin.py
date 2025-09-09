@@ -27,6 +27,18 @@ class UserAdminAdmin(UserAdmin):
 class CityAdmin(admin.ModelAdmin):
     list_display = ("name_en",)
     search_fields = ("name_en", "name_fr")
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": [
+                    ("name_fr", "name_en"),
+                    "is_capital",
+                ]
+            },
+        ),
+        ("Wikipedia", {"fields": [("wikipedia_link_fr", "wikipedia_link_en")]}),
+    ]
 
 
 class CapitalCitiesInline(admin.TabularInline):
@@ -67,17 +79,21 @@ class CountryAdminForm(forms.ModelForm):
 class CountryAdmin(admin.ModelAdmin):
     list_display = ("name_en", "display_flag", "continent")
     search_fields = ("name_en", "name_fr", "name_native")
-    fields = (
-        "name_en",
-        "name_fr",
-        "name_native",
-        "continent",
-        "iso2_code",
-        "iso3_code",
-        "wikidata_id",
-        "display_flag",
-        "flag",
-    )
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": [
+                    ("name_en", "name_fr", "name_native"),
+                    ("iso2_code", "iso3_code"),
+                    "continent",
+                    "wikidata_id",
+                ]
+            },
+        ),
+        (_("Flag"), {"fields": ["display_flag", "flag"]}),
+        ("Wikipedia", {"fields": [("wikipedia_link_fr", "wikipedia_link_en")]}),
+    ]
     readonly_fields = ["display_flag"]  # this is for the change form
     inlines = [CapitalCitiesInline]
     list_filter = [
