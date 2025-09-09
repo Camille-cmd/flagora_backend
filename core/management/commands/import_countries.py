@@ -8,7 +8,6 @@ from core.management.commands.generate_countries_json_backup import (
     Command as CountriesBackupCommand,
 )
 from core.models import City, Country
-from core.models.country import CONTINENT_MAPPING
 from core.utils import get_sparql_headers
 
 logging.basicConfig(level=logging.INFO)
@@ -168,8 +167,7 @@ class Command(BaseCommand):
             if not wikidata_id:
                 logger.info(f"No Wikidata ID found for country {name_en}.")
 
-            continent = CONTINENT_MAPPING.get(continents_data.get(iso2), "Unknown")
-
+            continent = continents_data.get(iso2, "Unknown")
             country_obj, country_obj_created = Country.objects.update_or_create(
                 iso2_code=iso2,
                 iso3_code=iso3,

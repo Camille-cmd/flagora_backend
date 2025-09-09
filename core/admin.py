@@ -32,7 +32,7 @@ class CityAdmin(admin.ModelAdmin):
 class CapitalCitiesInline(admin.TabularInline):
     model = Country.cities.through
     extra = 0
-    can_delete = False
+    can_delete = True
     verbose_name_plural = gettext_lazy("Capital Cities")
 
     def get_queryset(self, request):
@@ -88,9 +88,9 @@ class CountryAdmin(admin.ModelAdmin):
     @admin.display(description="Flag")
     def display_flag(self, obj):
         """
-        Génère le HTML pour afficher l'image du drapeau dans l'administration.
+        HTML to display the flag in the admin
         """
-        if obj.flag:  # Vérifiez si un drapeau est disponible
+        if obj.flag:
             return format_html(f'<img src="{obj.flag.url}" style="width: 80px; height: auto;" alt="Flag">')
         return _("(No Flag)")
 

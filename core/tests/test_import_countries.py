@@ -95,7 +95,7 @@ class ImportCountriesCommandTest(TestCase):
         country = Country.objects.get(iso2_code="FR")
         self.assertEqual(country.name_en, "France")
         self.assertEqual(country.name_fr, "France")
-        self.assertEqual(country.continent, "Europe")  # Based on CONTINENT_MAPPING
+        self.assertEqual(country.continent, "EU")  # Based on CONTINENT_MAPPING
         self.assertTrue(mock_save_flag.called)  # Ensures save_flag was called
 
         # Assertions on City object

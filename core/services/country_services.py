@@ -3,7 +3,7 @@ import logging
 import requests
 from django.utils.translation import gettext as _
 
-from core.management.commands.import_countries import CONTINENT_MAPPING, continents_url
+from core.management.commands.import_countries import continents_url
 from core.models import City, Country
 from core.utils import get_sparql_headers
 
@@ -67,8 +67,7 @@ def country_update(country_obj: Country) -> None:
 
     # Handle continent
     continents_data = requests.get(continents_url, timeout=10).json()
-    continent = CONTINENT_MAPPING.get(continents_data.get(iso2), "Unknown")
-    country_obj.continent = continent
+    country_obj.continent = continents_data.get(iso2)
 
     # Handle cities: assume that duplicated results are for the capital cities of the same country
     cities_to_add_to_country = []

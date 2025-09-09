@@ -48,7 +48,7 @@ class CountryUpdateTest(FlagoraTestCase):
         self.country.refresh_from_db()
         self.assertEqual(self.country.name_en, "Exampleland")
         self.assertEqual(self.country.iso2_code, "EX")
-        self.assertEqual(self.country.continent, "Europe")
+        self.assertEqual(self.country.continent, "EU")
 
         capital_city = City.objects.get(name_en="Example City")
         self.assertTrue(capital_city.is_capital)
