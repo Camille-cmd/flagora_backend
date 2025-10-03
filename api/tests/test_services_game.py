@@ -183,7 +183,7 @@ class GameServiceTest(FlagoraTestCase):
         self.assertEqual(current_score, 2)  # score is not incremented as we have an incorrect answer
         self.assertFalse(game_over)
         self.assertEqual(best_streak, None)
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)
 
         # challenge mode, game over
         cache.set(f"{self.session_id}_user_streak", 2)  # reset streak
@@ -194,7 +194,7 @@ class GameServiceTest(FlagoraTestCase):
             best_streak,
         ) = game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
 
-        self.assertEqual(current_score, 2)  # score is not incremented as we have a game over
+        self.assertEqual(current_score, 0)  # score back to 0 as we have game over
         self.assertTrue(game_over)
         self.assertEqual(best_streak, None)
         self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
@@ -211,7 +211,7 @@ class GameServiceTest(FlagoraTestCase):
         self.assertEqual(current_score, 9)
         self.assertFalse(game_over)  # training mode, no game over
         self.assertEqual(best_streak, 9)  # new best streak
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 9)  # training, streak doesn't move
         created_stats = UserStats.objects.get(user=self.user, game_mode=self.game_service.GAME_MODE)
         self.assertEqual(created_stats.best_streak, 9)
 
@@ -224,7 +224,7 @@ class GameServiceTest(FlagoraTestCase):
         ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
         self.assertEqual(current_score, 2)
         self.assertEqual(best_streak, 9)  # got the already stored best streak
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)  # training, streak doesn't move
 
         # Combo has another best streak
         cache.set(f"{self.session_id}_user_streak", 4)
@@ -235,10 +235,10 @@ class GameServiceTest(FlagoraTestCase):
             game_over,
             best_streak,
         ) = game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
-        self.assertEqual(current_score, 4)
+        self.assertEqual(current_score, 0)
         self.assertTrue(game_over)
         self.assertEqual(best_streak, 10)
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, reset streak
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, streak reset to 0
 
 
 @override_settings(

@@ -100,11 +100,13 @@ class GameService(ABC):
         game_over = False
         best_streak = None
         if not is_correct:
-            # stop streak
+            # do not increment streak
             current_score = current_streak
 
             if "challenge" in cls.GAME_MODE.lower():
                 game_over = True
+                # stop streak
+                current_score = 0
 
             if user.is_authenticated:
                 best_streak = user_get_best_steak(user, cls.GAME_MODE)
@@ -124,11 +126,10 @@ class GameService(ABC):
             # update streak
             current_score = current_streak + 1
 
-        current_streak = current_score if is_correct else 0
-        cache.set(cache_streak_key, current_streak, timeout=cls.CACHE_TIMEOUT_SECONDS)
+        cache.set(cache_streak_key, current_score, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         return (
-            current_streak,
+            current_score,
             game_over,
             best_streak,
         )

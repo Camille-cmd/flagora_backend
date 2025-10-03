@@ -47,6 +47,7 @@ class GameConsumerTestCase(TransactionTestCase):
             {
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "gameToken": "dummy-token",
                 "token": self.token,
                 "language": "en",
             }
@@ -65,7 +66,13 @@ class GameConsumerTestCase(TransactionTestCase):
         await communicator.connect()
 
         await communicator.send_json_to(
-            {"type": "user_accept", "gameMode": "unsupported game mode", "token": self.token, "language": "fr"}
+            {
+                "type": "user_accept",
+                "gameMode": "unsupported game mode",
+                "gameToken": "dummy-token",
+                "token": self.token,
+                "language": "fr",
+            }
         )
 
         with self.assertRaises(ValueError):
@@ -88,6 +95,7 @@ class GameConsumerTestCase(TransactionTestCase):
             {
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "gameToken": "dummy-token",
                 "token": self.token,
                 "language": "fr",
             }
@@ -116,6 +124,7 @@ class GameConsumerTestCase(TransactionTestCase):
             {
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "gameToken": "dummy-token",
                 "token": self.token,
                 "language": "fr",
             }
@@ -141,6 +150,7 @@ class GameConsumerTestCase(TransactionTestCase):
             {
                 "type": "user_accept",
                 "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "gameToken": "dummy-token",
                 "token": self.token,
                 "language": "fr",
             }
@@ -170,3 +180,22 @@ class GameConsumerTestCase(TransactionTestCase):
             consumer.receive_json({"type": "invalid_type"})
 
         self.assertIn("Unknown message type", str(context.exception))
+
+    def test_game_token_set_to_session_id(self):
+        consumer = GameConsumer()
+        consumer.scope = {"type": "websocket"}
+        consumer.channel_name = "test_channel"
+        consumer.send_json = MagicMock()
+
+        game_token = "very-real-token"
+        consumer.receive_json(
+            {
+                "type": "user_accept",
+                "gameMode": GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
+                "gameToken": game_token,
+                "token": self.token,
+                "language": "fr",
+            }
+        )
+
+        self.assertEqual(consumer.session_id, game_token)
