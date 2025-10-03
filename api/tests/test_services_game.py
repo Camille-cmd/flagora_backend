@@ -245,8 +245,8 @@ class GameServiceTest(FlagoraTestCase):
 
         Country.objects.all().delete()
 
-        country_1 = CountryFactory(name_en="France", iso2_code="FR")
-        country_2 = CountryFactory(name_en="Germany", iso2_code="DE")
+        CountryFactory(name_en="France", iso2_code="FR")
+        CountryFactory(name_en="Germany", iso2_code="DE")
 
         session_id = uuid4()
 
