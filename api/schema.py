@@ -152,6 +152,7 @@ class CitiesOut(BaseSchema):
 class SetUserWebsocket(BaseSchema):
     type: str
     token: str | None
+    game_token: str | None
     game_mode: GameModes
     language: str
 

@@ -29,9 +29,6 @@ class GameService(ABC):
 
             # Cache it for later requests
             cache.set(f"{session_id}_user_id", user.id, timeout=cls.CACHE_TIMEOUT_SECONDS)
-            # Reset streak in case of a new game
-            cache.set(f"{session_id}_user_streak", 0, timeout=cls.CACHE_TIMEOUT_SECONDS)
-
             return True
         except (Session.DoesNotExist, User.DoesNotExist):
             return False
@@ -127,10 +124,11 @@ class GameService(ABC):
             # update streak
             current_score = current_streak + 1
 
-        cache.set(cache_streak_key, current_score if is_correct else 0, timeout=cls.CACHE_TIMEOUT_SECONDS)
+        current_streak = current_score if is_correct else 0
+        cache.set(cache_streak_key, current_streak, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         return (
-            current_score,
+            current_streak,
             game_over,
             best_streak,
         )

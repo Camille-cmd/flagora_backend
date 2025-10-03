@@ -10,6 +10,7 @@ class GameConsumer(JsonWebsocketConsumer):
     questions = []
     game_service: GameService
     language: str = ""
+    session_id: str = ""  # for unique sessions by game modes
 
     def connect(self):
         self.accept()
@@ -30,16 +31,21 @@ class GameConsumer(JsonWebsocketConsumer):
                 raise ValueError(f"Unknown message type: {content['type']}")
 
     def store_user(self, content: dict):
-        # First set the user-selected language
-        self.language = content["language"]
-
+        # Validate the data
         data = SetUserWebsocket.model_validate(content, by_alias=True)
+
+        # Store the session id given from the frontend
+        # This is to keep the session unique for each game mode
+        self.session_id = data.game_token
+
+        # Set the user-selected language
+        self.language = data.language
+
         self.game_service = GameServiceRegistry.get_game_service(data.game_mode)
         if self.game_service is None:
             raise ValueError(_("Unknown game mode: {game_mode}".format(game_mode=data.game_mode)))
 
-        token = data.token
-        is_user_authenticated = self.game_service.user_accept(self.channel_name, token)
+        is_user_authenticated = self.game_service.user_accept(self.session_id, data.token)
 
         message = WebsocketMessage(
             type="user_accept",
@@ -53,7 +59,7 @@ class GameConsumer(JsonWebsocketConsumer):
         self.send_questions()
 
     def send_questions(self):
-        questions = self.game_service.get_questions(self.channel_name)
+        questions = self.game_service.get_questions(self.session_id)
         self.questions = questions
         message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
@@ -61,17 +67,17 @@ class GameConsumer(JsonWebsocketConsumer):
     def answer_result(self, content: dict[int, str], skipped: bool = False):
         question_id = int(content["id"])
         answer_submitted = content["answer"] if not skipped else ""
-        user = self.game_service.user_get(self.channel_name)
+        user = self.game_service.user_get(self.session_id)
 
         is_correct, country, *remaining_to_guess = self.game_service.check_answer(
-            self.channel_name, question_id, answer_submitted, user
+            self.session_id, question_id, answer_submitted, user
         )
 
         # for countries with several cities as capital
         remaining_to_guess = remaining_to_guess[0] if remaining_to_guess else 0
 
         current_streak, game_over, best_streak = self.game_service.user_get_streak_score(
-            self.channel_name, user, is_correct, remaining_to_guess
+            self.session_id, user, is_correct, remaining_to_guess
         )
 
         correct_answer: CorrectAnswer = []  # needs to be a lis, as countries can have several cities as capital
