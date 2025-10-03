@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from api.services.user_country_score import UserCountryScoreService
 from core.models import Guess, UserCountryScore
 from core.models.user_country_score import GameModes
-from core.tests.factories import CountryFactory, GuessFactory, UserCountryScoreFactory
+from core.tests.factories import CityFactory, CountryFactory, GuessFactory, UserCountryScoreFactory
 from flagora.tests.base import FlagoraTestCase
 
 
@@ -198,3 +198,121 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         result = service.compute_questions()
         # Only one country available
         self.assertEqual(len(result), 1)
+
+    def test_should_exclude_country_when_flag_is_missing(self):
+        country_without_flag = CountryFactory(flag=None)
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertNotIn(country_without_flag, questions)
+
+    def test_should_include_country_when_flag_exists(self):
+        country_with_flag = CountryFactory()
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertIn(country_with_flag, questions)
+
+    def test_should_exclude_country_when_capital_is_missing(self):
+        country_without_capital = CountryFactory(cities=[])
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertNotIn(country_without_capital, questions)
+
+    def test_should_include_country_when_capital_exists(self):
+        capital_city = CityFactory(is_capital=True)
+        country_with_capital = CountryFactory(cities=[capital_city])
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertIn(country_with_capital, questions)
+
+    def test_should_exclude_from_default_weights_when_flag_is_missing_for_never_attempted_country(self):
+        UserCountryScore.objects.filter(user=self.user).delete()
+
+        CountryFactory()
+        country_without_flag = CountryFactory(flag=None)
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertNotIn(country_without_flag, questions)
+
+    def test_should_exclude_from_default_weights_when_capital_is_missing_for_never_attempted_country(self):
+        UserCountryScore.objects.filter(user=self.user).delete()
+
+        capital_city = CityFactory(is_capital=True)
+        CountryFactory(cities=[capital_city])
+        country_without_capital = CountryFactory(cities=[])
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertNotIn(country_without_capital, questions)
+
+    def test_should_only_validate_flags_when_in_gcff_mode(self):
+        country_with_flag_no_capital = CountryFactory(cities=[])
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertIn(country_with_flag_no_capital, questions)
+
+    def test_should_only_validate_capitals_when_in_gcfc_mode(self):
+        capital_city = CityFactory(is_capital=True)
+        country_with_capital_no_flag = CountryFactory(flag=None, cities=[capital_city])
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertIn(country_with_capital_no_flag, questions)
+
+    def test_should_return_empty_list_when_no_valid_countries_available(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        CountryFactory(flag=None)
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        questions = service.compute_questions()
+
+        self.assertEqual(len(questions), 0)
+
+    def test_should_respect_cooldown_and_validation_when_both_apply(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+        UserCountryScore.objects.all().delete()
+
+        country_a = CountryFactory()
+        country_b = CountryFactory()
+        country_c = CountryFactory(flag=None)
+
+        score_a = UserCountryScoreFactory(
+            user=self.user, country=country_a, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+        score_b = UserCountryScoreFactory(
+            user=self.user, country=country_b, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+        score_c = UserCountryScoreFactory(
+            user=self.user, country=country_c, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+
+        UserCountryScore.objects.filter(pk=score_a.pk).update(updated_at=self.now - timedelta(minutes=3))
+        UserCountryScore.objects.filter(pk=score_b.pk).update(updated_at=self.now - timedelta(minutes=10))
+        UserCountryScore.objects.filter(pk=score_c.pk).update(updated_at=self.now - timedelta(minutes=10))
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        service.datetime_now = self.now
+
+        questions = service.compute_questions()
+
+        self.assertNotIn(country_a, questions)
+        self.assertIn(country_b, questions)
+        self.assertNotIn(country_c, questions)

@@ -109,24 +109,50 @@ class UserCountryScoreService:
     def is_game_mode_training(self):
         return "training" in self.game_mode.lower()
 
+    @property
+    def is_game_mode_gcff(self):
+        return "gcff" in self.game_mode.lower()
+
+    @property
+    def is_game_mode_gcfc(self):
+        return "gcfc" in self.game_mode.lower()
+
+    def get_valid_countries_filter(self, queryset):
+        if self.is_game_mode_gcff:
+            return queryset.exclude(flag__isnull=True).exclude(flag="")
+        elif self.is_game_mode_gcfc:
+            return queryset.filter(cities__is_capital=True).distinct()
+        return queryset
+
     def compute_questions(self) -> list[Country]:
         pack_len = 10
         # Challenge mode does not need the algorithm, just classic radom
         if not self.user.is_authenticated or self.is_game_mode_challenge:
-            return Country.objects.order_by("?")[0:pack_len]
+            countries = Country.objects.all()
+            countries = self.get_valid_countries_filter(countries)
+            return countries.order_by("?")[0:pack_len]
         else:
             # Apply the algorithm
             return self.personalized_questions(pack_len)
 
     def personalized_questions(self, pack_len: int) -> list[Country]:
         cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
-        self.user_country_scores = UserCountryScore.objects.filter(
+        user_country_scores = UserCountryScore.objects.filter(
             user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
         )
+
+        if self.is_game_mode_gcff:
+            user_country_scores = user_country_scores.exclude(country__flag__isnull=True).exclude(country__flag="")
+        elif self.is_game_mode_gcfc:
+            user_country_scores = user_country_scores.filter(country__cities__is_capital=True).distinct()
+
+        self.user_country_scores = user_country_scores
+
         countries_without_score = Country.objects.exclude(
             country_scores__game_mode=self.game_mode,
             country_scores__user=self.user,
         )
+        countries_without_score = self.get_valid_countries_filter(countries_without_score)
 
         # Step 1: Compute weights
         scored_questions = [self.compute_weight(q) for q in self.user_country_scores]
