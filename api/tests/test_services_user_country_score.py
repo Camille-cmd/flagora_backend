@@ -196,7 +196,17 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         service = UserCountryScoreService(AnonymousUser(), GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
         service.datetime_now = self.now
         result = service.compute_questions()
-        # Only one country available
+        self.assertEqual(len(result), 1)
+
+    def test_compute_questions_no_user_guesses_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+        CountryFactory(name_en="Country1", iso2_code="C1")
+
+        service = UserCountryScoreService(AnonymousUser(), GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+        service.datetime_now = self.now
+        result = service.compute_questions()
         self.assertEqual(len(result), 1)
 
     def test_should_exclude_country_when_flag_is_missing(self):
@@ -316,3 +326,120 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         self.assertNotIn(country_a, questions)
         self.assertIn(country_b, questions)
         self.assertNotIn(country_c, questions)
+
+    def test_should_filter_countries_by_continent_when_continent_is_specified(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        european_country = CountryFactory(name_en="France", iso2_code="FR", continent="EU")
+        asian_country = CountryFactory(name_en="Japan", iso2_code="JP", continent="AS")
+        african_country = CountryFactory(name_en="Kenya", iso2_code="KE", continent="AF")
+        north_american_country = CountryFactory(name_en="Canada", iso2_code="CA", continent="NA")
+
+        service = UserCountryScoreService(
+            self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE, continents=["EU", "AS"]
+        )
+
+        questions = service.compute_questions()
+
+        self.assertIn(european_country, questions)
+        self.assertIn(asian_country, questions)
+        self.assertNotIn(african_country, questions)
+        self.assertNotIn(north_american_country, questions)
+
+    def test_should_return_all_available_countries_when_requesting_questions_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        iso2_codes = ["FR", "DE", "ES", "IT", "PT", "BE", "NL", "CH", "AT", "SE", "NO", "DK", "FI", "PL", "CZ"]
+        iso3_codes = [
+            "FRA",
+            "DEU",
+            "ESP",
+            "ITA",
+            "PRT",
+            "BEL",
+            "NLD",
+            "CHE",
+            "AUT",
+            "SWE",
+            "NOR",
+            "DNK",
+            "FIN",
+            "POL",
+            "CZE",
+        ]
+        countries = [
+            CountryFactory(name_en=f"Country{i}", iso2_code=iso2_codes[i], iso3_code=iso3_codes[i]) for i in range(15)
+        ]
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+        questions = service.compute_questions()
+
+        self.assertEqual(len(questions), 15)
+        for country in countries:
+            self.assertIn(country, questions)
+
+    def test_should_return_questions_without_duplicates_when_requesting_questions_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        CountryFactory(name_en="France", iso2_code="FR")
+        CountryFactory(name_en="Germany", iso2_code="DE")
+        CountryFactory(name_en="Spain", iso2_code="ES")
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+        questions = service.compute_questions()
+
+        country_ids = [c.id for c in questions]
+        self.assertEqual(len(country_ids), len(set(country_ids)))
+
+    def test_should_respect_country_filtering_when_requesting_all_questions_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        country_with_flag = CountryFactory(name_en="France", iso2_code="FR")
+        country_without_flag = CountryFactory(name_en="Invalid", iso2_code="XX", flag=None)
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+        questions = service.compute_questions()
+
+        self.assertIn(country_with_flag, questions)
+        self.assertNotIn(country_without_flag, questions)
+
+    def test_should_respect_continent_filtering_when_requesting_all_questions_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        european_country = CountryFactory(name_en="France", iso2_code="FR", continent="EU")
+        asian_country = CountryFactory(name_en="Japan", iso2_code="JP", continent="AS")
+        african_country = CountryFactory(name_en="Kenya", iso2_code="KE", continent="AF")
+
+        service = UserCountryScoreService(
+            self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO, continents=["EU", "AS"]
+        )
+        questions = service.compute_questions()
+
+        self.assertIn(european_country, questions)
+        self.assertIn(asian_country, questions)
+        self.assertNotIn(african_country, questions)
+
+    @patch("api.services.user_country_score.random.shuffle")
+    def test_should_randomize_order_when_requesting_questions_in_challenge_mode(self, mock_shuffle):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        CountryFactory(name_en="France", iso2_code="FR")
+        CountryFactory(name_en="Germany", iso2_code="DE")
+        CountryFactory(name_en="Spain", iso2_code="ES")
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
+        service.compute_questions()
+
+        mock_shuffle.assert_called_once()

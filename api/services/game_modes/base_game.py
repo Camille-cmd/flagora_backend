@@ -15,9 +15,11 @@ from core.services.user_services import user_get_best_steak
 class GameService(ABC):
     CACHE_TIMEOUT_SECONDS = 86400
     GAME_MODE = ""
+    continents: list[str] | None = None
 
     @classmethod
-    def user_accept(cls, session_id: UUID, session_token: UUID) -> bool:
+    def user_accept(cls, session_id: UUID, session_token: UUID, continents: list[str] | None = None) -> bool:
+        cls.continents = continents
         try:
             # Get session data
             session = Session.objects.get(pk=session_token)

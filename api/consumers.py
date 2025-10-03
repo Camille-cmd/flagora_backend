@@ -7,7 +7,6 @@ from api.services.game_modes.base_game import GameService
 
 
 class GameConsumer(JsonWebsocketConsumer):
-    questions = []
     game_service: GameService
     language: str = ""
     session_id: str = ""  # for unique sessions by game modes
@@ -45,7 +44,7 @@ class GameConsumer(JsonWebsocketConsumer):
         if self.game_service is None:
             raise ValueError(_("Unknown game mode: {game_mode}".format(game_mode=data.game_mode)))
 
-        is_user_authenticated = self.game_service.user_accept(self.session_id, data.token)
+        is_user_authenticated = self.game_service.user_accept(self.session_id, data.token, data.continents)
 
         message = WebsocketMessage(
             type="user_accept",
@@ -60,7 +59,6 @@ class GameConsumer(JsonWebsocketConsumer):
 
     def send_questions(self):
         questions = self.game_service.get_questions(self.session_id)
-        self.questions = questions
         message = WebsocketMessage(type="new_questions", payload=questions.model_dump(by_alias=True))
         self.send_json(message.model_dump(by_alias=True))
 

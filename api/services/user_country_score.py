@@ -13,11 +13,12 @@ class UserCountryScoreService:
     DEFAULT_FORGETTING_SCORE = 70
     DEFAULT_FAILURE_SCORE = 70
 
-    def __init__(self, user: User, game_mode: GameModes):
+    def __init__(self, user: User, game_mode: GameModes, continents: list[str] | None = None):
         self.user = user
         self.datetime_now = timezone.now()
         self.user_country_scores = []
         self.game_mode = game_mode
+        self.continents = continents
 
     def _compute_failure_score(self, guesses: list):
         """
@@ -126,11 +127,18 @@ class UserCountryScoreService:
 
     def compute_questions(self) -> list[Country]:
         pack_len = 10
-        # Challenge mode does not need the algorithm, just classic radom
         if not self.user.is_authenticated or self.is_game_mode_challenge:
             countries = Country.objects.all()
+            if self.continents:
+                countries = countries.filter(continent__in=self.continents)
             countries = self.get_valid_countries_filter(countries)
-            return countries.order_by("?")[0:pack_len]
+
+            if self.is_game_mode_challenge:
+                countries_list = list(countries)
+                random.shuffle(countries_list)
+                return countries_list
+            else:
+                return countries.order_by("?")[0:pack_len]
         else:
             # Apply the algorithm
             return self.personalized_questions(pack_len)
@@ -140,6 +148,9 @@ class UserCountryScoreService:
         user_country_scores = UserCountryScore.objects.filter(
             user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
         )
+
+        if self.continents:
+            user_country_scores = user_country_scores.filter(country__continent__in=self.continents)
 
         if self.is_game_mode_gcff:
             user_country_scores = user_country_scores.exclude(country__flag__isnull=True).exclude(country__flag="")
@@ -152,6 +163,8 @@ class UserCountryScoreService:
             country_scores__game_mode=self.game_mode,
             country_scores__user=self.user,
         )
+        if self.continents:
+            countries_without_score = countries_without_score.filter(continent__in=self.continents)
         countries_without_score = self.get_valid_countries_filter(countries_without_score)
 
         # Step 1: Compute weights

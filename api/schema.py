@@ -155,6 +155,7 @@ class SetUserWebsocket(BaseSchema):
     game_token: str | None
     game_mode: GameModes
     language: str
+    continents: list[str] | None = None
 
 
 class UserStats(BaseSchema):

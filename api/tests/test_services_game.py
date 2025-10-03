@@ -240,6 +240,55 @@ class GameServiceTest(FlagoraTestCase):
         self.assertEqual(best_streak, 10)
         self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, streak reset to 0
 
+    def test_should_cache_all_questions_at_session_start_when_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        country_1 = CountryFactory(name_en="France", iso2_code="FR")
+        country_2 = CountryFactory(name_en="Germany", iso2_code="DE")
+
+        session_id = uuid4()
+
+        GameServiceGuessCountryFromFlagChallengeCombo.get_questions(session_id)
+
+        cached_data = cache.get(session_id)
+
+        self.assertEqual(len(cached_data), 2)
+        self.assertIn(0, cached_data)
+        self.assertIn(1, cached_data)
+
+    def test_should_send_all_questions_at_once_in_challenge_mode(self):
+        from core.models import Country
+
+        Country.objects.all().delete()
+
+        iso2_codes = ["FR", "DE", "ES", "IT", "PT", "BE", "NL", "CH", "AT", "SE", "NO", "DK", "FI", "PL", "CZ"]
+        iso3_codes = [
+            "FRA",
+            "DEU",
+            "ESP",
+            "ITA",
+            "PRT",
+            "BEL",
+            "NLD",
+            "CHE",
+            "AUT",
+            "SWE",
+            "NOR",
+            "DNK",
+            "FIN",
+            "POL",
+            "CZE",
+        ]
+        for i in range(15):
+            CountryFactory(name_en=f"Country{i}", iso2_code=iso2_codes[i], iso3_code=iso3_codes[i])
+
+        session_id = uuid4()
+
+        response = GameServiceGuessCountryFromFlagChallengeCombo.get_questions(session_id)
+        self.assertEqual(len(response.questions), 15)
+
 
 @override_settings(
     CACHES={
