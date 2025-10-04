@@ -59,6 +59,13 @@ class GameService(ABC):
         pass
 
     @classmethod
+    def get_last_question(cls, questions_with_answer: dict) -> str | None:
+        if questions_with_answer:
+            return list(questions_with_answer.values())[::-1][0]
+
+        return None
+
+    @classmethod
     def check_answer(
         cls,
         session_id: UUID,
@@ -103,10 +110,11 @@ class GameService(ABC):
         best_streak = None
         if not is_correct:
             # do not increment streak
-            current_score = current_streak
+            current_score = 0
 
             if "challenge" in cls.GAME_MODE.lower():
                 game_over = True
+                current_score = current_streak  # keep the current streak as is for game over summary
 
             if user.is_authenticated:
                 best_streak = user_get_best_steak(user, cls.GAME_MODE)

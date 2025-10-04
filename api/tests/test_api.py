@@ -253,8 +253,8 @@ class TestApi(FlagoraTestCase):
         """
         Countries should be ordered alphabetically by name in the selected language.
         """
-        CountryFactory(name_fr="Zambie", name_en="Zambia", iso2_code="ZM")
-        CountryFactory(name_fr="Albanie", name_en="Albania", iso2_code="AL")
+        CountryFactory(name_fr="Zambie", name_en="Zambia", iso2_code="ZM", iso3_code="ZMB")
+        CountryFactory(name_fr="Albanie", name_en="Albania", iso2_code="AL", iso3_code="ALB")
 
         response = self.client.get(
             self.country_get_list_url,

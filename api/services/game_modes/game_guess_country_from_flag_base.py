@@ -25,7 +25,9 @@ class GameServiceGuessCountryFromFlagBase(GameService):
 
         new_questions = {}
         user = cls.user_get(session_id)
-        countries = UserCountryScoreService(user, cls.GAME_MODE, cls.continents).compute_questions()
+        last_question = cls.get_last_question(questions_with_answer)
+
+        countries = UserCountryScoreService(user, cls.GAME_MODE, cls.continents).compute_questions(last_question)
 
         for index, country in enumerate(countries):
             next_index = len_previous_data + index

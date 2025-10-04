@@ -1,3 +1,4 @@
+import random
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -6,7 +7,7 @@ from django.utils import timezone
 from freezegun import freeze_time
 
 from api.services.user_country_score import UserCountryScoreService
-from core.models import Guess, UserCountryScore
+from core.models import Country, Guess, UserCountryScore
 from core.models.user_country_score import GameModes
 from core.tests.factories import CityFactory, CountryFactory, GuessFactory, UserCountryScoreFactory
 from flagora.tests.base import FlagoraTestCase
@@ -32,7 +33,7 @@ class UserCountryScoreServiceTestCase(FlagoraTestCase):
         return guesses
 
 
-class TestUserCountryScoreService(UserCountryScoreServiceTestCase):
+class UserCountryScoreServiceTest(UserCountryScoreServiceTestCase):
     def test_failure_score_empty(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
         service.datetime_now = self.now
@@ -66,23 +67,22 @@ class ComputeForgettingScoreTest(UserCountryScoreServiceTestCase):
 
     def test_forgetting_score_recent_guess(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
         guess = {"created_at": self.now - timedelta(minutes=1)}
-        score = service._compute_forgetting_score(guess)
+        with freeze_time(self.now):
+            score = service._compute_forgetting_score(guess)
         self.assertLess(score, 40)
 
     def test_forgetting_score_old_guess(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
         guess = {"created_at": self.now - timedelta(days=180)}
-        score = service._compute_forgetting_score(guess)
+        with freeze_time(self.now):
+            score = service._compute_forgetting_score(guess)
         self.assertGreater(score, 80)
 
 
 class ComputeWeightTest(UserCountryScoreServiceTestCase):
     def test_weight_with_no_guesses(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
         result = service.compute_weight(self.score)
 
         self.assertIn("weight", result)
@@ -92,7 +92,6 @@ class ComputeWeightTest(UserCountryScoreServiceTestCase):
     def test_weight_with_mixed_guesses(self):
         self.add_guesses([False, True, False])
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
 
         result = service.compute_weight(self.score)
         self.assertIn("weight", result)
@@ -100,41 +99,25 @@ class ComputeWeightTest(UserCountryScoreServiceTestCase):
 
 
 class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
-    @patch("api.services.user_country_score.UserCountryScoreService.compute_weight")
-    @patch("random.random")
-    def test_compute_questions_weighted_random(self, mock_random, mock_weight):
+    def test_compute_questions_weighted_random(self):
         # Add multiple scores
         UserCountryScore.objects.all().delete()
-        scores = [
+        for index in range(10):
+            iso2_code = f"{random.randint(0, 9)}{index}"
+            iso3_code = f"{random.randint(0, 9)}{index}{random.randint(0, 9)}"
             UserCountryScoreFactory(
                 user=self.user,
-                country=CountryFactory(),
+                country=CountryFactory(iso2_code=iso2_code, iso3_code=iso3_code),
                 user_guesses=GuessFactory.create_batch(2),
+                game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE,
             )
-            for _ in range(3)
-        ]
+
         # Update to avoid triggering the auto_now on the updated_at field
         UserCountryScore.objects.all().update(updated_at=self.now - timedelta(minutes=10))
 
-        # Patch weights
-        mock_weight.side_effect = [
-            {
-                "user_country_score": score,
-                "country": score.country,
-                "weight": w,
-                "failure_score": 0,
-                "forgetting_score": 0,
-            }
-            for score, w in zip(scores, [0.1, 0.3, 0.6])
-        ]
-
-        # Always pick the highest
-        mock_random.return_value = 0.9
-
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
-
-        result = service.compute_questions()
+        with freeze_time(self.now):
+            result = service.compute_questions(last_question=None)
 
         self.assertEqual(len(result), 10)
         self.assertTrue(all(isinstance(c, type(self.country)) for c in result))
@@ -180,9 +163,9 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         }
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
 
-        questions = list(service.compute_questions())
+        with freeze_time(self.now):
+            questions = list(service.compute_questions(last_question=None))
         selected_countries = {c.pk for c in questions}
         expected_countries = {
             old_score.country.pk,
@@ -194,8 +177,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
     def test_compute_questions_no_user_guesses(self):
         service = UserCountryScoreService(AnonymousUser(), GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
-        result = service.compute_questions()
+        with freeze_time(self.now):
+            result = service.compute_questions(last_question=None)
         self.assertEqual(len(result), 1)
 
     def test_compute_questions_no_user_guesses_in_challenge_mode(self):
@@ -205,15 +188,16 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         CountryFactory(name_en="Country1", iso2_code="C1")
 
         service = UserCountryScoreService(AnonymousUser(), GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
-        service.datetime_now = self.now
-        result = service.compute_questions()
+        with freeze_time(self.now):
+            result = service.compute_questions(last_question=None)
         self.assertEqual(len(result), 1)
 
     def test_should_exclude_country_when_flag_is_missing(self):
         country_without_flag = CountryFactory(flag=None)
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertNotIn(country_without_flag, questions)
 
@@ -221,7 +205,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_with_flag = CountryFactory()
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(country_with_flag, questions)
 
@@ -229,7 +214,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_without_capital = CountryFactory(cities=[])
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertNotIn(country_without_capital, questions)
 
@@ -238,7 +224,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_with_capital = CountryFactory(cities=[capital_city])
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(country_with_capital, questions)
 
@@ -249,7 +236,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_without_flag = CountryFactory(flag=None)
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertNotIn(country_without_flag, questions)
 
@@ -261,7 +249,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_without_capital = CountryFactory(cities=[])
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertNotIn(country_without_capital, questions)
 
@@ -269,7 +258,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_with_flag_no_capital = CountryFactory(cities=[])
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(country_with_flag_no_capital, questions)
 
@@ -278,7 +268,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_with_capital_no_flag = CountryFactory(flag=None, cities=[capital_city])
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_CAPITAL_FROM_COUNTRY_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(country_with_capital_no_flag, questions)
 
@@ -290,7 +281,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         CountryFactory(flag=None)
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertEqual(len(questions), 0)
 
@@ -314,14 +306,14 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
             user=self.user, country=country_c, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
         )
 
-        UserCountryScore.objects.filter(pk=score_a.pk).update(updated_at=self.now - timedelta(minutes=3))
+        UserCountryScore.objects.filter(pk=score_a.pk).update(updated_at=self.now - timedelta(minutes=1))
         UserCountryScore.objects.filter(pk=score_b.pk).update(updated_at=self.now - timedelta(minutes=10))
         UserCountryScore.objects.filter(pk=score_c.pk).update(updated_at=self.now - timedelta(minutes=10))
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
-        service.datetime_now = self.now
 
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertNotIn(country_a, questions)
         self.assertIn(country_b, questions)
@@ -341,7 +333,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
             self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE, continents=["EU", "AS"]
         )
 
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(european_country, questions)
         self.assertIn(asian_country, questions)
@@ -376,7 +369,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         ]
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertEqual(len(questions), 15)
         for country in countries:
@@ -392,7 +386,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         CountryFactory(name_en="Spain", iso2_code="ES")
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         country_ids = [c.id for c in questions]
         self.assertEqual(len(country_ids), len(set(country_ids)))
@@ -406,7 +401,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         country_without_flag = CountryFactory(name_en="Invalid", iso2_code="XX", flag=None)
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(country_with_flag, questions)
         self.assertNotIn(country_without_flag, questions)
@@ -423,7 +419,8 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         service = UserCountryScoreService(
             self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO, continents=["EU", "AS"]
         )
-        questions = service.compute_questions()
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=None)
 
         self.assertIn(european_country, questions)
         self.assertIn(asian_country, questions)
@@ -440,6 +437,98 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         CountryFactory(name_en="Spain", iso2_code="ES")
 
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_CHALLENGE_COMBO)
-        service.compute_questions()
+        with freeze_time(self.now):
+            service.compute_questions(last_question=None)
 
         mock_shuffle.assert_called_once()
+
+    @patch("random.random")
+    @patch("api.services.user_country_score.UserCountryScoreService.compute_weight")
+    def test_should_not_add_duplicate_country_in_single_batch_when_randomly_selected_twice(
+        self, mock_weight, mock_random
+    ):
+        UserCountryScore.objects.all().delete()
+        Country.objects.all().delete()
+
+        country1 = CountryFactory(name_en="France", iso2_code="FR")
+        country2 = CountryFactory(name_en="Germany", iso2_code="DE")
+
+        score1 = UserCountryScoreFactory(
+            user=self.user, country=country1, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+        score2 = UserCountryScoreFactory(
+            user=self.user, country=country2, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+
+        UserCountryScore.objects.all().update(updated_at=self.now - timedelta(minutes=10))
+
+        mock_weight.side_effect = [
+            {
+                "user_country_score": score1,
+                "country": country1,
+                "weight": 0.5,
+                "failure_score": 50,
+                "forgetting_score": 50,
+            },
+            {
+                "user_country_score": score2,
+                "country": country2,
+                "weight": 0.5,
+                "failure_score": 50,
+                "forgetting_score": 50,
+            },
+        ]
+
+        # Make random.random() always return 0.4, which will always select country1 (first country)
+        mock_random.return_value = 0.4
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=country1.iso2_code)
+
+        country_ids = [c.id for c in questions]
+        self.assertEqual(len(country_ids), len(set(country_ids)))
+
+    @patch("random.random")
+    @patch("api.services.user_country_score.UserCountryScoreService.compute_weight")
+    def test_should_not_repeat_last_question_as_first_when_randomly_selected(self, mock_weight, mock_random):
+        UserCountryScore.objects.all().delete()
+
+        country1 = CountryFactory(name_en="France", iso2_code="FR")
+        country2 = CountryFactory(name_en="Germany", iso2_code="DE")
+
+        score1 = UserCountryScoreFactory(
+            user=self.user, country=country1, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+        score2 = UserCountryScoreFactory(
+            user=self.user, country=country2, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
+        )
+
+        UserCountryScore.objects.all().update(updated_at=self.now - timedelta(minutes=10))
+
+        mock_weight.side_effect = [
+            {
+                "user_country_score": score1,
+                "country": country1,
+                "weight": 0.5,
+                "failure_score": 50,
+                "forgetting_score": 50,
+            },
+            {
+                "user_country_score": score2,
+                "country": country2,
+                "weight": 0.5,
+                "failure_score": 50,
+                "forgetting_score": 50,
+            },
+        ]
+
+        # Make random.random() always select country1 first
+        mock_random.return_value = 0.4
+
+        service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
+
+        with freeze_time(self.now):
+            questions = service.compute_questions(last_question=country1.iso2_code)
+
+        self.assertNotEqual(questions[0].iso2_code, country1.iso2_code)

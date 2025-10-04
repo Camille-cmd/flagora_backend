@@ -23,9 +23,11 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
 
         new_questions = {}
         user = cls.user_get(session_id)
-        countries = UserCountryScoreService(
-            user, game_mode=cls.GAME_MODE, continents=cls.continents
-        ).compute_questions()
+        last_question = cls.get_last_question(questions_with_answer)
+
+        countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE, continents=cls.continents).compute_questions(
+            last_question
+        )
 
         question_index = 0
         for country in countries:
@@ -38,6 +40,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
             questions_with_answer[next_index] = (
                 list(country.cities.values_list("id", flat=True)),
                 found_capitals,
+                country.iso2_code,
             )
 
             question_index += 1
@@ -45,6 +48,17 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         cache.set(session_id, questions_with_answer, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         return NewQuestions(questions=new_questions)
+
+    @classmethod
+    def get_last_question(cls, questions_with_answer: dict[int, tuple[list[int], list[int], str]]) -> str | None:
+        """
+        Override to return the last question from the cache, as for capital the cache structure is different.
+        """
+        if questions_with_answer:
+            last_question_key = list(questions_with_answer.keys())[-1]
+            return questions_with_answer.get(last_question_key)[2]
+
+        return None
 
     @classmethod
     def check_answer(
@@ -62,7 +76,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         if not questions or question_index not in questions:
             return False, None, 0
 
-        cities_ids_list, found_capitals_ids = questions.get(question_index)
+        cities_ids_list, found_capitals_ids, country_code = questions.get(question_index)
 
         cities_ids = City.objects.filter(id__in=cities_ids_list, is_capital=True).values_list("pk", flat=True)
         is_correct = answer_submitted in cities_ids

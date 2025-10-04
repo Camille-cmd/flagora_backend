@@ -180,10 +180,10 @@ class GameServiceTest(FlagoraTestCase):
             best_streak,
         ) = self.game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
 
-        self.assertEqual(current_score, 2)  # score is not incremented as we have an incorrect answer
+        self.assertEqual(current_score, 0)  # score is reset to 0
         self.assertFalse(game_over)
         self.assertEqual(best_streak, None)
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
 
         # challenge mode, game over
         cache.set(f"{self.session_id}_user_streak", 2)  # reset streak
@@ -194,7 +194,7 @@ class GameServiceTest(FlagoraTestCase):
             best_streak,
         ) = game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
 
-        self.assertEqual(current_score, 2)
+        self.assertEqual(current_score, 2)  # score is not incremented
         self.assertTrue(game_over)
         self.assertEqual(best_streak, None)
         self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)
@@ -208,10 +208,10 @@ class GameServiceTest(FlagoraTestCase):
             best_streak,
         ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
 
-        self.assertEqual(current_score, 9)
+        self.assertEqual(current_score, 0)
         self.assertFalse(game_over)  # training mode, no game over
         self.assertEqual(best_streak, 9)  # new best streak
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 9)  # training, streak doesn't move
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # training, streak reset to 0
         created_stats = UserStats.objects.get(user=self.user, game_mode=self.game_service.GAME_MODE)
         self.assertEqual(created_stats.best_streak, 9)
 
@@ -222,9 +222,9 @@ class GameServiceTest(FlagoraTestCase):
             game_over,
             best_streak,
         ) = self.game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
-        self.assertEqual(current_score, 2)
+        self.assertEqual(current_score, 0)
         self.assertEqual(best_streak, 9)  # got the already stored best streak
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)  # training, streak doesn't move
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # training, streak reset to 0
 
         # Combo has another best streak
         cache.set(f"{self.session_id}_user_streak", 4)
@@ -288,6 +288,13 @@ class GameServiceTest(FlagoraTestCase):
 
         response = GameServiceGuessCountryFromFlagChallengeCombo.get_questions(session_id)
         self.assertEqual(len(response.questions), 15)
+
+    def test_get_last_question(self):
+        iso2_code = self.city.countries.first().iso2_code
+        questions_with_answer = {0: iso2_code}
+        result = self.game_service.get_last_question(questions_with_answer)
+
+        self.assertEqual(result, iso2_code)
 
 
 @override_settings(
@@ -369,7 +376,7 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
         country2.cities.add(self.city)
 
         # Cache questions
-        questions_with_answer = {0: ([self.city.id], [])}
+        questions_with_answer = {0: ([self.city.id], [], self.city.countries.first().iso2_code)}
         cache.set(self.session_id, questions_with_answer)
 
         with self.assertRaises(ValueError) as cm:
@@ -381,3 +388,10 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
             )
 
         self.assertIn("Multiple countries found for cities", str(cm.exception))
+
+    def test_get_last_question(self):
+        iso2_code = self.city.countries.first().iso2_code
+        questions_with_answer = {0: ([self.city.id], [], iso2_code)}
+        result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_last_question(questions_with_answer)
+
+        self.assertEqual(result, iso2_code)

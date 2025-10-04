@@ -141,8 +141,8 @@ class UserCountryScoreService:
             queryset = queryset.filter(country__continent__in=self.continents)
         return queryset
 
-    def compute_questions(self) -> list[Country]:
-        pack_len = 10
+    def compute_questions(self, last_question: str | None) -> list[Country]:
+        selection_len = 10
         if not self.user.is_authenticated or self.is_game_mode_challenge:
             countries = Country.objects.all()
             if self.continents:
@@ -154,13 +154,13 @@ class UserCountryScoreService:
                 random.shuffle(countries_list)
                 return countries_list
             else:
-                print(countries.order_by("?")[0:pack_len])
-                return countries.order_by("?")[0:pack_len]
+                # Training mode is not available for anonymous users, but keep this line for now.
+                return countries.order_by("?")[0:selection_len]
         else:
             # Apply the algorithm
-            return self.personalized_questions(pack_len)
+            return self.personalized_questions(selection_len, last_question)
 
-    def personalized_questions(self, pack_len: int) -> list[Country]:
+    def personalized_questions(self, selection_len: int, last_question: str | None) -> list[Country]:
         datetime_now = timezone.now()
         cooldown_threshold = datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
 
@@ -199,18 +199,25 @@ class UserCountryScoreService:
             q["normalized_weight"] = q["weight"] / total_weight
 
         selection = []
-        for _ in range(pack_len):
+        for _ in range(selection_len):
             # Step 3: Weighted random selection
             # picking a random point.
-            rand_val = random.random()  # nosec
+            rand_val = random.uniform(0, sum(q["normalized_weight"] for q in scored_questions))  # nosec
             cumulative = 0
             for q in scored_questions:
                 # Cumulative is a way of checking each weight, the bigger the weight the more likely it is to be in the rand_val
                 cumulative += q["normalized_weight"]
                 # The first time the cumulative chance exceeds the rand_val, we stop
-                if rand_val <= cumulative:
+                if cumulative >= rand_val:
                     chosen = q["country"]
                     selection.append(chosen)
+                    scored_questions.remove(q)
                     break
 
+        # Avoid re-asking the same country twice in a row
+        first_selection = selection[0] if selection else None
+        if first_selection and first_selection.iso2_code == last_question:
+            selection = selection[1:] + [first_selection]
+
+        # breakpoint()
         return selection
