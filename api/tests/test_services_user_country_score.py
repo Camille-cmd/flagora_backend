@@ -324,10 +324,10 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
 
         Country.objects.all().delete()
 
-        european_country = CountryFactory(name_en="France", iso2_code="FR", continent="EU")
-        asian_country = CountryFactory(name_en="Japan", iso2_code="JP", continent="AS")
-        african_country = CountryFactory(name_en="Kenya", iso2_code="KE", continent="AF")
-        north_american_country = CountryFactory(name_en="Canada", iso2_code="CA", continent="NA")
+        european_country = CountryFactory(name_en="France", iso2_code="FR", continent="EU", iso3_code="FRA")
+        asian_country = CountryFactory(name_en="Japan", iso2_code="JP", continent="AS", iso3_code="JPA")
+        african_country = CountryFactory(name_en="Kenya", iso2_code="KE", continent="AF", iso3_code="KIO")
+        north_american_country = CountryFactory(name_en="Canada", iso2_code="CA", continent="NA", iso3_code="CAD")
 
         service = UserCountryScoreService(
             self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE, continents=["EU", "AS"]
