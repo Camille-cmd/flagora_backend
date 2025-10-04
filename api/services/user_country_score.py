@@ -72,7 +72,8 @@ class UserCountryScoreService:
 
     @staticmethod
     def _compute_question_weight(failure_score: float, forgetting_score: float):
-        return (failure_score * 0.7 + forgetting_score * 0.4) / 100
+        weight = (failure_score * 0.7 + forgetting_score * 0.4) / 100
+        return max(weight, 0.0001)  # Ensure minimum weight to avoid division by zero
 
     def compute_weight(self, user_country_score: UserCountryScore):
         guesses = user_country_score.user_guesses.values("created_at", "is_correct")

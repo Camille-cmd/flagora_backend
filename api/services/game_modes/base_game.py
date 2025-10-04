@@ -15,11 +15,10 @@ from core.services.user_services import user_get_best_steak
 class GameService(ABC):
     CACHE_TIMEOUT_SECONDS = 86400
     GAME_MODE = ""
-    continents: list[str] | None = None
 
     @classmethod
     def user_accept(cls, session_id: UUID, session_token: UUID, continents: list[str] | None = None) -> bool:
-        cls.continents = continents
+        cache.set(f"{session_id}_continents", continents, timeout=cls.CACHE_TIMEOUT_SECONDS)
         try:
             # Get session data
             session = Session.objects.get(pk=session_token)
@@ -51,8 +50,13 @@ class GameService(ABC):
         return AnonymousUser()
 
     @classmethod
+    def continents_get(cls, session_id: UUID) -> list[str] | None:
+        return cache.get(f"{session_id}_continents")
+
+    @classmethod
     def clear_cache(cls, session_id: UUID) -> None:
         cache.delete(f"{session_id}_user_id")
+        cache.delete(f"{session_id}_continents")
 
     @classmethod
     def get_questions(cls, session_id: UUID) -> NewQuestions:

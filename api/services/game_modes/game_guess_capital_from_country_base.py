@@ -23,9 +23,10 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
 
         new_questions = {}
         user = cls.user_get(session_id)
+        continents = cls.continents_get(session_id)
         last_question = cls.get_last_question(questions_with_answer)
 
-        countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE, continents=cls.continents).compute_questions(
+        countries = UserCountryScoreService(user, game_mode=cls.GAME_MODE, continents=continents).compute_questions(
             last_question
         )
 
