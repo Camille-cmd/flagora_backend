@@ -1,6 +1,7 @@
 import math
 import random
 
+from django.db.models import QuerySet
 from django.utils import timezone
 
 from core.models import Country, User, UserCountryScore
@@ -9,13 +10,12 @@ from core.models.user_country_score import GameModes
 
 class UserCountryScoreService:
     DECAY_CONSTANT = 4000
-    COOLDOWN = 5
+    COOLDOWN = 2
     DEFAULT_FORGETTING_SCORE = 70
     DEFAULT_FAILURE_SCORE = 70
 
     def __init__(self, user: User, game_mode: GameModes, continents: list[str] | None = None):
         self.user = user
-        self.datetime_now = timezone.now()
         self.user_country_scores = []
         self.game_mode = game_mode
         self.continents = continents
@@ -35,8 +35,9 @@ class UserCountryScoreService:
 
         total_weight = 0
         failure_weight = 0
+        datetime_now = timezone.now()
         for guess in guesses:
-            minutes_ago = (self.datetime_now - guess["created_at"]).total_seconds() / 60
+            minutes_ago = (datetime_now - guess["created_at"]).total_seconds() / 60
             weight = math.exp(-minutes_ago / self.DECAY_CONSTANT)
 
             if guess["is_correct"] is False:
@@ -60,7 +61,8 @@ class UserCountryScoreService:
             return self.DEFAULT_FORGETTING_SCORE  # middle score
 
         last_asked = last_guess["created_at"]
-        t_minutes = max((self.datetime_now - last_asked).total_seconds() / 60, 1)
+        datetime_now = timezone.now()
+        t_minutes = max((datetime_now - last_asked).total_seconds() / 60, 1)
 
         log_result = math.log(t_minutes, 10)
 
@@ -118,11 +120,25 @@ class UserCountryScoreService:
     def is_game_mode_gcfc(self):
         return "gcfc" in self.game_mode.lower()
 
-    def get_valid_countries_filter(self, queryset):
+    def get_valid_countries_filter(self, queryset: QuerySet[Country]) -> QuerySet[Country]:
         if self.is_game_mode_gcff:
-            return queryset.exclude(flag__isnull=True).exclude(flag="")
+            queryset = queryset.exclude(flag__isnull=True).exclude(flag="")
         elif self.is_game_mode_gcfc:
-            return queryset.filter(cities__is_capital=True).distinct()
+            queryset = queryset.filter(cities__is_capital=True).distinct()
+
+        if self.continents:
+            queryset = queryset.filter(continent__in=self.continents)
+
+        return queryset
+
+    def get_valid_user_country_filter(self, queryset: QuerySet[UserCountryScore]) -> QuerySet[UserCountryScore]:
+        if self.is_game_mode_gcff:
+            queryset = queryset.exclude(country__flag__isnull=True).exclude(country__flag="")
+        elif self.is_game_mode_gcfc:
+            queryset = queryset.filter(country__cities__is_capital=True).distinct()
+
+        if self.continents:
+            queryset = queryset.filter(country__continent__in=self.continents)
         return queryset
 
     def compute_questions(self) -> list[Country]:
@@ -138,34 +154,35 @@ class UserCountryScoreService:
                 random.shuffle(countries_list)
                 return countries_list
             else:
+                print(countries.order_by("?")[0:pack_len])
                 return countries.order_by("?")[0:pack_len]
         else:
             # Apply the algorithm
             return self.personalized_questions(pack_len)
 
     def personalized_questions(self, pack_len: int) -> list[Country]:
-        cooldown_threshold = self.datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
+        datetime_now = timezone.now()
+        cooldown_threshold = datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
+
+        # Get initial queryset
         user_country_scores = UserCountryScore.objects.filter(
             user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
         )
+        # Apply filters
+        self.user_country_scores = self.get_valid_user_country_filter(user_country_scores)
 
-        if self.continents:
-            user_country_scores = user_country_scores.filter(country__continent__in=self.continents)
-
-        if self.is_game_mode_gcff:
-            user_country_scores = user_country_scores.exclude(country__flag__isnull=True).exclude(country__flag="")
-        elif self.is_game_mode_gcfc:
-            user_country_scores = user_country_scores.filter(country__cities__is_capital=True).distinct()
-
-        self.user_country_scores = user_country_scores
-
+        # We need to ask countries that have never been asked before, or that have no score yet.
         countries_without_score = Country.objects.exclude(
             country_scores__game_mode=self.game_mode,
             country_scores__user=self.user,
         )
-        if self.continents:
-            countries_without_score = countries_without_score.filter(continent__in=self.continents)
+        # Apply filters
         countries_without_score = self.get_valid_countries_filter(countries_without_score)
+
+        # If no more questions to ask due to cooldown, broaden the filter
+        if not self.user_country_scores and not countries_without_score:
+            user_country_scores = UserCountryScore.objects.filter(user=self.user, game_mode=self.game_mode)
+            self.user_country_scores = self.get_valid_user_country_filter(user_country_scores)
 
         # Step 1: Compute weights
         scored_questions = [self.compute_weight(q) for q in self.user_country_scores]
