@@ -194,10 +194,10 @@ class GameServiceTest(FlagoraTestCase):
             best_streak,
         ) = game_service.user_get_streak_score(self.session_id, user, is_correct=False, remaining_to_guess=1)
 
-        self.assertEqual(current_score, 0)  # score back to 0 as we have game over
+        self.assertEqual(current_score, 2)
         self.assertTrue(game_over)
         self.assertEqual(best_streak, None)
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 2)
 
     def test_user_get_streak_score_authenticated_user(self):
         # No best streak stored yet, should create one
@@ -235,10 +235,10 @@ class GameServiceTest(FlagoraTestCase):
             game_over,
             best_streak,
         ) = game_service.user_get_streak_score(self.session_id, self.user, is_correct=False, remaining_to_guess=1)
-        self.assertEqual(current_score, 0)
+        self.assertEqual(current_score, 4)
         self.assertTrue(game_over)
         self.assertEqual(best_streak, 10)
-        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 0)  # game over, streak reset to 0
+        self.assertEqual(cache.get(f"{self.session_id}_user_streak"), 4)  # game over, streak reset to 0
 
     def test_should_cache_all_questions_at_session_start_when_in_challenge_mode(self):
         from core.models import Country

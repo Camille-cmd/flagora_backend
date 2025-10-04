@@ -107,8 +107,6 @@ class GameService(ABC):
 
             if "challenge" in cls.GAME_MODE.lower():
                 game_over = True
-                # stop streak
-                current_score = 0
 
             if user.is_authenticated:
                 best_streak = user_get_best_steak(user, cls.GAME_MODE)
