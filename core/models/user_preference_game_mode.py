@@ -18,6 +18,3 @@ class UserPreferenceGameMode(models.Model):
         unique_together = ("user", "game_mode")
         verbose_name = _("User preference by game mode")
         verbose_name_plural = _("User preference by game modes")
-
-    def __str__(self):
-        return self.user

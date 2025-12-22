@@ -11,14 +11,35 @@ from core.models.user_country_score import GameModes
 class UserCountryScoreService:
     DECAY_CONSTANT = 4000
     COOLDOWN = 2
-    DEFAULT_FORGETTING_SCORE = 70
-    DEFAULT_FAILURE_SCORE = 70
+    DEFAULT_FORGETTING_SCORE = 90
+    DEFAULT_FAILURE_SCORE = 90
 
     def __init__(self, user: User, game_mode: GameModes, continents: list[str] | None = None):
         self.user = user
         self.user_country_scores = []
         self.game_mode = game_mode
         self.continents = continents
+
+    @property
+    def is_game_mode_challenge(self):
+        return "challenge" in self.game_mode.lower()
+
+    @property
+    def is_game_mode_training(self):
+        return "training" in self.game_mode.lower()
+
+    @property
+    def is_game_mode_gcff(self):
+        return "gcff" in self.game_mode.lower()
+
+    @property
+    def is_game_mode_gcfc(self):
+        return "gcfc" in self.game_mode.lower()
+
+    @staticmethod
+    def _compute_question_weight(failure_score: float, forgetting_score: float):
+        weight = (failure_score * 0.6 + forgetting_score * 0.4) / 100
+        return max(weight, 0.0001)  # Ensure minimum weight to avoid division by zero
 
     def _compute_failure_score(self, guesses: list):
         """
@@ -70,11 +91,6 @@ class UserCountryScoreService:
 
         return min(100 - retention_factor, 100)
 
-    @staticmethod
-    def _compute_question_weight(failure_score: float, forgetting_score: float):
-        weight = (failure_score * 0.7 + forgetting_score * 0.4) / 100
-        return max(weight, 0.0001)  # Ensure minimum weight to avoid division by zero
-
     def compute_weight(self, user_country_score: UserCountryScore):
         guesses = user_country_score.user_guesses.values("created_at", "is_correct")
         guesses = list(guesses)
@@ -104,22 +120,6 @@ class UserCountryScoreService:
             "failure_score": self.DEFAULT_FAILURE_SCORE,
             "forgetting_score": self.DEFAULT_FORGETTING_SCORE,
         }
-
-    @property
-    def is_game_mode_challenge(self):
-        return "challenge" in self.game_mode.lower()
-
-    @property
-    def is_game_mode_training(self):
-        return "training" in self.game_mode.lower()
-
-    @property
-    def is_game_mode_gcff(self):
-        return "gcff" in self.game_mode.lower()
-
-    @property
-    def is_game_mode_gcfc(self):
-        return "gcfc" in self.game_mode.lower()
 
     def get_valid_countries_filter(self, queryset: QuerySet[Country]) -> QuerySet[Country]:
         if self.is_game_mode_gcff:
@@ -163,27 +163,29 @@ class UserCountryScoreService:
 
     def personalized_questions(self, selection_len: int, last_question: str | None) -> list[Country]:
         datetime_now = timezone.now()
-        cooldown_threshold = datetime_now - timezone.timedelta(minutes=self.COOLDOWN)
 
-        # Get initial queryset
-        user_country_scores = UserCountryScore.objects.filter(
-            user=self.user, updated_at__lte=cooldown_threshold, game_mode=self.game_mode
-        )
-        # Apply filters
-        self.user_country_scores = self.get_valid_user_country_filter(user_country_scores)
+        countries_without_score = Country.objects.none()
+        # The cooldown can be too harsh depending on the user's speed
+        # Reduce it until we find results
+        for cooldown_seconds in range(self.COOLDOWN * 60, -1, -30):
+            cooldown_threshold = datetime_now - timezone.timedelta(seconds=cooldown_seconds)
 
-        # We need to ask countries that have never been asked before, or that have no score yet.
-        countries_without_score = Country.objects.exclude(
-            country_scores__game_mode=self.game_mode,
-            country_scores__user=self.user,
-        )
-        # Apply filters
-        countries_without_score = self.get_valid_countries_filter(countries_without_score)
-
-        # If no more questions to ask due to cooldown, broaden the filter
-        if not self.user_country_scores and not countries_without_score:
-            user_country_scores = UserCountryScore.objects.filter(user=self.user, game_mode=self.game_mode)
+            user_country_scores = UserCountryScore.objects.filter(
+                user=self.user,
+                game_mode=self.game_mode,
+                updated_at__lte=cooldown_threshold,
+            )
             self.user_country_scores = self.get_valid_user_country_filter(user_country_scores)
+
+            # We need to ask countries that have never been asked before, or that have no score yet.
+            countries_without_score = Country.objects.exclude(
+                country_scores__game_mode=self.game_mode,
+                country_scores__user=self.user,
+            )
+            countries_without_score = self.get_valid_countries_filter(countries_without_score)
+
+            if self.user_country_scores or countries_without_score:
+                break
 
         # Step 1: Compute weights
         scored_questions = [self.compute_weight(q) for q in self.user_country_scores]
@@ -216,9 +218,10 @@ class UserCountryScoreService:
                     break
 
         # Avoid re-asking the same country twice in a row
+        # This can happen if the cooldown was so small (or inexistant)
+        # that the last question is able to be in the possible selected countries again
         first_selection = selection[0] if selection else None
         if first_selection and first_selection.iso2_code == last_question:
             selection = selection[1:] + [first_selection]
 
-        # breakpoint()
         return selection

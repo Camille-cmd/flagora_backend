@@ -7,7 +7,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from core.models import City, Country, Guess, User, UserCountryScore, UserStats
+from core.models import City, Country, Guess, User, UserCountryScore, UserPreferenceGameMode, UserStats
 from core.services.country_services import country_update
 
 
@@ -18,9 +18,16 @@ class UserStatsInline(admin.TabularInline):
     verbose_name_plural = gettext_lazy("User Stats")
 
 
+class UserPreferenceGameModeInline(admin.TabularInline):
+    model = UserPreferenceGameMode
+    extra = 0
+    can_delete = True
+    verbose_name_plural = gettext_lazy("User Game preferences")
+
+
 @admin.register(User)
 class UserAdminAdmin(UserAdmin):
-    inlines = [UserStatsInline]
+    inlines = [UserStatsInline, UserPreferenceGameModeInline]
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = super().get_fieldsets(request, obj)

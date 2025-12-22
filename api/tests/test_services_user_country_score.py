@@ -38,7 +38,7 @@ class UserCountryScoreServiceTest(UserCountryScoreServiceTestCase):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
         service.datetime_now = self.now
         score = service._compute_failure_score([])
-        self.assertEqual(score, 70)
+        self.assertEqual(score, 90)
 
     def test_failure_score_all_failures(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
@@ -63,7 +63,7 @@ class ComputeForgettingScoreTest(UserCountryScoreServiceTestCase):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
         service.datetime_now = self.now
         score = service._compute_forgetting_score(None)
-        self.assertEqual(score, 70)
+        self.assertEqual(score, 90)
 
     def test_forgetting_score_recent_guess(self):
         service = UserCountryScoreService(self.user, GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE)
@@ -86,8 +86,8 @@ class ComputeWeightTest(UserCountryScoreServiceTestCase):
         result = service.compute_weight(self.score)
 
         self.assertIn("weight", result)
-        self.assertEqual(result["failure_score"], 70)
-        self.assertEqual(result["forgetting_score"], 70)
+        self.assertEqual(result["failure_score"], 90)
+        self.assertEqual(result["forgetting_score"], 90)
 
     def test_weight_with_mixed_guesses(self):
         self.add_guesses([False, True, False])
@@ -292,9 +292,9 @@ class ComputeQuestionsTest(UserCountryScoreServiceTestCase):
         Country.objects.all().delete()
         UserCountryScore.objects.all().delete()
 
-        country_a = CountryFactory()
-        country_b = CountryFactory()
-        country_c = CountryFactory(flag=None)
+        country_a = CountryFactory(iso2_code="FR", iso3_code="FRA")
+        country_b = CountryFactory(iso2_code="DE", iso3_code="DEU")
+        country_c = CountryFactory(iso2_code="KN", iso3_code="KNA", flag=None)
 
         score_a = UserCountryScoreFactory(
             user=self.user, country=country_a, game_mode=GameModes.GUESS_COUNTRY_FROM_FLAG_TRAINING_INFINITE
