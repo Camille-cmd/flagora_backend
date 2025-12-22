@@ -56,9 +56,6 @@ INSTALLED_APPS = [
     "channels_redis",
 ]
 
-if DEBUG:
-    INSTALLED_APPS.append("debug_toolbar")
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "flagora.middleware.SessionMiddleware",
@@ -72,9 +69,6 @@ MIDDLEWARE = [
 
 if not DEBUG:
     MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
-
-if DEBUG:
-    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "flagora.urls"
 
