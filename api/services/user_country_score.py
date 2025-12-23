@@ -1,7 +1,7 @@
 import math
 import random
 
-from django.db.models import QuerySet
+from django.db.models import Count, Q, QuerySet
 from django.utils import timezone
 
 from core.models import Country, User, UserCountryScore
@@ -178,10 +178,11 @@ class UserCountryScoreService:
             self.user_country_scores = self.get_valid_user_country_filter(user_country_scores)
 
             # We need to ask countries that have never been asked before, or that have no score yet.
-            countries_without_score = Country.objects.exclude(
-                country_scores__game_mode=self.game_mode,
-                country_scores__user=self.user,
-            )
+            countries_without_score = Country.objects.annotate(
+                score_count=Count(
+                    "country_scores", filter=Q(country_scores__user=self.user, country_scores__game_mode=self.game_mode)
+                )
+            ).filter(score_count=0)
             countries_without_score = self.get_valid_countries_filter(countries_without_score)
 
             if self.user_country_scores or countries_without_score:
