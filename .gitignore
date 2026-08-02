@@ -21,3 +21,5 @@ media
 htmlcov
 
 static
+
+core/management/commands/data
