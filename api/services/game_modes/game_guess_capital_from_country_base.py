@@ -1,3 +1,4 @@
+from typing import NamedTuple
 from uuid import UUID
 
 from django.contrib.auth.models import AnonymousUser
@@ -7,6 +8,12 @@ from api.schema import CorrectAnswer, NewQuestions
 from api.services.game_modes.base_game import GameService
 from api.services.user_country_score import UserCountryScoreService
 from core.models import City, Country, User
+
+
+class QuestionWithAnswer(NamedTuple):
+    cities_ids_list: list[int]
+    found_capitals_ids: list[int]
+    country_code: str
 
 
 class GameServiceGuessCapitalFromCountryBase(GameService):
@@ -38,7 +45,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
             new_questions[next_index] = country.iso2_code
             # Send name field to keep a consistent answer check
             found_capitals = []
-            questions_with_answer[next_index] = (
+            questions_with_answer[next_index] = QuestionWithAnswer(
                 list(country.cities.values_list("id", flat=True)),
                 found_capitals,
                 country.iso2_code,
@@ -51,7 +58,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         return NewQuestions(questions=new_questions)
 
     @classmethod
-    def get_last_question(cls, questions_with_answer: dict[int, tuple[list[int], list[int], str]]) -> str | None:
+    def get_last_question(cls, questions_with_answer: dict[int, QuestionWithAnswer]) -> str | None:
         """
         Override to return the last question from the cache, as for capital the cache structure is different.
         """
@@ -89,7 +96,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
                 found_capitals_ids.append(answer_submitted)
             remaining_cities = len(cities_ids_list) - len(found_capitals_ids)
             # cache what has been found so far
-            questions[question_index] = (cities_ids_list, found_capitals_ids)
+            questions[question_index] = QuestionWithAnswer(cities_ids_list, found_capitals_ids, country_code)
             cache.set(session_id, questions, timeout=cls.CACHE_TIMEOUT_SECONDS)
 
         countries = Country.objects.filter(cities__in=cities_ids_list).distinct()
