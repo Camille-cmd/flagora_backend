@@ -17,7 +17,7 @@ from api.services.game_modes.training_modes.game_guess_country_from_flag import 
     GameServiceGuessCountryFromFlagTrainingInfinite,
 )
 from core.models import Guess, UserCountryScore, UserStats
-from core.tests.factories import CountryFactory
+from core.tests.factories import CityFactory, CountryFactory
 from flagora.tests.base import FlagoraTestCase
 
 
@@ -395,3 +395,63 @@ class GameServiceGuessCapitalFromCountryTest(FlagoraTestCase):
         result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_last_question(questions_with_answer)
 
         self.assertEqual(result, iso2_code)
+
+    def test_check_answer_multiple_capitals(self):
+        """
+        Check that for a country with several capitals, the cache entry for a question keeps
+        track of its country_code across successive guesses.
+        """
+        # Build a country with exactly two capitals (and nothing else) by passing `cities` explicitly to
+        # CountryFactory: without it, the factory's post_generation hook attaches an extra random,
+        # non-capital city, which would pollute the "remaining capitals" count below.
+        first_capital = CityFactory(name_en="Pretoria", name_fr="Pretoria", is_capital=True)
+        second_capital = CityFactory(name_en="Cape Town", name_fr="Le Cap", is_capital=True)
+        country = CountryFactory(
+            name_en="South Africa", name_fr="Afrique du Sud", cities=[first_capital, second_capital]
+        )
+        self.mock_compute_questions.return_value = [country]
+
+        GameServiceGuessCapitalFromCountryTrainingInfinite.get_questions(self.session_id)
+
+        # First correct guess: one capital found, one remaining.
+        is_correct, answered_country, remaining_cities = (
+            GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
+                self.session_id, 0, first_capital.pk, self.user
+            )
+        )
+        self.assertTrue(is_correct)
+        self.assertEqual(answered_country, country)
+        self.assertEqual(remaining_cities, 1)
+
+        # Second correct guess on the same question: this used to fail before the fix, since the first
+        # guess had overwritten the cache entry without its country_code.
+        is_correct, answered_country, remaining_cities = (
+            GameServiceGuessCapitalFromCountryTrainingInfinite.check_answer(
+                self.session_id, 0, second_capital.pk, self.user
+            )
+        )
+        self.assertTrue(is_correct)
+        self.assertEqual(answered_country, country)
+        self.assertEqual(remaining_cities, 0)
+
+        # The cache entry must still be well-formed: both capitals found, country_code preserved.
+        cities_ids_list, found_capitals_ids, country_code = cache.get(self.session_id)[0]
+        self.assertCountEqual(found_capitals_ids, [first_capital.pk, second_capital.pk])
+        self.assertEqual(country_code, country.iso2_code)
+
+    def test_get_correct_answer_multiple_capitals(self):
+        second_capital = CityFactory(
+            name_en="Cape Town",
+            name_fr="Le Cap",
+            is_capital=True,
+            wikipedia_link_en="https://en.wikipedia.org/wiki/Cape_Town",
+            wikipedia_link_fr="https://fr.wikipedia.org/wiki/Le_Cap",
+        )
+        self.country.cities.add(second_capital)
+
+        result = GameServiceGuessCapitalFromCountryTrainingInfinite.get_correct_answer(self.user, self.country, "en")
+
+        self.assertEqual(len(result), 2)
+        result_names = {answer.name for answer in result}
+        self.assertIn(self.city.name_en, result_names)
+        self.assertIn(second_capital.name_en, result_names)
