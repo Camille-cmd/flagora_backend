@@ -64,7 +64,7 @@ class GameServiceGuessCapitalFromCountryBase(GameService):
         """
         if questions_with_answer:
             last_question_key = list(questions_with_answer.keys())[-1]
-            return questions_with_answer.get(last_question_key)[2]
+            return questions_with_answer[last_question_key][2]
 
         return None
 
