@@ -141,6 +141,15 @@ class CityOutStats(CityOut):
     success_rate: float = 0.0
 
 
+class DepartmentOut(BaseSchema):
+    name: str
+    number: str
+
+
+class DepartmentOutStats(DepartmentOut):
+    success_rate: float = 0.0
+
+
 class CountriesOut(BaseSchema):
     countries: list[CountryOut]
 
@@ -160,8 +169,8 @@ class SetUserWebsocket(BaseSchema):
 
 class UserStats(BaseSchema):
     most_strikes: int
-    most_failed: CountryOutStats | CityOutStats
-    most_correctly_guessed: CountryOutStats | CityOutStats
+    most_failed: CountryOutStats | CityOutStats | DepartmentOutStats
+    most_correctly_guessed: CountryOutStats | CityOutStats | DepartmentOutStats
     success_rate: float = 0.0
 
 

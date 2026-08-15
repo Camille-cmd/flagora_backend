@@ -27,12 +27,16 @@ class GameServiceGuessDepartmentFromNumberBase(GameService):
 
         new_questions = {}
         user = cls.user_get(session_id)
-        departments = UserDepartmentScoreService(user, cls.GAME_MODE).compute_questions()
+        service = UserDepartmentScoreService(user, cls.GAME_MODE)
+        if service.is_game_mode_challenge:
+            departments = list(Department.objects.order_by("?"))
+        else:
+            departments = service.compute_questions()
 
         for index, department in enumerate(departments):
             next_index = len_previous_data + index
             new_questions[next_index] = department.number
-            questions_with_answer[next_index] = department.number
+            questions_with_answer[next_index] = department
 
         cache.set(session_id, questions_with_answer, timeout=cls.CACHE_TIMEOUT_SECONDS)
         return NewQuestions(questions=new_questions)
@@ -53,9 +57,8 @@ class GameServiceGuessDepartmentFromNumberBase(GameService):
         if not questions or question_index not in questions:
             return False, None
 
-        department_to_guess_number = questions.get(question_index)
-        department = Department.objects.get(number=department_to_guess_number)
-        
+        department = questions.get(question_index)
+
         # Check if the submitted answer matches the department name (case insensitive)
         is_correct = answer_submitted.lower().strip() == department.name.lower().strip()
         

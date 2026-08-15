@@ -194,9 +194,11 @@ class AdaptiveLearningAlgorithm(Generic[EntityType, ScoreType]):
         for q in scored_questions:
             q["normalized_weight"] = q["weight"] / total_weight
 
-        # Step 3: Weighted random selection
+        # Step 3: Weighted random selection (without replacement, so a pack never repeats an entity)
         selection = []
         for _ in range(pack_len):
+            if not scored_questions:
+                break
             # picking a random point.
             rand_val = random.random()  # nosec
             cumulative = 0
@@ -207,6 +209,7 @@ class AdaptiveLearningAlgorithm(Generic[EntityType, ScoreType]):
                 if rand_val <= cumulative:
                     chosen = q[self.entity_field_name]
                     selection.append(chosen)
+                    scored_questions.remove(q)
                     break
 
         return selection
