@@ -1,3 +1,10 @@
+"""
+@c3:component
+name: Flag Store
+container: API Server
+technology: Django Cache
+description: Redis-backed cache mapping country ISO codes to flag image paths, avoiding repeated database lookups during active game sessions.
+"""
 from django.core.cache import cache
 from django.db.models import QuerySet
 

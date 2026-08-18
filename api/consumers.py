@@ -1,3 +1,13 @@
+"""
+@c3:component
+name: Game Consumer
+container: API Server
+technology: Django Channels
+description: WebSocket endpoint managing real-time game flow — player connection, question delivery, answer validation, and score feedback. Delegates all game logic to the appropriate Game Mode via the registry.
+uses:
+- Game Registry: "resolves the concrete game mode service for the player's session"
+- Game Mode: "calls question generation, answer checking, and streak calculation"
+"""
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.utils.translation import gettext as _
 

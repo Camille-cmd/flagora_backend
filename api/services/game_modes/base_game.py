@@ -1,3 +1,12 @@
+"""
+@c3:component
+name: Game Mode
+container: API Server
+description: Abstract base and concrete implementations (training and challenge modes) for the game session lifecycle — player authentication, question generation, answer checking, and streak scoring.
+uses:
+- Core Domain: "reads countries, cities, guesses, and user stats"
+- Flag Store: "retrieves cached flag image paths for question rendering"
+"""
 from abc import ABC
 from uuid import UUID
 
