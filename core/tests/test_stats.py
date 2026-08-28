@@ -153,8 +153,8 @@ class UserStatsTestCase(FlagoraTestCase):
         # Should still return results for all game modes, but with zeros
         self.assertEqual(len(results), len(GameModes.values))
         for result in results:
-            # Cities is a list of dicts, so we need to check the name attribute
-            if "GCFF" in result.game_mode:
+            # Country and department names are strings, city (capital) names are a list
+            if "GCFF" in result.game_mode or "GDFN" in result.game_mode:
                 expected_name = ""
             else:
                 expected_name = [""]
