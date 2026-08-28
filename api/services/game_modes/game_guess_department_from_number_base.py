@@ -67,7 +67,8 @@ class GameServiceGuessDepartmentFromNumberBase(GameService):
     def get_correct_answer(cls, user: User, department: Department, user_language: str) -> list[CorrectAnswer]:
         correct_answer = department.name
         code = department.number
-        wikipedia_link = f"https://{user_language}.wikipedia.org/wiki/{correct_answer}"
+        wikipedia_field = f"wikipedia_link_{user_language}"
+        wikipedia_link = getattr(department, wikipedia_field)
 
         return [CorrectAnswer(name=correct_answer, code=code, wikipedia_link=wikipedia_link)]
 

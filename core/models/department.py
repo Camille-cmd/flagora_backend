@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models.wikipedia_link import WikipediaLink
 
-class Department(models.Model):
+
+class Department(WikipediaLink):
     """
     French Department model for the guessing game.
     """
@@ -19,3 +21,7 @@ class Department(models.Model):
 
     def __str__(self):
         return f"{self.number} - {self.name}"
+
+    @classmethod
+    def get_wikipedia_field_name(cls) -> str:
+        return "name"

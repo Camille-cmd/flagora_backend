@@ -1,5 +1,6 @@
 import csv
 import io
+
 import requests
 from django.core.management.base import BaseCommand
 
@@ -69,6 +70,8 @@ class Command(BaseCommand):
                 "name": dept["nom"],
                 "region": dept["region"]["nom"],
                 "prefecture": prefectures_data.get(dept_code, "Unknown"),
+                "wikipedia_link_en": f"https://en.wikipedia.org/wiki/{dept['nom']}",
+                "wikipedia_link_fr": f"https://fr.wikipedia.org/wiki/{dept['nom']}",
             }
             transformed_data.append(transformed_dept)
 
@@ -97,6 +100,8 @@ class Command(BaseCommand):
                     "name": dept_data["name"],
                     "region": dept_data["region"],
                     "prefecture": dept_data["prefecture"],
+                    "wikipedia_link_fr": dept_data["wikipedia_link_fr"],
+                    "wikipedia_link_en": dept_data["wikipedia_link_en"],
                 },
             )
 
