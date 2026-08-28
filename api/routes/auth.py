@@ -1,3 +1,13 @@
+"""
+@c3:component
+name: Auth API
+container: API Server
+technology: Django Ninja
+description: REST endpoints for registration, login, logout, email verification, and password reset.
+uses:
+- Core Domain: "reads and writes users and credentials"
+- Email Service: "sends verification and password reset emails"
+"""
 from anymail.exceptions import AnymailRequestsAPIError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password

@@ -1,3 +1,9 @@
+"""
+@c3:component
+name: Game Registry
+container: API Server
+description: Registry mapping game mode identifiers to their concrete GameService implementations, enabling dynamic game mode resolution at runtime.
+"""
 import typing
 
 from core.models.user_country_score import GameModes

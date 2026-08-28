@@ -1,3 +1,12 @@
+"""
+@c3:component
+name: Player HTTP API
+container: API Server
+technology: Django Ninja
+description: REST endpoints for user profile management, country and city data queries, and game statistics.
+uses:
+- Core Domain: "reads and writes users, countries, cities, and game statistics"
+"""
 from django.http import HttpRequest
 from django.utils import translation
 from django.utils.translation import gettext as _

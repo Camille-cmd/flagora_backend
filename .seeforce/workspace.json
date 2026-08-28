@@ -1,0 +1,179 @@
+{
+  "name": "Flagora",
+  "model": {
+    "people": [],
+    "softwareSystems": [
+      {
+        "id": "flagora",
+        "name": "Flagora",
+        "description": "Geography quiz game where players identify countries by their flags and capitals, with training and challenge modes.",
+        "tags": "Element,Software System",
+        "relationships": [],
+        "containers": [
+          {
+            "id": "flagora-api-server",
+            "name": "API Server",
+            "description": "ASGI server exposing REST endpoints for account and data management, and WebSocket connections for real-time game sessions.",
+            "technology": "Python / Django + Daphne",
+            "source_file": "api/__init__.py",
+            "tags": "Element,Container",
+            "relationships": [],
+            "components": [
+              {
+                "id": "flagora-api-server-core-domain",
+                "name": "Core Domain",
+                "description": "Domain models (User, Country, City, Guess, UserStats) and their business services. This is the business logic layer — not the database itself, which is a separate infrastructure concern.",
+                "technology": "Django ORM",
+                "source_file": "core/__init__.py",
+                "tags": "Element,Component",
+                "relationships": []
+              },
+              {
+                "id": "flagora-api-server-game-consumer",
+                "name": "Game Consumer",
+                "description": "WebSocket endpoint managing real-time game flow — player connection, question delivery, answer validation, and score feedback. Delegates all game logic to the appropriate Game Mode via the registry.",
+                "technology": "Django Channels",
+                "source_file": "api/consumers.py",
+                "tags": "Element,Component",
+                "relationships": [
+                  {
+                    "id": "rel-flagora-api-server-game-consumer-flagora-api-server-game-registry",
+                    "destinationId": "flagora-api-server-game-registry",
+                    "description": "resolves the concrete game mode service for the player's session",
+                    "technology": "",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "id": "rel-flagora-api-server-game-consumer-flagora-api-server-game-mode",
+                    "destinationId": "flagora-api-server-game-mode",
+                    "description": "calls question generation, answer checking, and streak calculation",
+                    "technology": "",
+                    "tags": "Relationship"
+                  }
+                ]
+              },
+              {
+                "id": "flagora-api-server-flag-store",
+                "name": "Flag Store",
+                "description": "Redis-backed cache mapping country ISO codes to flag image paths, avoiding repeated database lookups during active game sessions.",
+                "technology": "Django Cache",
+                "source_file": "api/flag_store.py",
+                "tags": "Element,Component",
+                "relationships": []
+              },
+              {
+                "id": "flagora-api-server-game-registry",
+                "name": "Game Registry",
+                "description": "Registry mapping game mode identifiers to their concrete GameService implementations, enabling dynamic game mode resolution at runtime.",
+                "technology": "",
+                "source_file": "api/game_registery.py",
+                "tags": "Element,Component",
+                "relationships": []
+              },
+              {
+                "id": "flagora-api-server-auth-api",
+                "name": "Auth API",
+                "description": "REST endpoints for registration, login, logout, email verification, and password reset.",
+                "technology": "Django Ninja",
+                "source_file": "api/routes/auth.py",
+                "tags": "Element,Component",
+                "relationships": [
+                  {
+                    "id": "rel-flagora-api-server-auth-api-flagora-api-server-core-domain",
+                    "destinationId": "flagora-api-server-core-domain",
+                    "description": "reads and writes users and credentials",
+                    "technology": "",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "id": "rel-flagora-api-server-auth-api-flagora-api-server-email-service",
+                    "destinationId": "flagora-api-server-email-service",
+                    "description": "sends verification and password reset emails",
+                    "technology": "",
+                    "tags": "Relationship"
+                  }
+                ]
+              },
+              {
+                "id": "flagora-api-server-player-http-api",
+                "name": "Player HTTP API",
+                "description": "REST endpoints for user profile management, country and city data queries, and game statistics.",
+                "technology": "Django Ninja",
+                "source_file": "api/routes/api.py",
+                "tags": "Element,Component",
+                "relationships": [
+                  {
+                    "id": "rel-flagora-api-server-player-http-api-flagora-api-server-core-domain",
+                    "destinationId": "flagora-api-server-core-domain",
+                    "description": "reads and writes users, countries, cities, and game statistics",
+                    "technology": "",
+                    "tags": "Relationship"
+                  }
+                ]
+              },
+              {
+                "id": "flagora-api-server-email-service",
+                "name": "Email Service",
+                "description": "Sends transactional emails — account verification, welcome, and password reset — using HTML and plain-text templates.",
+                "technology": "Django Anymail",
+                "source_file": "api/services/emails.py",
+                "tags": "Element,Component",
+                "relationships": []
+              },
+              {
+                "id": "flagora-api-server-game-mode",
+                "name": "Game Mode",
+                "description": "Abstract base and concrete implementations (training and challenge modes) for the game session lifecycle — player authentication, question generation, answer checking, and streak scoring.",
+                "technology": "",
+                "source_file": "api/services/game_modes/base_game.py",
+                "tags": "Element,Component",
+                "relationships": [
+                  {
+                    "id": "rel-flagora-api-server-game-mode-flagora-api-server-core-domain",
+                    "destinationId": "flagora-api-server-core-domain",
+                    "description": "reads countries, cities, guesses, and user stats",
+                    "technology": "",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "id": "rel-flagora-api-server-game-mode-flagora-api-server-flag-store",
+                    "destinationId": "flagora-api-server-flag-store",
+                    "description": "retrieves cached flag image paths for question rendering",
+                    "technology": "",
+                    "tags": "Relationship"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "views": {
+    "systemContextViews": [
+      {
+        "key": "SystemContext",
+        "softwareSystemId": "flagora"
+      }
+    ],
+    "containerViews": [
+      {
+        "key": "Containers-flagora",
+        "softwareSystemId": "flagora"
+      }
+    ],
+    "componentViews": [
+      {
+        "key": "Components-flagora-api-server",
+        "containerId": "flagora-api-server"
+      }
+    ],
+    "configuration": {
+      "styles": {
+        "elements": [],
+        "relationships": []
+      }
+    }
+  }
+}

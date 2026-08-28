@@ -1,3 +1,10 @@
+"""
+@c3:component
+name: Email Service
+container: API Server
+technology: Django Anymail
+description: Sends transactional emails — account verification, welcome, and password reset — using HTML and plain-text templates.
+"""
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone, translation
