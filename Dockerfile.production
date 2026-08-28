@@ -1,5 +1,5 @@
 # Alpine pyhon image with uv installed
-FROM ghcr.io/astral-sh/uv:0.8-python3.13-alpine
+FROM ghcr.io/astral-sh/uv:0.12.7-python3.13-alpine
 
 # Install psycopg2-binary
 RUN apk add build-base libpq libpq-dev && apk add libffi-dev
