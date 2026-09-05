@@ -8,7 +8,7 @@ from ninja.security import django_auth
 from api.schema import ResponseError
 from core.models import Country
 
-media_router_api = NinjaAPI(csrf=True, urls_namespace="media")
+media_router_api = NinjaAPI(urls_namespace="media")
 
 
 @media_router_api.get("/flags/{iso2_code}/flag.svg", auth=django_auth, response={200: str, 400: ResponseError})

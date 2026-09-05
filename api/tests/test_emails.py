@@ -14,7 +14,7 @@ from flagora.tests.base import FlagoraTestCase
 User = get_user_model()
 
 
-@override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+@override_settings(MAILERS={"default": {"BACKEND": "django.core.mail.backends.locmem.EmailBackend"}})
 class TestEmails(FlagoraTestCase):
     def test_send_email_reset_password_french(self):
         """

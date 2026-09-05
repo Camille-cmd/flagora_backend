@@ -35,7 +35,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [ 3.13 ]
+        python-version: [ 3.14 ]
 
     services:
       postgres:
@@ -79,7 +79,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
-          version: "0.8"
+          version: "0.12"
           # store uv's cache across workflow runs.
           enable-cache: true
 
