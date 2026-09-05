@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
@@ -9,14 +9,14 @@ repos:
         exclude: ^static/|^migrations/|/migrations/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.4
+    rev: v0.16.6
     hooks:
       - id: ruff-check
         args: [--select, I, --fix]  # sort files and enable lint fixes
       - id: ruff-format
 
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.3.1
+    rev: v2.4.0
     hooks:
       - id: autoflake
         args: [--in-place]

@@ -181,7 +181,11 @@ LOCALE_PATHS = [
 # Email
 if not DEBUG:
     # Use Brevo in production
-    EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+    MAILERS = {
+        "default": {
+            "BACKEND": "anymail.backends.brevo.EmailBackend",
+        },
+    }
     ANYMAIL = {
         "BREVO_API_KEY": os.environ.get("ANYMAIL_BREVO_API_KEY"),
         "SEND_DEFAULTS": {
@@ -190,6 +194,10 @@ if not DEBUG:
     }
 else:
     # Use console backend in development
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        },
+    }
 
 DEFAULT_FROM_EMAIL = os.environ["FROM_EMAIL"]

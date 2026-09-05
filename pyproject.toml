@@ -3,31 +3,31 @@ name = "flagora-backend"
 version = "0.1.0"
 description = "Backend for the Flagora app"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "channels-redis>=4.2.1",
-    "channels[daphne]>=4.2.2",
-    "django>=5.2",
-    "django-anymail[brevo]>=13.0",
-    "django-cors-headers>=4.7.0",
-    "django-ninja>=1.4.1",
-    "dotenv>=0.9.9",
-    "pillow>=11.2.1",
-    "psycopg2>=2.9.10",
-    "requests>=2.32.3",
+    "channels-redis>=4.3.0",
+    "channels[daphne]>=4.3.2",
+    "django>=6.1.1",
+    "django-anymail[brevo]>=15.1",
+    "django-cors-headers>=4.9.0",
+    "django-ninja>=1.7.0",
+    "python-dotenv>=1.2.3",
+    "pillow>=12.3.0",
+    "psycopg2>=2.9.12",
+    "requests>=2.34.2",
 ]
 
 [dependency-groups]
 dev = [
-    "bandit>=1.8.6",
-    "coverage>=7.9.2",
+    "bandit>=1.9.4",
+    "coverage>=7.16.0",
     "factory-boy>=3.3.3",
     "freezegun>=1.5.5",
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.12",
+    "pre-commit>=4.6.2",
+    "ruff>=0.16.6",
 ]
 production = [
-    "whitenoise>=6.9.0",
+    "whitenoise>=6.12.0",
 ]
 
 [tool.coverage.run]
